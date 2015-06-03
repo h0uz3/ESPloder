@@ -25,7 +25,7 @@ import java.util.prefs.Preferences;
 
 public class ESPlorer extends javax.swing.JFrame {
 
-    private static final String version = "v0.2.0-rc2";
+    private static final String version = "v0.0.1_refacturing";
     private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
     private static final String[] EXTENSION_LUA = new String[]{"lua", "lc"};
     private static final String[] EXTENSION_PY = new String[]{"py"};
@@ -1084,7 +1084,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         author.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        author.setText("by 4refr0nt");
+        author.setText("by h0uz3");
         author.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         homePage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/wifi.png"))); // NOI18N
@@ -4254,7 +4254,7 @@ public class ESPlorer extends javax.swing.JFrame {
         RightBottomPaneLayout.setHorizontalGroup(
                 RightBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(RightBottomPaneLayout.createSequentialGroup()
-                                .addComponent(Command, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Command, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SendCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -5670,7 +5670,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         PortFinder();
-        this.setTitle("ESPlorer " + version + " by 4refr0nt");
+        this.setTitle("ESPlorer");
         ProgressBar.setVisible(false);
         CommandsSetNodeMCU();
         isToolbarShow();
