@@ -25,12 +25,12 @@ import java.util.prefs.Preferences;
 
 public class ESPlorer extends javax.swing.JFrame {
 
-    public static final String version = "v0.2.0-rc2";
-    public static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
-    static final String[] EXTENSION_LUA = new String[]{"lua", "lc"};
-    static final String[] EXTENSION_PY = new String[]{"py"};
-    static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", EXTENSION_LUA);
-    static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", EXTENSION_PY);
+    private static final String version = "v0.2.0-rc2";
+    private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
+    private static final String[] EXTENSION_LUA = new String[]{"lua", "lc"};
+    private static final String[] EXTENSION_PY = new String[]{"py"};
+    private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", EXTENSION_LUA);
+    private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", EXTENSION_PY);
     // Variables
     private static final boolean debug = false; // true; //false;
     private static final float TERMINAL_FONT_SIZE_DEFAULT = 16f;
@@ -86,84 +86,84 @@ public class ESPlorer extends javax.swing.JFrame {
     private static final String CONDENSED = "condensed";
     private static final String AUTODETECT = "autodetect_firmware";
     private static final int portMask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
-    public static boolean pOpen = false;
+    private static boolean pOpen = false;
     public static boolean sOpen = false;
-    public static boolean portJustOpen = false;
+    private static boolean portJustOpen = false;
     public static ArrayList<String> LAF;
-    public static ArrayList<String> LAFclass;
-    public static Preferences prefs;
-    public static int j = 0;
+    private static ArrayList<String> LAFclass;
+    private static Preferences prefs;
+    private static int j = 0;
     public static String s[];
-    public static String rcvBuf = "";
-    public static String rx_data = "";
-    public static byte[] rx_byte;
-    public static byte[] tx_byte;
-    public static String DownloadCommand;
+    private static String rcvBuf = "";
+    private static String rx_data = "";
+    private static byte[] rx_byte;
+    private static byte[] tx_byte;
+    private static String DownloadCommand;
     // downloader end
-    public static boolean busyIcon = false;
+    private static boolean busyIcon = false;
     private static SerialPort serialPort;
     private static int LogMax = 10 * 1024;
     private static int TerminalMax = 100 * 1024;
     /* Snippets */
-    private static String[] Snippets = new String[16];
+    private static final String[] Snippets = new String[16];
     private static int iSnippets = 0;
     private static javax.swing.ImageIcon LED_GREY;
     private static javax.swing.ImageIcon LED_GREEN;
     private static javax.swing.ImageIcon LED_RED;
     private static javax.swing.ImageIcon LED_BLUE;
     private static boolean LocalEcho = true;
-    public final int SendPacketSize = 250;
+    private final int SendPacketSize = 250;
     /* Files tab end */
-    public int nSpeed = 9600;
-    public ActionListener taskPerformer;
-    public ActionListener watchDog;
-    public ActionListener checker;
-    public ActionListener taskSleep;
-    public Timer timer;
-    public Timer timeout;
-    public Timer sleep;
-    public Timer openTimeout;
+    private int nSpeed = 9600;
+    private ActionListener taskPerformer;
+    private ActionListener watchDog;
+    private ActionListener checker;
+    private ActionListener taskSleep;
+    private Timer timer;
+    private Timer timeout;
+    private Timer sleep;
+    private Timer openTimeout;
     public Color color;
-    public Color themeTextBackground;
-    public ArrayList<String> sendBuf;
+    private Color themeTextBackground;
+    private ArrayList<String> sendBuf;
     // downloader
-    public int packets = 0;
-    public String rcvFile = "";
-    public ArrayList<String> rcvPackets;
-    public ArrayList<byte[]> sendPackets;
-    public ArrayList<Boolean> sendPacketsCRC;
-    public ArrayList<String> PacketsData;
-    public ArrayList<Integer> PacketsSize;
-    public ArrayList<Integer> PacketsCRC;
-    public ArrayList<Integer> PacketsNum;
-    public byte[] PacketsByte;
-    public URI donate_uri;
-    public URI homepage_uri;
-    public URI api_cn_uri;
-    public URI api_en_uri;
-    public URI api_ru_uri;
-    public URI changelog_uri;
-    public URI nodemcu_download_latest_uri;
-    public URI nodemcu_download_dev_uri;
-    public URI flasher_uri;
-    public URI buy_nodeMCU;
-    public URI buy_esp8266;
-    public URI buy_esd12;
-    public URI buy_other;
+    private int packets = 0;
+    private String rcvFile = "";
+    private ArrayList<String> rcvPackets;
+    private ArrayList<byte[]> sendPackets;
+    private ArrayList<Boolean> sendPacketsCRC;
+    private ArrayList<String> PacketsData;
+    private ArrayList<Integer> PacketsSize;
+    private ArrayList<Integer> PacketsCRC;
+    private ArrayList<Integer> PacketsNum;
+    private byte[] PacketsByte;
+    private URI donate_uri;
+    private URI homepage_uri;
+    private URI api_cn_uri;
+    private URI api_en_uri;
+    private URI api_ru_uri;
+    private URI changelog_uri;
+    private URI nodemcu_download_latest_uri;
+    private URI nodemcu_download_dev_uri;
+    private URI flasher_uri;
+    private URI buy_nodeMCU;
+    private URI buy_esp8266;
+    private URI buy_esd12;
+    private URI buy_other;
     public URI esp8266com_uri;
-    public URI esp8266ru_uri;
+    private URI esp8266ru_uri;
     public URI esplorer_home;
-    public URI esplorer_latest;
-    public URI esplorer_source;
+    private URI esplorer_latest;
+    private URI esplorer_source;
     //  String s = new String();
-    String FileName = "script"; // without ext
-    String DownloadedFileName = "";
-    String NewFile = "New";
-    int FileCount = 0;
-    String workDir = "";
-    JFileChooser chooser;
-    FileInputStream fis = null;
-    FileOutputStream fos = null;
+    private String FileName = "script"; // without ext
+    private String DownloadedFileName = "";
+    private final String NewFile = "New";
+    private int FileCount = 0;
+    private String workDir = "";
+    private JFileChooser chooser;
+    private FileInputStream fis = null;
+    private FileOutputStream fos = null;
     InputStreamReader isr = null;
     OutputStreamWriter osw = null;
     BufferedReader br = null;
@@ -381,6 +381,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private int iTab = 0; // tab index
     private int mFileIndex = -1; // multifile index
     private long startTime = System.currentTimeMillis();
+
     /**
      * Creates new form MainWindows
      */
@@ -1084,7 +1085,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        appName.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        appName.setFont(new java.awt.Font("Tahoma", Font.BOLD, 24)); // NOI18N
         appName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         appName.setText("ESPlorer");
         appName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -6004,7 +6005,7 @@ public class ESPlorer extends javax.swing.JFrame {
             cmd += "\"UDP\",\"";
         }
         cmd += remote_address.getText().trim() + "\"," + remote_port.getText().trim();
-        if ((udp_local_port.getText().trim() != "") && (protocol.getSelectedIndex() == 1)) {
+        if ((udp_local_port.getText().trim().isEmpty()) && (protocol.getSelectedIndex() == 1)) {
             cmd += "," + udp_local_port.getText().trim() + "," + udp_mode.getText().trim();
         }
         btnSend(cmd);
@@ -6221,7 +6222,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_PASSActionPerformed
 
     private void PASSFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSFocusGained
-        if (PASS.getText().trim() == "password") {
+        if (PASS.getText().trim().equals("password")) {
             PASS.setText("");
         }
     }//GEN-LAST:event_PASSFocusGained
@@ -6231,7 +6232,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_SSIDActionPerformed
 
     private void SSIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SSIDFocusGained
-        if (SSID.getText().trim() == "SSID") {
+        if (SSID.getText().trim().equals("SSID")) {
             SSID.setText("");
         }
     }//GEN-LAST:event_SSIDFocusGained
@@ -6292,7 +6293,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemFileSaveActionPerformed
 
-    boolean isFileNew() {
+    private boolean isFileNew() {
         try {
             if (FilesTabbedPane.getTitleAt(iTab).equals(NewFile)) {
                 return true;
@@ -6303,7 +6304,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return false;
     }
 
-    boolean SaveFile() {
+    private boolean SaveFile() {
         boolean success = false;
         if (isFileNew()) { // we saving new file
             log("Saving new file...");
@@ -7071,7 +7072,6 @@ public class ESPlorer extends javax.swing.JFrame {
         timer.setInitialDelay(delay);
         WatchDog();
         timer.start();
-        return;
     }
 
     private void FileDownloadFinisher(boolean success) {
@@ -7093,8 +7093,6 @@ public class ESPlorer extends javax.swing.JFrame {
                 FileNew(rcvFile);
             } else if (DownloadCommand.startsWith("DOWNLOAD")) {
                 SaveDownloadedFile();
-            } else {
-                // nothing, reserved
             }
         } else {
             TerminalAdd("FAIL.\r\n");
@@ -7152,7 +7150,6 @@ public class ESPlorer extends javax.swing.JFrame {
             if (success && (n == nPacket)) {
                 ret = i + s.length();
                 break;
-            } else {
             }
             i++;
         }
@@ -7172,7 +7169,7 @@ public class ESPlorer extends javax.swing.JFrame {
             //log("\r\nCRC size= " + Integer.toString(s.length)+ ", CRC="+Integer.toString(cs));
         } catch (Exception e) {
             log(e.toString());
-            log(e.getStackTrace().toString());
+            log(Arrays.toString(e.getStackTrace()));
             log("size=" + Integer.toString(s.length));
         }
         return cs;
@@ -7369,8 +7366,6 @@ public class ESPlorer extends javax.swing.JFrame {
             CommandsSetNodeMCU();
         } else if (LeftTab.getSelectedIndex() == 1) {  // AT
             CommandsSetAT();
-        } else if (LeftTab.getSelectedIndex() == 2) {  // Frankenshtein
-            // TODO
         }
     }//GEN-LAST:event_LeftTabStateChanged
 
@@ -7874,7 +7869,7 @@ public class ESPlorer extends javax.swing.JFrame {
             LogMax = 32 * 1024;
         }
         prefs.putInt(LOG_MAX_SIZE, LogMax);
-        log("Log max size set to " + Integer.toString(LogMax / 1024) + " KB", debug);
+        log("Log max size set to " + Integer.toString(LogMax / 1024) + " KB");
     }//GEN-LAST:event_LogMaxSizeFocusLost
 
     private void TerminalMaxSizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TerminalMaxSizeFocusLost
@@ -7889,7 +7884,7 @@ public class ESPlorer extends javax.swing.JFrame {
             TerminalMax = 1024 * 1024;
         }
         prefs.putInt(TERMINAL_MAX_SIZE, TerminalMax);
-        log("Terminal max size set to " + Integer.toString(TerminalMax / 1024) + " KB", debug);
+        log("Terminal max size set to " + Integer.toString(TerminalMax / 1024) + " KB");
     }//GEN-LAST:event_TerminalMaxSizeFocusLost
 
     private void SnippetCancelEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetCancelEditActionPerformed
@@ -8398,15 +8393,15 @@ public class ESPlorer extends javax.swing.JFrame {
         Command.addItem(new String("AT+RST"));
     }
 
-    public void inc_j() {
+    private void inc_j() {
         j++;
     }
 
-    public void j0() {
+    private void j0() {
         j = 0;
     }
 
-    public void PortFinder() {
+    private void PortFinder() {
         int i;
         Port.removeAllItems();
         if (UseCustomPortName.isSelected()) {
@@ -8451,7 +8446,7 @@ public class ESPlorer extends javax.swing.JFrame {
         };
     }
 
-    public void log(String l) {
+    private void log(String l) {
         String log = Log.getText();
         Document doc = Log.getDocument();
         logger.info(l);
@@ -8468,11 +8463,7 @@ public class ESPlorer extends javax.swing.JFrame {
         Log.setCaretPosition(Log.getText().length());
     }
 
-    public void log(String l, boolean d) {
-        if (d) log(l);
-    }
-
-    public String GetSerialPortName() {
+    private String GetSerialPortName() {
         String portName;
         if (UseCustomPortName.isSelected()) {
             portName = CustomPortName.getText().trim();
@@ -8482,7 +8473,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return portName;
     }
 
-    public boolean SetSerialPortParams() {
+    private boolean SetSerialPortParams() {
         boolean success = false;
         String portName = GetSerialPortName();
         try {
@@ -8502,7 +8493,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return success;
     }
 
-    public boolean portOpen() {
+    private boolean portOpen() {
         boolean success = false;
         String portName = GetSerialPortName();
         nSpeed = Integer.parseInt((String) Speed.getSelectedItem());
@@ -8565,7 +8556,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     }
 
-    public void CheckComm() {
+    private void CheckComm() {
         if (!AutodetectFirmware.isSelected()) {
             portJustOpen = false;
             return;
@@ -8591,7 +8582,7 @@ public class ESPlorer extends javax.swing.JFrame {
         openTimeout.start();
     }
 
-    public void portClose() {
+    private void portClose() {
         boolean success = false;
         if (portJustOpen) {
             try {
@@ -8619,8 +8610,8 @@ public class ESPlorer extends javax.swing.JFrame {
         ClearFileManager();
     }
 
-    public void SendCommand() {
-        if (SendCommand.isEnabled() == false || pOpen == false || portJustOpen) {
+    private void SendCommand() {
+        if (!SendCommand.isEnabled() || !pOpen || portJustOpen) {
             log("Port not open, operation FAILED.");
             return;
         }
@@ -8633,23 +8624,16 @@ public class ESPlorer extends javax.swing.JFrame {
 
         //Autoclean History --ADDED by Mike, DL2ZAP --
         //if (Autoclean.isSelected()) {   // ToDo: create Checkbox "Autoclean & uncomment this line
-        if (true) { // ToDo: After creating Checkbox delete this line
-            int eintraege = Command.getItemCount();
-            //System.out.println("Start cleaning");
-            for (int lv1 = 0; lv1 < eintraege; lv1++) {
-                //System.out.print("Eintrag:" + lv1 +" : "+Command.getItemAt(lv1));
-                if (Command.getItemAt(lv1) == cmd) {
-                    // System.out.println(" Doppelt, entfernt!");
-                    Command.removeItemAt(lv1);
-                    lv1--;  // re-read this Entry because List has moved up the Follower
-                } else {
-                    // System.out.println(" OK.");
-                }
+        int eintraege = Command.getItemCount();
+        //System.out.println("Start cleaning");
+        for (int lv1 = 0; lv1 < eintraege; lv1++) {
+            //System.out.print("Eintrag:" + lv1 +" : "+Command.getItemAt(lv1));
+            if (Command.getItemAt(lv1) == cmd) {
+                // System.out.println(" Doppelt, entfernt!");
+                Command.removeItemAt(lv1);
+                lv1--;  // re-read this Entry because List has moved up the Follower
             }
         }
-
-        // System.out.println("Adding Command:" + cmd );
-        int eintraege = Command.getItemCount();
 
         Command.setSelectedIndex(Command.getItemCount() - 1); // Place Index on last Entry
         Command.addItem(cmd); // Add to History after last Position
@@ -8671,20 +8655,20 @@ public class ESPlorer extends javax.swing.JFrame {
         //Command.setSelectedIndex(Command.getItemCount()-1);
     }
 
-    public String addCRLF(String s) {
+    private String addCRLF(String s) {
         String r = s;
         r += (char) 13;
         r += (char) 10;
         return r;
     }
 
-    public String addCR(String s) {
+    private String addCR(String s) {
         String r = s;
         r += (char) 13;
         return r;
     }
 
-    public void btnSend(String s) {
+    private void btnSend(String s) {
         send(addCRLF(s), true);
     }
 
@@ -8965,7 +8949,6 @@ public class ESPlorer extends javax.swing.JFrame {
         // PopUp menu
         FilePopupMenu.add(new javax.swing.JPopupMenu());
         int x = FilePopupMenu.size() - 1;
-        int y;
         // PopUp menu items
         if (FileName.endsWith(".lua")) {
             FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/lua.png")));
@@ -9610,7 +9593,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return success;
     }
 
-    public boolean SendTurboTimerStart() {
+    private boolean SendTurboTimerStart() {
         startTime = System.currentTimeMillis();
         SendLock();
         rcvBuf = "";
@@ -9644,7 +9627,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return true;
     }
 
-    public boolean SendTimerStart() {
+    private boolean SendTimerStart() {
         startTime = System.currentTimeMillis();
         SendLock();
         rcvBuf = "";
@@ -9706,7 +9689,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return true;
     }
 
-    public void send(String s, boolean simple) {
+    private void send(String s, boolean simple) {
         if (!pOpen) {
             log("DataSender: Serial port not open, operation FAILED.");
             return;
@@ -9737,7 +9720,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    public void Busy() {
+    private void Busy() {
         Busy.setText("BUSY");
         Busy.setBackground(new java.awt.Color(153, 0, 0)); // RED
         SnippetsBusy.setText("BUSY");
@@ -9775,14 +9758,14 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet15.setEnabled(false);
     }
 
-    public void SendLock() {
+    private void SendLock() {
         Busy();
         FileSaveESP.setText("Cancel");
         FileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/abort.png")));
         FileSaveESP.setSelected(true);
     }
 
-    public void Idle() {
+    private void Idle() {
         Busy.setText("IDLE");
         Busy.setBackground(new java.awt.Color(0, 153, 0)); // GREEN
         Busy.setIcon(LED_GREY);
@@ -9795,7 +9778,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateEditorButtons();
     }
 
-    public void UpdateLED() {
+    private void UpdateLED() {
         pOpen = Open.isSelected();
         if (!pOpen) {
             PortDTR.setIcon(LED_GREY);
@@ -9825,7 +9808,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    public void SendUnLock() {
+    private void SendUnLock() {
         Idle();
         FileSaveESP.setText("Save to ESP");
         FileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/move.png")));
@@ -9833,7 +9816,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileSendESP.setSelected(false);
     }
 
-    public void SetSnippetEditButtonsTooltip() {
+    private void SetSnippetEditButtonsTooltip() {
         // should be called after loading, setting or editing any of the Snippet-Names
         // eg after SnippetSaveActionPerformed() and LoadSnippets ()
         // Mike, DL2ZAP 2015-01-04
@@ -9855,7 +9838,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit15.setToolTipText(ButtonSnippet15.getText());
     }
 
-    boolean SaveDownloadedFile() {
+    private boolean SaveDownloadedFile() {
         boolean success = false;
         log("Saving downloaded file...");
 //            FileCount ++;
@@ -10092,7 +10075,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return lastPacketSize;
     }
 
-    public void sendBytes(byte[] b) {
+    private void sendBytes(byte[] b) {
         if (!pOpen) {
             log("BytesSender: Serial port not open, operation FAILED.");
             return;
@@ -10109,7 +10092,7 @@ public class ESPlorer extends javax.swing.JFrame {
             //log("BytesSender sending:" + b.toString().replace("\r\n", "<CR><LF>"));
             serialPort.writeBytes(b);
         } catch (SerialPortException ex) {
-            log("BytesSender send FAIL:" + b.toString().replace("\r\n", "<CR><LF>"));
+            log("BytesSender send FAIL:" + Arrays.toString(b).replace("\r\n", "<CR><LF>"));
         }
     }
 
@@ -10138,10 +10121,10 @@ public class ESPlorer extends javax.swing.JFrame {
     private class PortFilesReader implements SerialPortEventListener {
 
         public void serialEvent(SerialPortEvent event) {
-            String data;
+
             if (event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
-                    data = serialPort.readString(event.getEventValue());
+                    String data = serialPort.readString(event.getEventValue());
                     rcvBuf = rcvBuf + data;
                     rx_data = rx_data + data;
                 } catch (Exception e) {
@@ -10156,9 +10139,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     rcvBuf = "";
                     if (j < sendBuf.size() - 1) {
-                        if (timer.isRunning()) {
-                            //
-                        } else {
+                        if (!timer.isRunning()) {
                             inc_j();
                             timer.start();
                         }
@@ -10247,7 +10228,6 @@ public class ESPlorer extends javax.swing.JFrame {
                     rx_data = rx_data + data;
                     //TerminalAdd(data);
                 } catch (SerialPortException e) {
-                    data = "";
                     log(e.toString());
                 }
                 if (rcvBuf.contains("> ")) {
@@ -10258,9 +10238,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     rcvBuf = "";
                     if (j < sendBuf.size() - 1) {
-                        if (timer.isRunning()) {
-                            //
-                        } else {
+                        if (!timer.isRunning()) {
                             inc_j();
                             timer.start();
                         }
@@ -10353,8 +10331,6 @@ public class ESPlorer extends javax.swing.JFrame {
                     log("Downloader: Receive final sequense. File download: Success");
                     //log(rx_data);
                     FileDownloadFinisher(true);
-                } else {
-                    //log("rxbyte - " + Integer.toString( rx_byte.length ));
                 }
             } else if (event.isCTS()) {
                 UpdateLedCTS();
@@ -10441,9 +10417,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     rcvBuf = "";
                     if (j < sendBuf.size() - 1) {
-                        if (timer.isRunning()) {
-                            // waiting
-                        } else {
+                        if (!timer.isRunning()) {
                             inc_j();
                             int div = sendBuf.size() - 1;
                             if (div == 0) div = 1;
@@ -10490,9 +10464,8 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     rcvBuf = "";
                     if (j < sendBuf.size() - 1) {
-                        if (timer.isRunning()) {
-                            // waiting
-                        } else {
+                        if (!timer.isRunning()) {
+
                             inc_j();
                             int div = sendBuf.size() - 1;
                             if (div == 0) div = 1;
@@ -10523,7 +10496,6 @@ public class ESPlorer extends javax.swing.JFrame {
                     rx_data = rx_data + data;
                     //log("rcv:"+data);
                 } catch (Exception e) {
-                    data = "";
                     log(e.toString());
                 }
                 if (rcvBuf.contains("> ") && j < sendBuf.size()) {
@@ -10564,9 +10536,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     ProgressBar.setValue(j * 100 / (sendBuf.size() + sendPackets.size() - 1));
                     if (j < (sendBuf.size() + sendPackets.size())) {
-                        if (timer.isRunning()) {
-                            //
-                        } else {
+                        if (!timer.isRunning()) {
                             inc_j();
                             timer.start();
                         }
