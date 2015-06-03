@@ -32,7 +32,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", EXTENSION_LUA);
     private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", EXTENSION_PY);
     // Variables
-    private static final boolean debug = false; // true; //false;
     private static final float TERMINAL_FONT_SIZE_DEFAULT = 16f;
     private static final float TERMINAL_FONT_SIZE_MAX = 40f;
     private static final float TERMINAL_FONT_SIZE_MIN = 5f;
@@ -87,13 +86,12 @@ public class ESPlorer extends javax.swing.JFrame {
     private static final String AUTODETECT = "autodetect_firmware";
     private static final int portMask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
     private static boolean pOpen = false;
-    public static boolean sOpen = false;
     private static boolean portJustOpen = false;
-    public static ArrayList<String> LAF;
+    private static ArrayList<String> LAF;
     private static ArrayList<String> LAFclass;
     private static Preferences prefs;
     private static int j = 0;
-    public static String s[];
+    private static String[] s;
     private static String rcvBuf = "";
     private static String rx_data = "";
     private static byte[] rx_byte;
@@ -116,14 +114,9 @@ public class ESPlorer extends javax.swing.JFrame {
     /* Files tab end */
     private int nSpeed = 9600;
     private ActionListener taskPerformer;
-    private ActionListener watchDog;
-    private ActionListener checker;
-    private ActionListener taskSleep;
     private Timer timer;
     private Timer timeout;
-    private Timer sleep;
     private Timer openTimeout;
-    public Color color;
     private Color themeTextBackground;
     private ArrayList<String> sendBuf;
     // downloader
@@ -150,9 +143,8 @@ public class ESPlorer extends javax.swing.JFrame {
     private URI buy_esp8266;
     private URI buy_esd12;
     private URI buy_other;
-    public URI esp8266com_uri;
+    private URI esp8266com_uri;
     private URI esp8266ru_uri;
-    public URI esplorer_home;
     private URI esplorer_latest;
     private URI esplorer_source;
     //  String s = new String();
@@ -164,12 +156,9 @@ public class ESPlorer extends javax.swing.JFrame {
     private JFileChooser chooser;
     private FileInputStream fis = null;
     private FileOutputStream fos = null;
-    InputStreamReader isr = null;
-    OutputStreamWriter osw = null;
-    BufferedReader br = null;
-    BufferedWriter bw = null;
+    private OutputStreamWriter osw = null;
+    private BufferedWriter bw = null;
 
-    private javax.swing.JButton AT_Restart;
     private javax.swing.JDialog About;
     private javax.swing.JCheckBoxMenuItem AlwaysOnTop;
     private javax.swing.JSlider AnswerDelay;
@@ -205,7 +194,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JButton ButtonSnippet9;
     private javax.swing.JButton ButtonUndo;
     private javax.swing.JCheckBox CR;
-    private javax.swing.JComboBox Command;
+    private javax.swing.JComboBox<String> Command;
     private javax.swing.JCheckBox Condensed;
     private javax.swing.JPopupMenu ContextMenuEditor;
     private javax.swing.JTextField CustomPortName;
@@ -300,7 +289,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JRadioButton OptionNodeMCU;
     private javax.swing.JTextField PASS;
     private javax.swing.JTextField PASSsoftAP;
-    private javax.swing.JComboBox Port;
+    private javax.swing.JComboBox<String> Port;
     private javax.swing.JLabel PortCTS;
     private javax.swing.JToggleButton PortDTR;
     private javax.swing.JLabel PortOpenLabel;
@@ -617,14 +606,6 @@ public class ESPlorer extends javax.swing.JFrame {
         UseCustomPortName = new javax.swing.JCheckBox();
         JLabel jLabel10 = new JLabel();
         AutodetectFirmware = new javax.swing.JCheckBox();
-        JLayeredPane basicATcommandsPane = new JLayeredPane();
-        JButton cmdAT = new JButton();
-        AT_Restart = new javax.swing.JButton();
-        JButton AT_GMR = new JButton();
-        JButton GSLP = new JButton();
-        JButton ATE0 = new JButton();
-        JButton ATE1 = new JButton();
-        JButton UPDATE = new JButton();
         JPanel AT_Station = new JPanel();
         Box.Filler topWiFiStaFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JLayeredPane wiFiStationPane = new JLayeredPane();
@@ -1155,7 +1136,6 @@ public class ESPlorer extends javax.swing.JFrame {
             }
 
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
-                ContextMenuESPFileLUAPopupMenuWillBecomeVisible(evt);
             }
         });
 
@@ -1164,7 +1144,6 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemESPFileDo.setToolTipText("");
         menuItemESPFileDo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemESPFileDoActionPerformed(evt);
             }
         });
         contextMenuESPFileLUA.add(menuItemESPFileDo);
@@ -1175,7 +1154,6 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemESPFileDelete.setToolTipText("");
         menuItemESPFileDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemESPFileDeleteActionPerformed(evt);
             }
         });
         contextMenuESPFileLUA.add(menuItemESPFileDelete);
@@ -1202,7 +1180,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                formWindowGainedFocus(evt);
             }
 
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
@@ -1210,12 +1187,10 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                formPropertyChange(evt);
             }
         });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
             }
 
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -1251,7 +1226,6 @@ public class ESPlorer extends javax.swing.JFrame {
         nodeMCU.setPreferredSize(new java.awt.Dimension(461, 537));
         nodeMCU.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                NodeMCUFocusGained(evt);
             }
         });
         nodeMCU.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -1266,7 +1240,6 @@ public class ESPlorer extends javax.swing.JFrame {
         TextTab.setPreferredSize(new java.awt.Dimension(462, 365));
         TextTab.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                TextTabStateChanged(evt);
             }
         });
 
@@ -1544,7 +1517,6 @@ public class ESPlorer extends javax.swing.JFrame {
 
         fileLayeredPane.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                FileLayeredPaneFocusGained(evt);
             }
         });
 
@@ -1571,7 +1543,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         textEditor.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                TextEditorFocusGained(evt);
             }
         });
         textEditor.addActiveLineRangeListener(new org.fife.ui.rsyntaxtextarea.ActiveLineRangeListener() {
@@ -1585,7 +1556,6 @@ public class ESPlorer extends javax.swing.JFrame {
             }
 
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                TextEditorInputMethodTextChanged(evt);
             }
         });
         textEditor.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1625,7 +1595,6 @@ public class ESPlorer extends javax.swing.JFrame {
         fileDo1.setPreferredSize(new java.awt.Dimension(127, 30));
         fileDo1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileDo1ActionPerformed(evt);
             }
         });
         LeftExtraButtons.add(fileDo1);
@@ -1654,7 +1623,6 @@ public class ESPlorer extends javax.swing.JFrame {
         fileSaveCompileDoLC.setPreferredSize(new java.awt.Dimension(127, 30));
         fileSaveCompileDoLC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileSaveCompileDoLCActionPerformed(evt);
             }
         });
         LeftExtraButtons.add(fileSaveCompileDoLC);
@@ -1685,7 +1653,6 @@ public class ESPlorer extends javax.swing.JFrame {
         fileCompile1.setPreferredSize(new java.awt.Dimension(127, 30));
         fileCompile1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileCompile1ActionPerformed(evt);
             }
         });
         LeftExtraButtons.add(fileCompile1);
@@ -2531,7 +2498,6 @@ public class ESPlorer extends javax.swing.JFrame {
         TurboMode.setToolTipText("");
         TurboMode.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                TurboModeItemStateChanged(evt);
             }
         });
         TurboMode.addActionListener(new java.awt.event.ActionListener() {
@@ -2620,7 +2586,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         LogMaxSize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LogMaxSizeActionPerformed(evt);
             }
         });
 
@@ -2782,96 +2747,6 @@ public class ESPlorer extends javax.swing.JFrame {
 
         LeftTab.addTab("NodeMCU+MicroPython", nodeMCU);
 
-        basicATcommandsPane.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED), "Basic AT commands", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        basicATcommandsPane.setToolTipText("Basic AT commnads");
-        basicATcommandsPane.setMaximumSize(new java.awt.Dimension(445, 50));
-        basicATcommandsPane.setMinimumSize(new java.awt.Dimension(445, 50));
-        basicATcommandsPane.setLayout(new java.awt.FlowLayout());
-
-        cmdAT.setText("AT");
-        cmdAT.setToolTipText("Super simple command \"AT\"");
-        cmdAT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdATActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(cmdAT);
-
-        AT_Restart.setText("RST");
-        AT_Restart.setToolTipText("Restart");
-        AT_Restart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AT_RestartActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(AT_Restart);
-
-        AT_GMR.setText("GMR");
-        AT_GMR.setToolTipText("Get version info");
-        AT_GMR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AT_GMRActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(AT_GMR);
-
-        GSLP.setText("GSLP");
-        GSLP.setToolTipText("Enter deep-sleep mode on 5sec");
-        GSLP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GSLPActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(GSLP);
-
-        ATE0.setText("ATE0");
-        ATE0.setToolTipText("Echo OFF");
-        ATE0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ATE0ActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(ATE0);
-
-        ATE1.setText("ATE1");
-        ATE1.setToolTipText("Echo ON");
-        ATE1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ATE1ActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(ATE1);
-
-        UPDATE.setText("UPD");
-        UPDATE.setToolTipText("Send command \"AT+UPDATE\" for firmware Cloud update ");
-        UPDATE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UPDATEActionPerformed(evt);
-            }
-        });
-        basicATcommandsPane.add(UPDATE);
-
-        AT_Station.setToolTipText("WiFi commands");
-        AT_Station.setAlignmentX(0.0F);
-        AT_Station.setAlignmentY(0.0F);
-        AT_Station.setAutoscrolls(true);
-        AT_Station.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        AT_Station.setInheritsPopupMenu(true);
-        AT_Station.setMinimumSize(new java.awt.Dimension(0, 130));
-        AT_Station.setName(""); // NOI18N
-        AT_Station.setOpaque(false);
-        AT_Station.setPreferredSize(new java.awt.Dimension(457, 291));
-        AT_Station.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                AT_StationFocusGained(evt);
-            }
-        });
-        AT_Station.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                AT_StationComponentShown(evt);
-            }
-        });
-
         topWiFiStaFiller.setOpaque(true);
 
         wiFiStationPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "WiFi Station"));
@@ -2923,7 +2798,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         SSID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SSIDActionPerformed(evt);
             }
         });
 
@@ -2940,7 +2814,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         PASS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PASSActionPerformed(evt);
             }
         });
 
@@ -3124,12 +2997,10 @@ public class ESPlorer extends javax.swing.JFrame {
 
         AT_SoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                AT_SoftAPFocusGained(evt);
             }
         });
         AT_SoftAP.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
-                AT_SoftAPComponentShown(evt);
             }
         });
 
@@ -3204,12 +3075,10 @@ public class ESPlorer extends javax.swing.JFrame {
         SSIDsoftAP.setPreferredSize(new java.awt.Dimension(100, 23));
         SSIDsoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                SSIDsoftAPFocusGained(evt);
             }
         });
         SSIDsoftAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SSIDsoftAPActionPerformed(evt);
             }
         });
 
@@ -3221,12 +3090,10 @@ public class ESPlorer extends javax.swing.JFrame {
         PASSsoftAP.setPreferredSize(new java.awt.Dimension(104, 23));
         PASSsoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                PASSsoftAPFocusGained(evt);
             }
         });
         PASSsoftAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PASSsoftAPActionPerformed(evt);
             }
         });
 
@@ -3419,7 +3286,6 @@ public class ESPlorer extends javax.swing.JFrame {
         AT_Client.setOpaque(false);
         AT_Client.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                AT_ClientFocusGained(evt);
             }
         });
         AT_Client.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -3443,7 +3309,6 @@ public class ESPlorer extends javax.swing.JFrame {
         single.setToolTipText("Single connection");
         single.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                singleItemStateChanged(evt);
             }
         });
 
@@ -3453,12 +3318,10 @@ public class ESPlorer extends javax.swing.JFrame {
         multi.setToolTipText("Multiple connection");
         multi.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                multiItemStateChanged(evt);
             }
         });
         multi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                multiActionPerformed(evt);
             }
         });
 
@@ -3502,7 +3365,6 @@ public class ESPlorer extends javax.swing.JFrame {
         UDP.setBorder(javax.swing.BorderFactory.createTitledBorder("UDP only"));
         UDP.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                UDPPropertyChange(evt);
             }
         });
 
@@ -3559,7 +3421,6 @@ public class ESPlorer extends javax.swing.JFrame {
         protocol.setToolTipText("Connection type: TCP or UDP");
         protocol.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                protocolItemStateChanged(evt);
             }
         });
 
@@ -3702,7 +3563,6 @@ public class ESPlorer extends javax.swing.JFrame {
         AT_Server.setOpaque(false);
         AT_Server.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                AT_ServerFocusGained(evt);
             }
         });
         AT_Server.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -3991,7 +3851,6 @@ public class ESPlorer extends javax.swing.JFrame {
 
         cmdGetHelpCWMODE.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetHelpCWMODEActionPerformed(evt);
             }
         });
         WiFi_common.add(cmdGetHelpCWMODE);
@@ -4202,7 +4061,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         Speed.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                SpeedFocusLost(evt);
             }
         });
         Speed.addActionListener(new java.awt.event.ActionListener() {
@@ -4218,7 +4076,6 @@ public class ESPlorer extends javax.swing.JFrame {
         ReScan.setPreferredSize(new java.awt.Dimension(25, 25));
         ReScan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ReScanActionPerformed(evt);
             }
         });
 
@@ -4243,12 +4100,10 @@ public class ESPlorer extends javax.swing.JFrame {
         Port.setPreferredSize(new java.awt.Dimension(150, 25));
         Port.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                PortItemStateChanged(evt);
             }
         });
         Port.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PortActionPerformed(evt);
             }
         });
 
@@ -4351,7 +4206,6 @@ public class ESPlorer extends javax.swing.JFrame {
         SendCommand.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SendCommand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SendCommandActionPerformed(evt);
             }
         });
 
@@ -4377,7 +4231,6 @@ public class ESPlorer extends javax.swing.JFrame {
         Command.setName("Command"); // NOI18N
         Command.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                CommandItemStateChanged(evt);
             }
         });
         Command.addActionListener(new java.awt.event.ActionListener() {
@@ -4387,15 +4240,12 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         Command.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                CommandKeyPressed(evt);
             }
 
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                CommandKeyReleased(evt);
             }
 
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                CommandKeyTyped(evt);
             }
         });
 
@@ -4434,7 +4284,6 @@ public class ESPlorer extends javax.swing.JFrame {
         rightBigPane.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         rightBigPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                RightBigPanePropertyChange(evt);
             }
         });
 
@@ -4484,7 +4333,6 @@ public class ESPlorer extends javax.swing.JFrame {
         Terminal.setSyntaxEditingStyle("text/LUA");
         Terminal.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                TerminalPropertyChange(evt);
             }
         });
         terminalPane.setViewportView(Terminal);
@@ -4521,7 +4369,6 @@ public class ESPlorer extends javax.swing.JFrame {
         Log.setSelectionEnd(0);
         Log.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                LogCaretUpdate(evt);
             }
         });
         ScrollLog.setViewportView(Log);
@@ -4616,7 +4463,6 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAsButton1.setPreferredSize(new java.awt.Dimension(130, 25));
         FileAsButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                FileAsButton1MouseClicked(evt);
             }
         });
         FileAsButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -4999,7 +4845,6 @@ public class ESPlorer extends javax.swing.JFrame {
         menuFile.setText("File");
         menuFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuFileActionPerformed(evt);
             }
         });
 
@@ -5050,7 +4895,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileSaveAs.setText("Save As.. to disk");
         MenuItemFileSaveAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileSaveAsActionPerformed(evt);
             }
         });
         menuFile.add(MenuItemFileSaveAs);
@@ -5133,7 +4977,6 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemFileExit.setLabel("Exit");
         menuItemFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileExitActionPerformed(evt);
             }
         });
         menuFile.add(menuItemFileExit);
@@ -5259,7 +5102,6 @@ public class ESPlorer extends javax.swing.JFrame {
         buttonGroupLF.add(MenuView);
         MenuView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuViewActionPerformed(evt);
             }
         });
 
@@ -5398,7 +5240,6 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuItemViewDonate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewDonateActionPerformed(evt);
             }
         });
         MenuView.add(MenuItemViewDonate);
@@ -5682,18 +5523,6 @@ public class ESPlorer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void PortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PortActionPerformed
-
-    private void MenuItemFileExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileExitActionPerformed
-        AppClose();
-    }//GEN-LAST:event_MenuItemFileExitActionPerformed
-
-    private void SpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SpeedFocusLost
-        nSpeed = Integer.parseInt((String) Speed.getSelectedItem());
-    }//GEN-LAST:event_SpeedFocusLost
-
     private void SpeedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpeedActionPerformed
         if (portJustOpen) {
             log("ERROR: Communication with MCU not established.");
@@ -5908,18 +5737,6 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void ReScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReScanActionPerformed
-        PortFinder();
-    }//GEN-LAST:event_ReScanActionPerformed
-
-    private void CommandKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CommandKeyTyped
-        //logWin("key: "+ Integer.toString(evt.getExtendedKeyCode()));
-    }//GEN-LAST:event_CommandKeyTyped
-
-    private void SendCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendCommandActionPerformed
-        SendCommand();
-    }//GEN-LAST:event_SendCommandActionPerformed
-
     private void CommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CommandActionPerformed
         //log("CommandActionPerformed " + evt.getActionCommand());
         if ("comboBoxEdited".equals(evt.getActionCommand())) { // Hit Enter
@@ -5927,41 +5744,9 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CommandActionPerformed
 
-    private void CommandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CommandKeyPressed
-        //logWin("key: "+ Integer.toString(evt.getExtendedKeyCode()));
-    }//GEN-LAST:event_CommandKeyPressed
-
-    private void CommandKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CommandKeyReleased
-        //logWin("key: "+evt.getKeyChar());
-    }//GEN-LAST:event_CommandKeyReleased
-
-    private void cmdATActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdATActionPerformed
-        btnSend("AT");
-    }//GEN-LAST:event_cmdATActionPerformed
-
-    private void AT_RestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AT_RestartActionPerformed
-        btnSend("AT+RST");
-    }//GEN-LAST:event_AT_RestartActionPerformed
-
     private void AT_GMRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AT_GMRActionPerformed
         btnSend("AT+GMR");
     }//GEN-LAST:event_AT_GMRActionPerformed
-
-    private void GSLPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GSLPActionPerformed
-        btnSend("AT+GSLP=5000");
-    }//GEN-LAST:event_GSLPActionPerformed
-
-    private void ATE0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ATE0ActionPerformed
-        btnSend("ATE0");
-    }//GEN-LAST:event_ATE0ActionPerformed
-
-    private void ATE1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ATE1ActionPerformed
-        btnSend("ATE1");
-    }//GEN-LAST:event_ATE1ActionPerformed
-
-    private void cmdGetHelpCWMODEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetHelpCWMODEActionPerformed
-        btnSend("AT+CWMODE=?");
-    }//GEN-LAST:event_cmdGetHelpCWMODEActionPerformed
 
     private void cmdGetCWMODEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCWMODEActionPerformed
         btnSend("AT+CWMODE?");
@@ -6014,29 +5799,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private void UPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UPDATEActionPerformed
         btnSend("AT+CIUPDATE");
     }//GEN-LAST:event_UPDATEActionPerformed
-
-    private void UDPPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_UDPPropertyChange
-
-    }//GEN-LAST:event_UDPPropertyChange
-
-    private void multiItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_multiItemStateChanged
-
-    }//GEN-LAST:event_multiItemStateChanged
-
-    private void singleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_singleItemStateChanged
-
-    }//GEN-LAST:event_singleItemStateChanged
-
-    private void protocolItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_protocolItemStateChanged
-        if (protocol.getSelectedIndex() == 0) { // TCP
-            udp_local_port.setEnabled(false);
-            udp_mode.setEnabled(false);
-        } else {
-            udp_local_port.setEnabled(true);
-            udp_mode.setEnabled(true);
-        }
-
-    }//GEN-LAST:event_protocolItemStateChanged
 
     private void cmdGetCIPMUXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPMUXActionPerformed
         btnSend("AT+CIPMUX?");
@@ -6188,22 +5950,6 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend("AT+CWLIF");
     }//GEN-LAST:event_cmdGetCWLIFActionPerformed
 
-    private void PASSsoftAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PASSsoftAPActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PASSsoftAPActionPerformed
-
-    private void PASSsoftAPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSsoftAPFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PASSsoftAPFocusGained
-
-    private void SSIDsoftAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SSIDsoftAPActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SSIDsoftAPActionPerformed
-
-    private void SSIDsoftAPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SSIDsoftAPFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SSIDsoftAPFocusGained
-
     private void cmdSetCWSAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWSAPActionPerformed
         int ch = channel.getSelectedIndex() + 1;
         btnSend("AT+CWSAP=\"" + SSIDsoftAP.getText() + "\",\"" + PASSsoftAP.getText() + "\"," + Integer.toString(ch) + "," + encryption.getSelectedIndex());
@@ -6217,19 +5963,11 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend("AT+CWQAP");
     }//GEN-LAST:event_cmdSetCWQAPActionPerformed
 
-    private void PASSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PASSActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PASSActionPerformed
-
     private void PASSFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSFocusGained
         if (PASS.getText().trim().equals("password")) {
             PASS.setText("");
         }
     }//GEN-LAST:event_PASSFocusGained
-
-    private void SSIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SSIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SSIDActionPerformed
 
     private void SSIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SSIDFocusGained
         if (SSID.getText().trim().equals("SSID")) {
@@ -6245,31 +5983,10 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend("AT+CWJAP?");
     }//GEN-LAST:event_cmdGetCWJAPActionPerformed
 
-    private void AT_StationFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AT_StationFocusGained
-
-    }//GEN-LAST:event_AT_StationFocusGained
-
-    private void AT_SoftAPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AT_SoftAPFocusGained
-
-    }//GEN-LAST:event_AT_SoftAPFocusGained
-
-    private void AT_ClientFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AT_ClientFocusGained
-
-    }//GEN-LAST:event_AT_ClientFocusGained
-
-    private void AT_ServerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AT_ServerFocusGained
-
-    }//GEN-LAST:event_AT_ServerFocusGained
-
     private void AT_StationComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_StationComponentShown
         WiFi_common.setVisible(true);
         TCP_common.setVisible(false);
     }//GEN-LAST:event_AT_StationComponentShown
-
-    private void AT_SoftAPComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_SoftAPComponentShown
-        WiFi_common.setVisible(true);
-        TCP_common.setVisible(false);
-    }//GEN-LAST:event_AT_SoftAPComponentShown
 
     private void AT_ClientComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_ClientComponentShown
         WiFi_common.setVisible(false);
@@ -6464,7 +6181,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }
 
     private boolean LoadFile() {
-        boolean success = false;
+        boolean success;
         if (isFileNew()) {
             UpdateEditorButtons();
             log("Internal error 101: FileTab is NewFile.");
@@ -6478,6 +6195,8 @@ public class ESPlorer extends javax.swing.JFrame {
             log("Internal error 102: no current file descriptor.");
             return false;
         }
+        InputStreamReader isr;
+        BufferedReader br;
         try {
             fis = new FileInputStream(iFile.get(iTab));
             isr = new InputStreamReader(fis, "UTF-8");
@@ -6498,15 +6217,14 @@ public class ESPlorer extends javax.swing.JFrame {
             return false;
         }
         try {
-            if (br != null) br.close();
-            if (isr != null) isr.close();
-            if (fis != null) fis.close();
+            br.close();
+            isr.close();
+            fis.close();
         } catch (Exception ex) {
             log(ex.toString());
 //                log(ex.getStackTrace().toString());
             log("Internal error 103: can't close stream.");
         }
-        if (success) {
             TextEditor1.get(iTab).setCaretPosition(0);
             FileChanged.set(iTab, false);
             TextEditor1.get(iTab).discardAllEdits();
@@ -6516,8 +6234,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 TextEditor1.get(iTab).setEditable(false);
             }
             log("Loading " + FileName + ": Success.");
-        }
-        return success;
+        return true;
     }
 
     private void DelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DelayStateChanged
@@ -6706,18 +6423,10 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateButtons();
     }//GEN-LAST:event_formFocusGained
 
-    private void NodeMCUFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_NodeMCUFocusGained
-
-    }//GEN-LAST:event_NodeMCUFocusGained
-
     private void NodeMCUComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_NodeMCUComponentShown
         UpdateEditorButtons();
         UpdateButtons();
     }//GEN-LAST:event_NodeMCUComponentShown
-
-    private void multiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_multiActionPerformed
 
     private void ButtonFileReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileReloadActionPerformed
         MenuItemFileReload.doClick();
@@ -6792,7 +6501,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 if (SetSerialPortParams()) {
                     log("Reconnect: Success. Now we waiting for ESP reboot...");
                     // Now, we can ready to reconnect on old_speed
-                    taskSleep = new ActionListener() {
+                    ActionListener taskSleep = new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
                             if (nSpeed == 9600) {
                                 CheckComm();
@@ -6801,7 +6510,7 @@ public class ESPlorer extends javax.swing.JFrame {
                             }
                         }
                     };
-                    sleep = new Timer(2000, taskSleep);
+                    Timer sleep = new Timer(2000, taskSleep);
                     sleep.setRepeats(false);
                     sleep.setInitialDelay(2000);
                     sleep.start();
@@ -6859,22 +6568,10 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateEditorButtons();
     }//GEN-LAST:event_TextEditorCaretUpdate
 
-    private void FileLayeredPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_FileLayeredPaneFocusGained
-
-    }//GEN-LAST:event_FileLayeredPaneFocusGained
-
-    private void TextEditorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TextEditorFocusGained
-
-    }//GEN-LAST:event_TextEditorFocusGained
-
     private void FilesTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_FilesTabbedPaneStateChanged
         FileLabelUpdate();
         //   if (iTab > 0) FilesTabbedPane.setTitleAt(iTab, Integer.toString(iTab));
     }//GEN-LAST:event_FilesTabbedPaneStateChanged
-
-    private void TextEditorInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_TextEditorInputMethodTextChanged
-
-    }//GEN-LAST:event_TextEditorInputMethodTextChanged
 
     private void TextEditorCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_TextEditorCaretPositionChanged
         UpdateEditorButtons();
@@ -7274,7 +6971,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemEditorSendSelectedActionPerformed
 
     private void MenuItemEditSendSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditSendSelectedActionPerformed
-        int l = 0;
+        int l;
         if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Scripts
             try {
                 l = TextEditor1.get(iTab).getSelectedText().length();
@@ -7357,10 +7054,6 @@ public class ESPlorer extends javax.swing.JFrame {
         goLink(homepage_uri);
     }//GEN-LAST:event_HomePageActionPerformed
 
-    private void CommandItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CommandItemStateChanged
-        //SendCommand.doClick();
-    }//GEN-LAST:event_CommandItemStateChanged
-
     private void LeftTabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LeftTabStateChanged
         if (LeftTab.getSelectedIndex() == 0) {  // NodeMCU & Python
             CommandsSetNodeMCU();
@@ -7368,10 +7061,6 @@ public class ESPlorer extends javax.swing.JFrame {
             CommandsSetAT();
         }
     }//GEN-LAST:event_LeftTabStateChanged
-
-    private void PortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_PortItemStateChanged
-
-    }//GEN-LAST:event_PortItemStateChanged
 
     private void LoadSnippets() {
         if (OptionNodeMCU.isSelected()) {
@@ -7428,14 +7117,6 @@ public class ESPlorer extends javax.swing.JFrame {
             log("Snippets (Python) load: Success.");
         }
     }
-
-    private void TextTabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_TextTabStateChanged
-        if (TextTab.getSelectedIndex() == 2) { // snippets
-        } else if (TextTab.getSelectedIndex() == 3) { // Settings
-        } else if (TextTab.getSelectedIndex() == 1) { // Commands
-        } else if (TextTab.getSelectedIndex() == 0) { // Scripts
-        }
-    }//GEN-LAST:event_TextTabStateChanged
 
     private void SnippetEdit0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit0ActionPerformed
         SnippetEdit(0);
@@ -7731,10 +7412,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditSendLine.doClick();
     }//GEN-LAST:event_MenuItemEditorSendLineActionPerformed
 
-    private void MenuFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuFileActionPerformed
-
-    }//GEN-LAST:event_MenuFileActionPerformed
-
     private void ButtonFileSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileSaveAllActionPerformed
         MenuItemFileSaveAll.doClick();
     }//GEN-LAST:event_ButtonFileSaveAllActionPerformed
@@ -7850,13 +7527,6 @@ public class ESPlorer extends javax.swing.JFrame {
 
     }//GEN-LAST:event_SpeedItemStateChanged
 
-    private void LogCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_LogCaretUpdate
-    }//GEN-LAST:event_LogCaretUpdate
-
-    private void LogMaxSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogMaxSizeActionPerformed
-
-    }//GEN-LAST:event_LogMaxSizeActionPerformed
-
     private void LogMaxSizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_LogMaxSizeFocusLost
         try {
             LogMax = Integer.parseInt(LogMaxSize.getText()) * 1024;
@@ -7909,10 +7579,6 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetText.setBackground(SnippetTopPane.getBackground());
     }//GEN-LAST:event_SnippetCancelEditActionPerformed
 
-    private void TurboModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TurboModeItemStateChanged
-
-    }//GEN-LAST:event_TurboModeItemStateChanged
-
     private void TurboModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TurboModeActionPerformed
         if (TurboMode.isSelected()) {
             DumbMode.setEnabled(false);
@@ -7928,7 +7594,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             cmdNodeRestart.doClick();
         } else if (LeftTab.getSelectedIndex() == 1) {     // AT TAB
-            AT_Restart.doClick();
+            // AT_Restart.doClick();
         }
     }//GEN-LAST:event_MenuItemESPResetActionPerformed
 
@@ -7987,39 +7653,15 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
     }//GEN-LAST:event_FileCompileDoLCActionPerformed
 
-    private void MenuItemESPFileDoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemESPFileDoActionPerformed
-
-    }//GEN-LAST:event_MenuItemESPFileDoActionPerformed
-
-    private void MenuItemESPFileDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemESPFileDeleteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MenuItemESPFileDeleteActionPerformed
-
-    private void ContextMenuESPFileLUAPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ContextMenuESPFileLUAPopupMenuWillBecomeVisible
-
-    }//GEN-LAST:event_ContextMenuESPFileLUAPopupMenuWillBecomeVisible
-
     private void logoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoMouseClicked
         MenuItemHelpAbout.doClick();
     }//GEN-LAST:event_logoMouseClicked
-
-    private void TerminalPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TerminalPropertyChange
-
-    }//GEN-LAST:event_TerminalPropertyChange
 
     private void RightFilesSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_RightFilesSplitPanePropertyChange
         if ("dividerLocation".equals(evt.getPropertyName()) && MenuItemViewFileManager.isSelected()) {
             prefs.putInt(FM_DIV, RightFilesSplitPane.getDividerLocation());
         }
     }//GEN-LAST:event_RightFilesSplitPanePropertyChange
-
-    private void RightBigPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_RightBigPanePropertyChange
-
-    }//GEN-LAST:event_RightBigPanePropertyChange
-
-    private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
-        //log(evt.getPropertyName());
-    }//GEN-LAST:event_formPropertyChange
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         isFileManagerShow();
@@ -8046,10 +7688,6 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_FileAsButton1ActionPerformed
 
-    private void FileAsButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FileAsButton1MouseClicked
-
-    }//GEN-LAST:event_FileAsButton1MouseClicked
-
     private void NodeInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeInfoActionPerformed
         btnSend("=node.info()");
     }//GEN-LAST:event_NodeInfoActionPerformed
@@ -8070,14 +7708,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemESPFormat.doClick();
     }//GEN-LAST:event_FileFormatActionPerformed
 
-    private void FileUploadBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileUploadBinActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileUploadBinActionPerformed
-
-    private void FileSaveCompileDoLCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSaveCompileDoLCActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileSaveCompileDoLCActionPerformed
-
     private void MenuItemViewSnippetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewSnippetsActionPerformed
         prefs.putBoolean(SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
         isRightSnippetsShow();
@@ -8093,35 +7723,15 @@ public class ESPlorer extends javax.swing.JFrame {
         prefs.putBoolean(SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
     }//GEN-LAST:event_MenuItemViewRightExtraActionPerformed
 
-    private void MenuItemFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileSaveAsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MenuItemFileSaveAsActionPerformed
-
-    private void FileDo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileDo1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileDo1ActionPerformed
-
     private void MenuItemViewToolbarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewToolbarActionPerformed
         prefs.putBoolean(SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
         isToolbarShow();
     }//GEN-LAST:event_MenuItemViewToolbarActionPerformed
 
-    private void FileCompileDoLC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompileDoLC2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileCompileDoLC2ActionPerformed
-
-    private void FileCompileDoLC3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompileDoLC3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileCompileDoLC3ActionPerformed
-
     private void MenuItemViewLeftExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLeftExtraActionPerformed
         prefs.putBoolean(SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
         isLeftExtraShow();
     }//GEN-LAST:event_MenuItemViewLeftExtraActionPerformed
-
-    private void MenuViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuViewActionPerformed
-
-    }//GEN-LAST:event_MenuViewActionPerformed
 
     private void UseCustomPortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UseCustomPortNameActionPerformed
         Port.setEnabled(!UseCustomPortName.isSelected());
@@ -8227,10 +7837,6 @@ public class ESPlorer extends javax.swing.JFrame {
         prefs.putBoolean(SHOW_DONATE, MenuItemViewDonate.isSelected());
     }//GEN-LAST:event_MenuItemViewDonateItemStateChanged
 
-    private void MenuItemViewDonateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewDonateActionPerformed
-        // nothing
-    }//GEN-LAST:event_MenuItemViewDonateActionPerformed
-
     private void DonateSmallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateSmallActionPerformed
         goLink(donate_uri);
     }//GEN-LAST:event_DonateSmallActionPerformed
@@ -8283,10 +7889,6 @@ public class ESPlorer extends javax.swing.JFrame {
         goLink(nodemcu_download_dev_uri);
     }//GEN-LAST:event_MenuItemLinksDownloadLatestDevActionPerformed
 
-    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-
-    }//GEN-LAST:event_formWindowGainedFocus
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         AppClose();
     }//GEN-LAST:event_formWindowClosing
@@ -8310,17 +7912,9 @@ public class ESPlorer extends javax.swing.JFrame {
         System.exit(0);
     }
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formWindowClosed
-
     private void EOLItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_EOLItemStateChanged
         Terminal.setEOLMarkersVisible(EOL.isSelected());
     }//GEN-LAST:event_EOLItemStateChanged
-
-    private void FileCompile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompile1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FileCompile1ActionPerformed
 
     private void CondensedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CondensedItemStateChanged
         prefs.putBoolean(CONDENSED, Condensed.isSelected());
@@ -8405,7 +7999,7 @@ public class ESPlorer extends javax.swing.JFrame {
         int i;
         Port.removeAllItems();
         if (UseCustomPortName.isSelected()) {
-            Port.addItem(makeObj(CustomPortName.getText().trim()));
+            Port.addItem(CustomPortName.getText().trim());
             Port.setSelectedIndex(Port.getItemCount() - 1);
             Port.setEnabled(false);
             Speed.setSelectedIndex(prefs.getInt(SERIAL_BAUD, 3));
@@ -8424,7 +8018,7 @@ public class ESPlorer extends javax.swing.JFrame {
             String lastPort = prefs.get(SERIAL_PORT, null);
             int port = 0;
             for (i = 0; i < portNames.length; i++) {
-                Port.addItem(makeObj(portNames[i]));
+                Port.addItem(portNames[i]);
                 if (portNames[i].equals(lastPort)) {
                     port = i;
                     log("found last saved serial port " + portNames[i]);
@@ -8436,14 +8030,6 @@ public class ESPlorer extends javax.swing.JFrame {
             Speed.setSelectedIndex(prefs.getInt(SERIAL_BAUD, 3));
         }
         log("Scan done.");
-    }
-
-    private Object makeObj(final String item) {
-        return new Object() {
-            public String toString() {
-                return item;
-            }
-        };
     }
 
     private void log(String l) {
@@ -8494,7 +8080,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }
 
     private boolean portOpen() {
-        boolean success = false;
+        boolean success;
         String portName = GetSerialPortName();
         nSpeed = Integer.parseInt((String) Speed.getSelectedItem());
         if (pOpen) {
@@ -8563,7 +8149,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
         portJustOpen = true;
         TerminalAdd("\r\nCommunication with MCU..");
-        checker = new ActionListener() {
+        ActionListener checker = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 if (portJustOpen) {
                     btnSend("");  // only CR+LF
@@ -8608,51 +8194,6 @@ public class ESPlorer extends javax.swing.JFrame {
         }
         UpdateLED();
         ClearFileManager();
-    }
-
-    private void SendCommand() {
-        if (!SendCommand.isEnabled() || !pOpen || portJustOpen) {
-            log("Port not open, operation FAILED.");
-            return;
-        }
-        String cmd;
-        try {
-            cmd = Command.getSelectedItem().toString();
-        } catch (Exception e) {
-            cmd = "";
-        }
-
-        //Autoclean History --ADDED by Mike, DL2ZAP --
-        //if (Autoclean.isSelected()) {   // ToDo: create Checkbox "Autoclean & uncomment this line
-        int eintraege = Command.getItemCount();
-        //System.out.println("Start cleaning");
-        for (int lv1 = 0; lv1 < eintraege; lv1++) {
-            //System.out.print("Eintrag:" + lv1 +" : "+Command.getItemAt(lv1));
-            if (Command.getItemAt(lv1) == cmd) {
-                // System.out.println(" Doppelt, entfernt!");
-                Command.removeItemAt(lv1);
-                lv1--;  // re-read this Entry because List has moved up the Follower
-            }
-        }
-
-        Command.setSelectedIndex(Command.getItemCount() - 1); // Place Index on last Entry
-        Command.addItem(cmd); // Add to History after last Position
-        Command.setSelectedIndex(Command.getItemCount() - 1); // Place Index on new last Entry
-        // End of Autoclean-Procedure
-
-        //Command.addItem(cmd); // Add to History
-        if (CR.isSelected()) {
-            cmd += (char) 13;
-        }
-        if (LF.isSelected()) {
-            cmd += (char) 10;
-        }
-        send(cmd, true);
-        // History trim
-        if (Command.getItemCount() > 20) {
-            Command.removeItemAt(0);
-        }
-        //Command.setSelectedIndex(Command.getItemCount()-1);
     }
 
     private String addCRLF(String s) {
@@ -9167,7 +8708,6 @@ public class ESPlorer extends javax.swing.JFrame {
             }
 
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                TextEditorInputMethodTextChanged(evt);
             }
         });
         TextEditor1.get(i).addKeyListener(new java.awt.event.KeyAdapter() {
@@ -9290,10 +8830,7 @@ public class ESPlorer extends javax.swing.JFrame {
         } catch (Exception e) {
             return false;
         }
-        if (TextEditor1.get(iTab).canUndo()) {
-            return true;
-        }
-        return TextEditor1.get(iTab).canRedo();
+        return TextEditor1.get(iTab).canUndo() || TextEditor1.get(iTab).canRedo();
     }
 
     private int Dialog(String msg, int btn) {
@@ -9483,38 +9020,34 @@ public class ESPlorer extends javax.swing.JFrame {
         log("Operation done. Duration = " + Long.toString(duration) + " ms");
     }
 
-    private boolean SendToESP(String str) {
-        boolean success = false;
+    private void SendToESP(String str) {
         if (!pOpen || portJustOpen) {
             log("SendESP: Serial port not open. Cancel.");
-            return success;
+            return;
         }
         sendBuf = new ArrayList<String>();
         s = str.split("\r?\n");
         sendBuf.addAll(Arrays.asList(s));
-        success = SendTimerStart();
+        SendTimerStart();
         log("SendToESP: Starting...");
-        return success;
     }
 
-    private boolean SendToESP(ArrayList<String> buf) {
-        boolean success = false;
+    private void SendToESP(ArrayList<String> buf) {
         if (!pOpen || portJustOpen) {
             log("SendESP: Serial port not open. Cancel.");
-            return success;
+            return;
         }
         sendBuf = new ArrayList<String>();
         sendBuf.addAll(buf);
-        success = SendTimerStart();
+        SendTimerStart();
         log("SendToESP: Starting...");
-        return success;
     }
 
     private void WatchDog() {
         if (DumbMode.isSelected()) {
             return;
         }
-        watchDog = new ActionListener() {
+        ActionListener watchDog = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 StopSend();
                 Toolkit.getDefaultToolkit().beep();
@@ -9530,11 +9063,10 @@ public class ESPlorer extends javax.swing.JFrame {
         timeout.start();
     }
 
-    private boolean SaveFileESP() {
-        boolean success = false;
+    private void SaveFileESP() {
         if (!pOpen || portJustOpen) {
             log("FileSaveESP: Serial port not open. Cancel.");
-            return success;
+            return;
         }
         log("FileSaveESP: Try to save file to ESP...");
         String ft = iFile.get(iTab).getName();
@@ -9542,11 +9074,11 @@ public class ESPlorer extends javax.swing.JFrame {
             log("FileSaveESP: FAIL. Can't save file to ESP without name.");
             SendUnLock();
             JOptionPane.showMessageDialog(null, "Can't save file to ESP without name.");
-            return success;
+            return;
         }
         sendBuf = new ArrayList<String>();
         if (TurboMode.isSelected()) {
-            return SaveFileESPTurbo(ft);
+            SaveFileESPTurbo(ft);
         }
         sendBuf.add("file.remove(\"" + ft + "\");");
         sendBuf.add("file.open(\"" + ft + "\",\"w+\");");
@@ -9560,19 +9092,17 @@ public class ESPlorer extends javax.swing.JFrame {
             sendBuf.add("dofile(\"" + ft + "\");");
         }
         // data ready
-        success = SendTimerStart();
+        SendTimerStart();
         log("FileSaveESP: Starting...");
-        return success;
     }
 
-    private boolean SaveFileESPTurbo(String ft) {
-        boolean success = false;
+    private void SaveFileESPTurbo(String ft) {
         log("FileSaveESP-Turbo: Try to save file to ESP in Turbo Mode...");
         sendBuf.add("local FILE=\"" + ft + "\" file.remove(FILE) file.open(FILE,\"w+\") uart.setup(0," + Integer.toString(nSpeed) + ",8,0,1,0)");
         sendBuf.add("ESP_Receiver=function(rcvBuf) if string.match(rcvBuf,\"^ESP_cmd_close\")==nil then file.write(string.gsub(rcvBuf, \'\\r\', \'\')) uart.write(0, \"> \") else uart.on(\"data\") ");
         sendBuf.add("file.flush() file.close() FILE=nil rcvBuf=nil ESP_Receiver=nil uart.setup(0," + Integer.toString(nSpeed) + ",8,0,1,1) str=\"\\r\\n--Done--\\r\\n> \" print(str) str=nil collectgarbage() end end uart.on(\"data\",'\\r',ESP_Receiver,0)");
         int pos1 = 0;
-        int pos2 = 0;
+        int pos2;
         int size = 254;
         int l = TextEditor1.get(iTab).getText().length();
         String fragment;
@@ -9588,12 +9118,11 @@ public class ESPlorer extends javax.swing.JFrame {
         if (FileAutoRun.isSelected()) {
             sendBuf.add("dofile(\"" + ft + "\")");
         }
-        success = SendTurboTimerStart();
+        SendTurboTimerStart();
         log("FileSaveESP-Turbo: Starting...");
-        return success;
     }
 
-    private boolean SendTurboTimerStart() {
+    private void SendTurboTimerStart() {
         startTime = System.currentTimeMillis();
         SendLock();
         rcvBuf = "";
@@ -9605,9 +9134,9 @@ public class ESPlorer extends javax.swing.JFrame {
             serialPort.addEventListener(new PortTurboReader(), portMask);
         } catch (SerialPortException e) {
             log("DataTurboSender: Add EventListener Error. Canceled.");
-            return false;
+            return;
         }
-        int delay = 0;
+        int delay;
         j0();
         delay = Delay.getValue();
         if (delay == 0) delay = 10;
@@ -9624,10 +9153,9 @@ public class ESPlorer extends javax.swing.JFrame {
         timer.setInitialDelay(delay);
         WatchDog();
         timer.start();
-        return true;
     }
 
-    private boolean SendTimerStart() {
+    private void SendTimerStart() {
         startTime = System.currentTimeMillis();
         SendLock();
         rcvBuf = "";
@@ -9643,9 +9171,9 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         } catch (SerialPortException e) {
             log("DataSender: Add EventListener Error. Canceled.");
-            return false;
+            return;
         }
-        int delay = 0;
+        int delay;
         j0();
         if (DumbMode.isSelected()) { // DumbMode
             delay = LineDelay.getValue();
@@ -9686,7 +9214,6 @@ public class ESPlorer extends javax.swing.JFrame {
             log("DataSender: start \"Smart Mode\"");
             WatchDog();
         }
-        return true;
     }
 
     private void send(String s, boolean simple) {
@@ -9838,8 +9365,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit15.setToolTipText(ButtonSnippet15.getText());
     }
 
-    private boolean SaveDownloadedFile() {
-        boolean success = false;
+    private void SaveDownloadedFile() {
         log("Saving downloaded file...");
 //            FileCount ++;
 //            iFile.set(iTab, new File("script" + Integer.toString(FileCount) + ".lua") );
@@ -9852,7 +9378,7 @@ public class ESPlorer extends javax.swing.JFrame {
         int returnVal = chooser.showSaveDialog(null);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             log("Saving abort by user.");
-            return success;
+            return;
         }
         f = chooser.getSelectedFile();
         chooser.setFileFilter(flt);
@@ -9863,7 +9389,7 @@ public class ESPlorer extends javax.swing.JFrame {
             int shouldWrite = Dialog("File " + DownloadedFileName + " already exist. Overwrite?", JOptionPane.YES_NO_OPTION);
             if (shouldWrite != JOptionPane.YES_OPTION) {
                 log("Saving canceled by user, because file " + DownloadedFileName + " already exist");
-                return success;
+                return;
             } else {
                 log("File " + DownloadedFileName + " will be overwriten by user choice");
             }
@@ -9876,7 +9402,6 @@ public class ESPlorer extends javax.swing.JFrame {
             fos.write(PacketsByte);
             fos.flush();
             log("Save file " + DownloadedFileName + ": Success, size:" + Long.toString(f.length()));
-            success = true;
         } catch (Exception e) {
             log("Save file " + DownloadedFileName + ": FAIL.");
             log(e.toString());
@@ -9887,7 +9412,6 @@ public class ESPlorer extends javax.swing.JFrame {
         } catch (IOException e) {
             log(e.toString());
         }
-        return success;
     }
 
     private void UploadFiles() {
@@ -10121,14 +9645,12 @@ public class ESPlorer extends javax.swing.JFrame {
     private class PortFilesReader implements SerialPortEventListener {
 
         public void serialEvent(SerialPortEvent event) {
-
             if (event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
                     String data = serialPort.readString(event.getEventValue());
                     rcvBuf = rcvBuf + data;
                     rx_data = rx_data + data;
                 } catch (Exception e) {
-                    data = "";
                     log(e.toString());
                 }
                 if (rcvBuf.contains("> ")) {
