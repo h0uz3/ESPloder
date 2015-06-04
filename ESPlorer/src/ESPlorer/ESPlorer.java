@@ -22,69 +22,14 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import ESPlorer.Constants;
 
 public class ESPlorer extends javax.swing.JFrame {
 
-    private static final String version = "v0.0.1_refacturing";
-    private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
-    private static final String[] EXTENSION_LUA = new String[]{"lua", "lc"};
-    private static final String[] EXTENSION_PY = new String[]{"py"};
-    private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", EXTENSION_LUA);
-    private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", EXTENSION_PY);
-    // Variables
-    private static final float TERMINAL_FONT_SIZE_DEFAULT = 16f;
-    private static final float TERMINAL_FONT_SIZE_MAX = 40f;
-    private static final float TERMINAL_FONT_SIZE_MIN = 5f;
-    private static final float EDITOR_FONT_SIZE_DEFAULT = 13f;
-    private static final float EDITOR_FONT_SIZE_MAX = 40f;
-    private static final float EDITOR_FONT_SIZE_MIN = 8f;
-    private static final float LOG_FONT_SIZE_DEFAULT = 10f;
-    private static final float LOG_FONT_SIZE_MAX = 40f;
-    private static final float LOG_FONT_SIZE_MIN = 5f;
-    /*  Prefs */
-    private static final String nodeRoot = "/com/esp8266.ru/ESPlorer/config";
-    private static final String SERIAL_PORT = "serial_port";
-    private static final String SERIAL_BAUD = "serial_baud";
-    private static final String PATH = "path";
-    private static final String FIRMWARE = "firmware";
-    private static final String FILE_AUTO_SAVE_DISK = "file_auto_save_disk";
-    private static final String FILE_AUTO_SAVE_ESP = "file_auto_save_esp";
-    private static final String FILE_AUTO_RUN = "file_auto_run";
-    private static final String COLOR_THEME = "color_theme";
-    private static final String DELAY = "delay";
-    private static final String TIMEOUT = "timeout";
-    private static final String DUMB_MODE = "dumb_mode";
-    private static final String TURBO_MODE = "turbo_mode";
-    private static final String LINE_DELAY = "line_delay";
-    private static final String TERMINAL_FONT_SIZE = "terminal_font_size";
-    private static final String EDITOR_FONT_SIZE = "editor_font_size";
-    private static final String LOG_FONT_SIZE = "log_font_size";
-    private static final String LOG_MAX_SIZE = "log_max_size";
-    private static final String TERMINAL_MAX_SIZE = "terminal_max_size";
-    // v0.2
-    private static final String AUTO_SCROLL = "auto_scroll";
-    private static final String SHOW_LOG = "show_log";
-    private static final String SHOW_TOOLBAR = "show_toolbar";
-    private static final String SHOW_EXTRA_LEFT = "show_extra_left";
-    private static final String SHOW_EXTRA_RIGHT = "show_extra_right";
-    private static final String SHOW_SNIP_RIGHT = "show_snip_right";
-    private static final String SHOW_FM_RIGHT = "show_fm_right";
-    private static final String USE_CUSTOM_PORT = "use_custom_port";
-    private static final String CUSTOM_PORT_NAME = "custom_port_name";
-    private static final String LOG_DIV = "log_div";
-    private static final String FM_DIV = "fm_div";
-    private static final String PORT_RTS = "port_rts";
-    private static final String PORT_DTR = "port_dtr";
-    private static final String USE_EXT_EDITOR = "use_ext_editor";
-    private static final String SHOW_DONATE = "show_donate";
-    private static final String SHOW_EOL = "show_eol";
-    private static final String WIN_X = "win_x";
-    private static final String WIN_Y = "win_y";
-    private static final String WIN_H = "win_h";
-    private static final String WIN_W = "win_w";
-    private static final String CONDENSED = "condensed";
-    private static final String AUTODETECT = "autodetect_firmware";
     private static final int portMask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
+    private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
+    private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
+    private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
     private static boolean pOpen = false;
     private static boolean portJustOpen = false;
     private static ArrayList<String> LAF;
@@ -406,7 +351,7 @@ public class ESPlorer extends javax.swing.JFrame {
         LAF = new ArrayList<String>();
         LAFclass = new ArrayList<String>();
         String laf;
-        prefs = Preferences.userRoot().node(nodeRoot);
+        prefs = Preferences.userRoot().node(Constants.nodeRoot);
         laf = prefs.get("LAF", "javax.swing.plaf.nimbus.NimbusLookAndFeel");
         LAF.add("Nimbus");
         LAFclass.add("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -1072,7 +1017,7 @@ public class ESPlorer extends javax.swing.JFrame {
         appName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         version1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        version1.setText(version);
+        version1.setText(Constants.version);
         version1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         donate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/donate.gif"))); // NOI18N
@@ -5560,10 +5505,10 @@ public class ESPlorer extends javax.swing.JFrame {
                 } else {
                     port = Port.getSelectedItem().toString().trim();
                 }
-                prefs.put(SERIAL_PORT, port);
+                prefs.put(Constants.SERIAL_PORT, port);
                 log("Serial port " + port + " save as default.");
                 int speed = Speed.getSelectedIndex();
-                prefs.putInt(SERIAL_BAUD, speed);
+                prefs.putInt(Constants.SERIAL_BAUD, speed);
                 log("Baud rate " + Speed.getSelectedItem().toString().trim() + " save as default.");
             } catch (Exception e) {
             }
@@ -5684,10 +5629,10 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void SetWindowSize() {
         int x, y, h, w;
-        x = prefs.getInt(WIN_X, 0);
-        y = prefs.getInt(WIN_Y, 0);
-        h = prefs.getInt(WIN_H, 768);
-        w = prefs.getInt(WIN_W, 1024);
+        x = prefs.getInt(Constants.WIN_X, 0);
+        y = prefs.getInt(Constants.WIN_Y, 0);
+        h = prefs.getInt(Constants.WIN_H, 768);
+        w = prefs.getInt(Constants.WIN_W, 1024);
         this.setBounds(x, y, w, h);
     }
 
@@ -5713,7 +5658,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (MenuItemViewFileManager.isSelected()) {
             FileManagerScrollPane.setEnabled(true);
             FileManagerScrollPane.setVisible(true);
-            //div = prefs.getInt( FM_DIV, RightFilesSplitPane.getWidth()-w );
+            //div = prefs.getInt( Constants.FM_DIV, RightFilesSplitPane.getWidth()-w );
             //if ( div > RightFilesSplitPane.getWidth()-w ) {
             div = RightFilesSplitPane.getWidth() - w;
             //}
@@ -5729,7 +5674,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (MenuItemViewLog.isSelected()) {
             ScrollLog.setVisible(true);
             ScrollLog.setEnabled(true);
-            RightSplitPane.setDividerLocation(prefs.getInt(LOG_DIV, RightSplitPane.getHeight() - 200));
+            RightSplitPane.setDividerLocation(prefs.getInt(Constants.LOG_DIV, RightSplitPane.getHeight() - 200));
         } else {
             ScrollLog.setVisible(false);
             ScrollLog.setEnabled(false);
@@ -5847,16 +5792,16 @@ public class ESPlorer extends javax.swing.JFrame {
         }
         int size = Terminal.getFont().getSize();
         String inc, dec;
-        if (size < TERMINAL_FONT_SIZE_MAX) {
+        if (size < Constants.TERMINAL_FONT_SIZE_MAX) {
             inc = "Change font size from " + Integer.toString(size) + " to " + Integer.toString(size + 1);
         } else {
-            inc = "Set font size to " + Float.toString(TERMINAL_FONT_SIZE_MIN);
+            inc = "Set font size to " + Float.toString(Constants.TERMINAL_FONT_SIZE_MIN);
         }
         MenuItemTerminalFontInc.setText(inc);
-        if (size > TERMINAL_FONT_SIZE_MIN) {
+        if (size > Constants.TERMINAL_FONT_SIZE_MIN) {
             dec = "Change font size from " + Integer.toString(size) + " to " + Integer.toString(size - 1);
         } else {
-            dec = "Set font size to " + Float.toString(TERMINAL_FONT_SIZE_MAX);
+            dec = "Set font size to " + Float.toString(Constants.TERMINAL_FONT_SIZE_MAX);
         }
         MenuItemTerminalFontDec.setText(dec);
     }//GEN-LAST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
@@ -6000,7 +5945,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void MenuItemViewLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogActionPerformed
         isLogShow();
-        prefs.putBoolean(SHOW_LOG, MenuItemViewLog.isSelected());
+        prefs.putBoolean(Constants.SHOW_LOG, MenuItemViewLog.isSelected());
     }//GEN-LAST:event_MenuItemViewLogActionPerformed
 
     private void MenuItemFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileSaveActionPerformed
@@ -6128,7 +6073,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void SavePath() {
         workDir = chooser.getCurrentDirectory().toString();
-        prefs.put(PATH, workDir);
+        prefs.put(Constants.PATH, workDir);
     }
 
     private void OpenFile() {
@@ -6239,7 +6184,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void DelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DelayStateChanged
         DelayLabel.setText("Delay after answer = " + Integer.toString(Delay.getValue()) + " ms");
-        prefs.putInt(DELAY, Delay.getValue());
+        prefs.putInt(Constants.DELAY, Delay.getValue());
         PrefsFlush();
     }//GEN-LAST:event_DelayStateChanged
 
@@ -6485,7 +6430,7 @@ public class ESPlorer extends javax.swing.JFrame {
         TerminalAdd("Soft restart by user command\r\n");
         btnSend("node.restart()");
         if (pOpen) { // reconnect
-            int speed = prefs.getInt(SERIAL_BAUD, 3);
+            int speed = prefs.getInt(Constants.SERIAL_BAUD, 3);
             final int old_speed = Speed.getSelectedIndex();
             //if (speed == old_speed) { // reconnect not needed
             //return;
@@ -6583,7 +6528,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void EditorThemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditorThemeActionPerformed
         int n = EditorTheme.getSelectedIndex();
-        prefs.putInt(COLOR_THEME, n);
+        prefs.putInt(Constants.COLOR_THEME, n);
         PrefsFlush();
         SetTheme(n, true); // for all
     }//GEN-LAST:event_EditorThemeActionPerformed
@@ -6613,7 +6558,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AnswerDelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_AnswerDelayStateChanged
         AnswerDelayLabel.setText("Answer timout = " + Integer.toString(AnswerDelay.getValue()) + " s");
-        prefs.putInt(TIMEOUT, AnswerDelay.getValue());
+        prefs.putInt(Constants.TIMEOUT, AnswerDelay.getValue());
         PrefsFlush();
     }//GEN-LAST:event_AnswerDelayStateChanged
 
@@ -7329,7 +7274,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void OptionNodeMCUItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_OptionNodeMCUItemStateChanged
         if (OptionNodeMCU.isSelected()) {
-            prefs.put(FIRMWARE, "NodeMCU");
+            prefs.put(Constants.FIRMWARE, "NodeMCU");
             PrefsFlush();
             chooser.setFileFilter(filterLUA);
         }
@@ -7337,30 +7282,30 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void OptionMicroPythonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_OptionMicroPythonItemStateChanged
         if (OptionMicroPython.isSelected()) {
-            prefs.put(FIRMWARE, "MicroPython");
+            prefs.put(Constants.FIRMWARE, "MicroPython");
             PrefsFlush();
             chooser.setFileFilter(filterPY);
         }
     }//GEN-LAST:event_OptionMicroPythonItemStateChanged
 
     private void FileAutoSaveDiskItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoSaveDiskItemStateChanged
-        prefs.putBoolean(FILE_AUTO_SAVE_DISK, FileAutoSaveDisk.isSelected());
+        prefs.putBoolean(Constants.FILE_AUTO_SAVE_DISK, FileAutoSaveDisk.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoSaveDiskItemStateChanged
 
     private void FileAutoSaveESPItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoSaveESPItemStateChanged
-        prefs.putBoolean(FILE_AUTO_SAVE_ESP, FileAutoSaveESP.isSelected());
+        prefs.putBoolean(Constants.FILE_AUTO_SAVE_ESP, FileAutoSaveESP.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoSaveESPItemStateChanged
 
     private void FileAutoRunItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoRunItemStateChanged
-        prefs.putBoolean(FILE_AUTO_RUN, FileAutoRun.isSelected());
+        prefs.putBoolean(Constants.FILE_AUTO_RUN, FileAutoRun.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoRunItemStateChanged
 
     private void LineDelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LineDelayStateChanged
         LineDelayLabel.setText("Line delay for \"Dumb Mode\" = " + Integer.toString(LineDelay.getValue()) + " ms");
-        prefs.putInt(LINE_DELAY, LineDelay.getValue());
+        prefs.putInt(Constants.LINE_DELAY, LineDelay.getValue());
         PrefsFlush();
     }//GEN-LAST:event_LineDelayStateChanged
 
@@ -7383,7 +7328,7 @@ public class ESPlorer extends javax.swing.JFrame {
             LineDelay.setEnabled(false);
             TurboMode.setEnabled(true);
         }
-        prefs.putBoolean(DUMB_MODE, DumbMode.isSelected());
+        prefs.putBoolean(Constants.DUMB_MODE, DumbMode.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_DumbModeItemStateChanged
 
@@ -7430,58 +7375,58 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void MenuItemViewTermFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewTermFontIncActionPerformed
         int size = Terminal.getFont().getSize();
-        if (size < TERMINAL_FONT_SIZE_MAX) {
+        if (size < Constants.TERMINAL_FONT_SIZE_MAX) {
             Terminal.setFont(Terminal.getFont().deriveFont(Terminal.getFont().getSize() + 1f));
         } else {
-            Terminal.setFont(Terminal.getFont().deriveFont(TERMINAL_FONT_SIZE_MIN));
+            Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_MIN));
         }
-        prefs.putFloat(TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
+        prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontIncActionPerformed
 
     private void MenuItemViewTermFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewTermFontDecActionPerformed
         int size = Terminal.getFont().getSize();
-        if (size > TERMINAL_FONT_SIZE_MIN) {
+        if (size > Constants.TERMINAL_FONT_SIZE_MIN) {
             Terminal.setFont(Terminal.getFont().deriveFont(Terminal.getFont().getSize() - 1f));
         } else {
-            Terminal.setFont(Terminal.getFont().deriveFont(TERMINAL_FONT_SIZE_MAX));
+            Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_MAX));
         }
-        prefs.putFloat(TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
+        prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontDecActionPerformed
 
     private void MenuItemViewEditorFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewEditorFontIncActionPerformed
         int size = TextEditor1.get(iTab).getFont().getSize();
-        if (size < EDITOR_FONT_SIZE_MAX) {
+        if (size < Constants.EDITOR_FONT_SIZE_MAX) {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(TextEditor1.get(iTab).getFont().getSize() + 1f));
         } else {
-            TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(EDITOR_FONT_SIZE_MIN));
+            TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(Constants.EDITOR_FONT_SIZE_MIN));
         }
-        prefs.putFloat(EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
+        prefs.putFloat(Constants.EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
         PrefsFlush();
-        SetTheme(prefs.getInt(COLOR_THEME, 0), true); // for all
+        SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontIncActionPerformed
 
     private void MenuItemViewEditorFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewEditorFontDecActionPerformed
         int size = TextEditor1.get(iTab).getFont().getSize();
-        if (size > EDITOR_FONT_SIZE_MIN) {
+        if (size > Constants.EDITOR_FONT_SIZE_MIN) {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(TextEditor1.get(iTab).getFont().getSize() - 1f));
         } else {
-            TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(EDITOR_FONT_SIZE_MAX));
+            TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(Constants.EDITOR_FONT_SIZE_MAX));
         }
-        prefs.putFloat(EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
+        prefs.putFloat(Constants.EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
         PrefsFlush();
-        SetTheme(prefs.getInt(COLOR_THEME, 0), true); // for all
+        SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontDecActionPerformed
 
     private void MenuItemViewFontDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewFontDefaultActionPerformed
-        prefs.putFloat(TERMINAL_FONT_SIZE, TERMINAL_FONT_SIZE_DEFAULT);
-        prefs.putFloat(EDITOR_FONT_SIZE, EDITOR_FONT_SIZE_DEFAULT);
-        prefs.putFloat(LOG_FONT_SIZE, LOG_FONT_SIZE_DEFAULT);
+        prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT);
+        prefs.putFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT);
+        prefs.putFloat(Constants.LOG_FONT_SIZE, Constants.LOG_FONT_SIZE_DEFAULT);
         PrefsFlush();
-        SetTheme(prefs.getInt(COLOR_THEME, 0), true); // for all
-        Terminal.setFont(Terminal.getFont().deriveFont(TERMINAL_FONT_SIZE_DEFAULT));
-        Log.setFont(Log.getFont().deriveFont(LOG_FONT_SIZE_DEFAULT));
+        SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
+        Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_DEFAULT));
+        Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_DEFAULT));
     }//GEN-LAST:event_MenuItemViewFontDefaultActionPerformed
 
     private void MenuItemEditorFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorFontIncActionPerformed
@@ -7494,23 +7439,23 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void MenuItemViewLogFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogFontIncActionPerformed
         int size = Log.getFont().getSize();
-        if (size < LOG_FONT_SIZE_MAX) {
+        if (size < Constants.LOG_FONT_SIZE_MAX) {
             Log.setFont(Log.getFont().deriveFont(Log.getFont().getSize() + 1f));
         } else {
-            Log.setFont(Log.getFont().deriveFont(LOG_FONT_SIZE_MIN));
+            Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_MIN));
         }
-        prefs.putFloat(LOG_FONT_SIZE, Log.getFont().getSize());
+        prefs.putFloat(Constants.LOG_FONT_SIZE, Log.getFont().getSize());
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontIncActionPerformed
 
     private void MenuItemViewLogFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogFontDecActionPerformed
         int size = Log.getFont().getSize();
-        if (size > LOG_FONT_SIZE_MIN) {
+        if (size > Constants.LOG_FONT_SIZE_MIN) {
             Log.setFont(Log.getFont().deriveFont(Log.getFont().getSize() - 1f));
         } else {
-            Log.setFont(Log.getFont().deriveFont(LOG_FONT_SIZE_MAX));
+            Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_MAX));
         }
-        prefs.putFloat(LOG_FONT_SIZE, Log.getFont().getSize());
+        prefs.putFloat(Constants.LOG_FONT_SIZE, Log.getFont().getSize());
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontDecActionPerformed
 
@@ -7538,7 +7483,7 @@ public class ESPlorer extends javax.swing.JFrame {
         } else if (LogMax > 32 * 1024) {
             LogMax = 32 * 1024;
         }
-        prefs.putInt(LOG_MAX_SIZE, LogMax);
+        prefs.putInt(Constants.LOG_MAX_SIZE, LogMax);
         log("Log max size set to " + Integer.toString(LogMax / 1024) + " KB");
     }//GEN-LAST:event_LogMaxSizeFocusLost
 
@@ -7553,7 +7498,7 @@ public class ESPlorer extends javax.swing.JFrame {
         } else if (TerminalMax > 1024 * 1024) {
             TerminalMax = 1024 * 1024;
         }
-        prefs.putInt(TERMINAL_MAX_SIZE, TerminalMax);
+        prefs.putInt(Constants.TERMINAL_MAX_SIZE, TerminalMax);
         log("Terminal max size set to " + Integer.toString(TerminalMax / 1024) + " KB");
     }//GEN-LAST:event_TerminalMaxSizeFocusLost
 
@@ -7586,7 +7531,7 @@ public class ESPlorer extends javax.swing.JFrame {
         } else {
             DumbMode.setEnabled(true);
         }
-        prefs.putBoolean(TURBO_MODE, TurboMode.isSelected());
+        prefs.putBoolean(Constants.TURBO_MODE, TurboMode.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_TurboModeActionPerformed
 
@@ -7632,7 +7577,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemLinksAPIcnActionPerformed
 
     private void CustomPortNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CustomPortNameFocusLost
-        prefs.put(CUSTOM_PORT_NAME, CustomPortName.getText());
+        prefs.put(Constants.CUSTOM_PORT_NAME, CustomPortName.getText());
     }//GEN-LAST:event_CustomPortNameFocusLost
 
     private void FileCompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompileActionPerformed
@@ -7659,7 +7604,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void RightFilesSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_RightFilesSplitPanePropertyChange
         if ("dividerLocation".equals(evt.getPropertyName()) && MenuItemViewFileManager.isSelected()) {
-            prefs.putInt(FM_DIV, RightFilesSplitPane.getDividerLocation());
+            prefs.putInt(Constants.FM_DIV, RightFilesSplitPane.getDividerLocation());
         }
     }//GEN-LAST:event_RightFilesSplitPanePropertyChange
 
@@ -7709,27 +7654,27 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_FileFormatActionPerformed
 
     private void MenuItemViewSnippetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewSnippetsActionPerformed
-        prefs.putBoolean(SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
+        prefs.putBoolean(Constants.SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
         isRightSnippetsShow();
     }//GEN-LAST:event_MenuItemViewSnippetsActionPerformed
 
     private void MenuItemViewFileManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewFileManagerActionPerformed
-        prefs.putBoolean(SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
+        prefs.putBoolean(Constants.SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
         isFileManagerShow();
     }//GEN-LAST:event_MenuItemViewFileManagerActionPerformed
 
     private void MenuItemViewRightExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewRightExtraActionPerformed
         RightExtraButtons.setVisible(MenuItemViewRightExtra.isSelected());
-        prefs.putBoolean(SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
+        prefs.putBoolean(Constants.SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
     }//GEN-LAST:event_MenuItemViewRightExtraActionPerformed
 
     private void MenuItemViewToolbarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewToolbarActionPerformed
-        prefs.putBoolean(SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
+        prefs.putBoolean(Constants.SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
         isToolbarShow();
     }//GEN-LAST:event_MenuItemViewToolbarActionPerformed
 
     private void MenuItemViewLeftExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLeftExtraActionPerformed
-        prefs.putBoolean(SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
+        prefs.putBoolean(Constants.SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
         isLeftExtraShow();
     }//GEN-LAST:event_MenuItemViewLeftExtraActionPerformed
 
@@ -7737,21 +7682,21 @@ public class ESPlorer extends javax.swing.JFrame {
         Port.setEnabled(!UseCustomPortName.isSelected());
         Port.setVisible(!UseCustomPortName.isSelected());
         CustomPortName.setEnabled(UseCustomPortName.isSelected());
-        prefs.putBoolean(USE_CUSTOM_PORT, UseCustomPortName.isSelected());
+        prefs.putBoolean(Constants.USE_CUSTOM_PORT, UseCustomPortName.isSelected());
     }//GEN-LAST:event_UseCustomPortNameActionPerformed
 
     private void RightSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_RightSplitPanePropertyChange
         if ("dividerLocation".equals(evt.getPropertyName()) && MenuItemViewLog.isSelected()) {
-            prefs.putInt(LOG_DIV, RightSplitPane.getDividerLocation());
+            prefs.putInt(Constants.LOG_DIV, RightSplitPane.getDividerLocation());
         }
     }//GEN-LAST:event_RightSplitPanePropertyChange
 
     private void AutoScrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoScrollActionPerformed
-        prefs.putBoolean(AUTO_SCROLL, AutoScroll.isSelected());
+        prefs.putBoolean(Constants.AUTO_SCROLL, AutoScroll.isSelected());
     }//GEN-LAST:event_AutoScrollActionPerformed
 
     private void PortDTRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortDTRActionPerformed
-        prefs.putBoolean(PORT_DTR, PortDTR.isSelected());
+        prefs.putBoolean(Constants.PORT_DTR, PortDTR.isSelected());
         try {
             serialPort.setDTR(PortDTR.isSelected());
             if (PortDTR.isSelected()) {
@@ -7768,7 +7713,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_PortDTRActionPerformed
 
     private void PortRTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortRTSActionPerformed
-        prefs.putBoolean(PORT_RTS, PortRTS.isSelected());
+        prefs.putBoolean(Constants.PORT_RTS, PortRTS.isSelected());
         try {
             serialPort.setRTS(PortRTS.isSelected());
             if (PortRTS.isSelected()) {
@@ -7785,38 +7730,38 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_PortRTSActionPerformed
 
     private void UseExternalEditorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_UseExternalEditorItemStateChanged
-        prefs.putBoolean(USE_EXT_EDITOR, UseExternalEditor.isSelected());
+        prefs.putBoolean(Constants.USE_EXT_EDITOR, UseExternalEditor.isSelected());
         UpdateButtons();
     }//GEN-LAST:event_UseExternalEditorItemStateChanged
 
     private void MenuItemViewToolbarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewToolbarItemStateChanged
-        prefs.putBoolean(SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
+        prefs.putBoolean(Constants.SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
         isToolbarShow();
     }//GEN-LAST:event_MenuItemViewToolbarItemStateChanged
 
     private void MenuItemViewLeftExtraItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewLeftExtraItemStateChanged
-        prefs.putBoolean(SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
+        prefs.putBoolean(Constants.SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
         isLeftExtraShow();
     }//GEN-LAST:event_MenuItemViewLeftExtraItemStateChanged
 
     private void MenuItemViewSnippetsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewSnippetsItemStateChanged
-        prefs.putBoolean(SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
+        prefs.putBoolean(Constants.SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
         isRightSnippetsShow();
     }//GEN-LAST:event_MenuItemViewSnippetsItemStateChanged
 
     private void MenuItemViewFileManagerItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewFileManagerItemStateChanged
-        prefs.putBoolean(SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
+        prefs.putBoolean(Constants.SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
         isFileManagerShow();
     }//GEN-LAST:event_MenuItemViewFileManagerItemStateChanged
 
     private void MenuItemViewRightExtraItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewRightExtraItemStateChanged
         RightExtraButtons.setVisible(MenuItemViewRightExtra.isSelected());
-        prefs.putBoolean(SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
+        prefs.putBoolean(Constants.SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
     }//GEN-LAST:event_MenuItemViewRightExtraItemStateChanged
 
     private void MenuItemViewLogItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewLogItemStateChanged
         isLogShow();
-        prefs.putBoolean(SHOW_LOG, MenuItemViewLog.isSelected());
+        prefs.putBoolean(Constants.SHOW_LOG, MenuItemViewLog.isSelected());
     }//GEN-LAST:event_MenuItemViewLogItemStateChanged
 
     private void FileSystemInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSystemInfoActionPerformed
@@ -7834,7 +7779,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void MenuItemViewDonateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewDonateItemStateChanged
         DonateSmall.setVisible(!MenuItemViewDonate.isSelected());
-        prefs.putBoolean(SHOW_DONATE, MenuItemViewDonate.isSelected());
+        prefs.putBoolean(Constants.SHOW_DONATE, MenuItemViewDonate.isSelected());
     }//GEN-LAST:event_MenuItemViewDonateItemStateChanged
 
     private void DonateSmallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateSmallActionPerformed
@@ -7895,11 +7840,11 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AppClose() {
         Rectangle r = this.getBounds();
-        prefs.putInt(WIN_X, r.x);
-        prefs.putInt(WIN_Y, r.y);
-        prefs.putInt(WIN_H, r.height);
-        prefs.putInt(WIN_W, r.width);
-        //log("w="+Integer.toString(prefs.getInt(WIN_W, 0)));
+        prefs.putInt(Constants.WIN_X, r.x);
+        prefs.putInt(Constants.WIN_Y, r.y);
+        prefs.putInt(Constants.WIN_H, r.height);
+        prefs.putInt(Constants.WIN_W, r.width);
+        //log("w="+Integer.toString(prefs.getInt(Constants.WIN_W, 0)));
         while (FilesTabbedPane.getTabCount() > 0) {
             if (CloseFile() == JOptionPane.CANCEL_OPTION) {
                 return;
@@ -7917,11 +7862,11 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_EOLItemStateChanged
 
     private void CondensedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CondensedItemStateChanged
-        prefs.putBoolean(CONDENSED, Condensed.isSelected());
+        prefs.putBoolean(Constants.CONDENSED, Condensed.isSelected());
     }//GEN-LAST:event_CondensedItemStateChanged
 
     private void AutodetectFirmwareItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_AutodetectFirmwareItemStateChanged
-        prefs.putBoolean(AUTODETECT, AutodetectFirmware.isSelected());
+        prefs.putBoolean(Constants.AUTODETECT, AutodetectFirmware.isSelected());
     }//GEN-LAST:event_AutodetectFirmwareItemStateChanged
     /*  Prefs end */
 
@@ -8002,7 +7947,7 @@ public class ESPlorer extends javax.swing.JFrame {
             Port.addItem(CustomPortName.getText().trim());
             Port.setSelectedIndex(Port.getItemCount() - 1);
             Port.setEnabled(false);
-            Speed.setSelectedIndex(prefs.getInt(SERIAL_BAUD, 3));
+            Speed.setSelectedIndex(prefs.getInt(Constants.SERIAL_BAUD, 3));
             log("Using custom port name " + CustomPortName.getText());
             return;
         }
@@ -8012,10 +7957,10 @@ public class ESPlorer extends javax.swing.JFrame {
         if (portNames.length < 1) {
             log("Could not find any serial port. Please, connect device and ReScan");
         } else {
-            if (prefs.get(SERIAL_PORT, null) == null) {
-                prefs.put(SERIAL_PORT, portNames[0]);
+            if (prefs.get(Constants.SERIAL_PORT, null) == null) {
+                prefs.put(Constants.SERIAL_PORT, portNames[0]);
             }
-            String lastPort = prefs.get(SERIAL_PORT, null);
+            String lastPort = prefs.get(Constants.SERIAL_PORT, null);
             int port = 0;
             for (i = 0; i < portNames.length; i++) {
                 Port.addItem(portNames[i]);
@@ -8027,7 +7972,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 }
             }
             Port.setSelectedIndex(port);
-            Speed.setSelectedIndex(prefs.getInt(SERIAL_BAUD, 3));
+            Speed.setSelectedIndex(prefs.getInt(Constants.SERIAL_BAUD, 3));
         }
         log("Scan done.");
     }
@@ -8417,57 +8362,57 @@ public class ESPlorer extends javax.swing.JFrame {
     private void LoadPrefs() {
 //        log("Load saved settings...");
         // Settings - Firmware
-        workDir = prefs.get(PATH, "");
+        workDir = prefs.get(Constants.PATH, "");
         chooser = new JFileChooser(workDir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setCurrentDirectory(new File(workDir));
-        if (prefs.get(FIRMWARE, null) == null) {
+        if (prefs.get(Constants.FIRMWARE, null) == null) {
             log("Load saved settings: NOT FOUND. Used default settings.");
-            prefs.put(FIRMWARE, "NodeMCU");
+            prefs.put(Constants.FIRMWARE, "NodeMCU");
             PrefsFlush();
         }
-        if (prefs.get(FIRMWARE, "NodeMCU").equals("MicroPython") && OptionMicroPython.isEnabled()) {
+        if (prefs.get(Constants.FIRMWARE, "NodeMCU").equals("MicroPython") && OptionMicroPython.isEnabled()) {
             OptionMicroPython.setSelected(true);
             chooser.setFileFilter(filterPY);
         } else {
             OptionNodeMCU.setSelected(true);
             chooser.setFileFilter(filterLUA);
         }
-        FileAutoSaveDisk.setSelected(prefs.getBoolean(FILE_AUTO_SAVE_DISK, true));
-        FileAutoSaveESP.setSelected(prefs.getBoolean(FILE_AUTO_SAVE_ESP, true));
-        FileAutoRun.setSelected(prefs.getBoolean(FILE_AUTO_RUN, true));
-        EditorTheme.setSelectedIndex(prefs.getInt(COLOR_THEME, 0));
-        Delay.setValue(prefs.getInt(DELAY, 0));
-        AnswerDelay.setValue(prefs.getInt(TIMEOUT, 3));
-        DumbMode.setSelected(prefs.getBoolean(DUMB_MODE, false));
-        TurboMode.setSelected(prefs.getBoolean(TURBO_MODE, false));
-        LineDelay.setValue(prefs.getInt(LINE_DELAY, 200));
+        FileAutoSaveDisk.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_DISK, true));
+        FileAutoSaveESP.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_ESP, true));
+        FileAutoRun.setSelected(prefs.getBoolean(Constants.FILE_AUTO_RUN, true));
+        EditorTheme.setSelectedIndex(prefs.getInt(Constants.COLOR_THEME, 0));
+        Delay.setValue(prefs.getInt(Constants.DELAY, 0));
+        AnswerDelay.setValue(prefs.getInt(Constants.TIMEOUT, 3));
+        DumbMode.setSelected(prefs.getBoolean(Constants.DUMB_MODE, false));
+        TurboMode.setSelected(prefs.getBoolean(Constants.TURBO_MODE, false));
+        LineDelay.setValue(prefs.getInt(Constants.LINE_DELAY, 200));
         // Font size
-        Terminal.setFont(Terminal.getFont().deriveFont(prefs.getFloat(TERMINAL_FONT_SIZE, TERMINAL_FONT_SIZE_DEFAULT)));
-        SnippetText.setFont(SnippetText.getFont().deriveFont(prefs.getFloat(EDITOR_FONT_SIZE, EDITOR_FONT_SIZE_DEFAULT)));
-        Log.setFont(Log.getFont().deriveFont(prefs.getFloat(LOG_FONT_SIZE, LOG_FONT_SIZE_DEFAULT)));
-        LogMax = prefs.getInt(LOG_MAX_SIZE, LogMax);
+        Terminal.setFont(Terminal.getFont().deriveFont(prefs.getFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT)));
+        SnippetText.setFont(SnippetText.getFont().deriveFont(prefs.getFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT)));
+        Log.setFont(Log.getFont().deriveFont(prefs.getFloat(Constants.LOG_FONT_SIZE, Constants.LOG_FONT_SIZE_DEFAULT)));
+        LogMax = prefs.getInt(Constants.LOG_MAX_SIZE, LogMax);
         LogMaxSize.setText(Integer.toString(LogMax / 1024));
-        TerminalMax = prefs.getInt(TERMINAL_MAX_SIZE, TerminalMax);
+        TerminalMax = prefs.getInt(Constants.TERMINAL_MAX_SIZE, TerminalMax);
         TerminalMaxSize.setText(Integer.toString(TerminalMax / 1024));
-        AutoScroll.setSelected(prefs.getBoolean(AUTO_SCROLL, true));
-        MenuItemViewLog.setSelected(prefs.getBoolean(SHOW_LOG, false));
-        MenuItemViewToolbar.setSelected(prefs.getBoolean(SHOW_TOOLBAR, true));
-        MenuItemViewLeftExtra.setSelected(prefs.getBoolean(SHOW_EXTRA_LEFT, true));
-        MenuItemViewRightExtra.setSelected(prefs.getBoolean(SHOW_EXTRA_RIGHT, true));
-        MenuItemViewSnippets.setSelected(prefs.getBoolean(SHOW_SNIP_RIGHT, true));
-        MenuItemViewFileManager.setSelected(prefs.getBoolean(SHOW_FM_RIGHT, true));
-        MenuItemViewDonate.setSelected(prefs.getBoolean(SHOW_DONATE, false));
+        AutoScroll.setSelected(prefs.getBoolean(Constants.AUTO_SCROLL, true));
+        MenuItemViewLog.setSelected(prefs.getBoolean(Constants.SHOW_LOG, false));
+        MenuItemViewToolbar.setSelected(prefs.getBoolean(Constants.SHOW_TOOLBAR, true));
+        MenuItemViewLeftExtra.setSelected(prefs.getBoolean(Constants.SHOW_EXTRA_LEFT, true));
+        MenuItemViewRightExtra.setSelected(prefs.getBoolean(Constants.SHOW_EXTRA_RIGHT, true));
+        MenuItemViewSnippets.setSelected(prefs.getBoolean(Constants.SHOW_SNIP_RIGHT, true));
+        MenuItemViewFileManager.setSelected(prefs.getBoolean(Constants.SHOW_FM_RIGHT, true));
+        MenuItemViewDonate.setSelected(prefs.getBoolean(Constants.SHOW_DONATE, false));
         DonateSmall.setVisible(!MenuItemViewDonate.isSelected());
-        UseCustomPortName.setSelected(prefs.getBoolean(USE_CUSTOM_PORT, false));
-        CustomPortName.setText(prefs.get(CUSTOM_PORT_NAME, "/dev/AnySerialDevice"));
-        PortDTR.setSelected(prefs.getBoolean(PORT_DTR, false));
-        PortRTS.setSelected(prefs.getBoolean(PORT_RTS, false));
-        UseExternalEditor.setSelected(prefs.getBoolean(USE_EXT_EDITOR, false));
-        EOL.setSelected(prefs.getBoolean(SHOW_EOL, false));
-        Condensed.setSelected(prefs.getBoolean(CONDENSED, false));
-        AutodetectFirmware.setSelected(prefs.getBoolean(AUTODETECT, true));
+        UseCustomPortName.setSelected(prefs.getBoolean(Constants.USE_CUSTOM_PORT, false));
+        CustomPortName.setText(prefs.get(Constants.CUSTOM_PORT_NAME, "/dev/AnySerialDevice"));
+        PortDTR.setSelected(prefs.getBoolean(Constants.PORT_DTR, false));
+        PortRTS.setSelected(prefs.getBoolean(Constants.PORT_RTS, false));
+        UseExternalEditor.setSelected(prefs.getBoolean(Constants.USE_EXT_EDITOR, false));
+        EOL.setSelected(prefs.getBoolean(Constants.SHOW_EOL, false));
+        Condensed.setSelected(prefs.getBoolean(Constants.CONDENSED, false));
+        AutodetectFirmware.setSelected(prefs.getBoolean(Constants.AUTODETECT, true));
         log("Load saved settings: DONE.");
     }
 
@@ -8773,18 +8718,18 @@ public class ESPlorer extends javax.swing.JFrame {
             if (all) {
                 for (int i = 0; i < FilesTabbedPane.getTabCount(); i++) {
                     theme.apply(TextEditor1.get(i));
-                    TextEditor1.get(i).setFont(TextEditor1.get(i).getFont().deriveFont(prefs.getFloat(EDITOR_FONT_SIZE, EDITOR_FONT_SIZE_DEFAULT)));
+                    TextEditor1.get(i).setFont(TextEditor1.get(i).getFont().deriveFont(prefs.getFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT)));
                 }
                 theme.apply(SnippetText);
-                SnippetText.setFont(SnippetText.getFont().deriveFont(prefs.getFloat(EDITOR_FONT_SIZE, EDITOR_FONT_SIZE_DEFAULT)));
+                SnippetText.setFont(SnippetText.getFont().deriveFont(prefs.getFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT)));
                 theme.apply(Terminal);
-                Terminal.setFont(Terminal.getFont().deriveFont(prefs.getFloat(TERMINAL_FONT_SIZE, TERMINAL_FONT_SIZE_DEFAULT)));
+                Terminal.setFont(Terminal.getFont().deriveFont(prefs.getFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT)));
                 themeTextBackground = SnippetText.getBackground();
                 SnippetText.setBackground(SnippetTopPane.getBackground());
                 log("Set new color theme: Success.");
             } else {
                 theme.apply(TextEditor1.get(iTab));
-                TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(prefs.getFloat(EDITOR_FONT_SIZE, EDITOR_FONT_SIZE_DEFAULT)));
+                TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(prefs.getFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT)));
             }
         } catch (IOException e) {
             log(e.toString());
