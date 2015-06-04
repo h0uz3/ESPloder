@@ -7659,13 +7659,8 @@ public class ESPlorer extends javax.swing.JFrame {
             AddMenuItemRun(x, FileName);
             AddMenuItemCompile(x, FileName);
             AddMenuItemSeparator(x);
-            AddMenuItemView(x, FileName);
-            AddMenuItemDump(x, FileName);
-            AddMenuItemEdit(x, FileName, size);
-            AddMenuItemDownload(x, FileName, size);
-            AddMenuItemRename(x, FileName);
-            AddMenuItemSeparator(x);
-            AddMenuItemRemove(x, FileName);
+            setupFileMenuItem(FileName, x, size);
+
         } else if (FileName.endsWith(".lc")) {
             FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/lc.png")));
             FileAsButton.get(i).setToolTipText(FileAsButton.get(i).getActionCommand() + ", LeftClick - Run, RightClick - Other actions");
@@ -7679,7 +7674,7 @@ public class ESPlorer extends javax.swing.JFrame {
         } else {
             FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file.png")));
             FileAsButton.get(i).setToolTipText(FileAsButton.get(i).getActionCommand() + ", LeftClick - View, RightClick - Other actions");
-            AddMenuItemView(x, FileName);
+            setupFileMenuItem(FileName, x, size);
             AddMenuItemDump(x, FileName);
             AddMenuItemEdit(x, FileName, size);
             AddMenuItemDownload(x, FileName, size);
@@ -7690,6 +7685,16 @@ public class ESPlorer extends javax.swing.JFrame {
 
         FileAsButton.get(i).setComponentPopupMenu(FilePopupMenu.get(x));
         FileManagerPane.add(FileAsButton.get(i));
+    }
+
+    private void setupFileMenuItem(String FileName, int x, int size) {
+        AddMenuItemView(x, FileName);
+        AddMenuItemDump(x, FileName);
+        AddMenuItemEdit(x, FileName, size);
+        AddMenuItemDownload(x, FileName, size);
+        AddMenuItemRename(x, FileName);
+        AddMenuItemSeparator(x);
+        AddMenuItemRemove(x, FileName);
     }
 
     private void AddMenuItemSeparator(int x) {
