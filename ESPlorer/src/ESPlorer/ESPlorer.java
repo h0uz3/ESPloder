@@ -22,7 +22,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import ESPlorer.Constants;
 
 public class ESPlorer extends javax.swing.JFrame {
 
@@ -30,6 +29,8 @@ public class ESPlorer extends javax.swing.JFrame {
     private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
     private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
     private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
+    /* Snippets */
+    private static final String[] Snippets = new String[16];
     private static boolean pOpen = false;
     private static boolean portJustOpen = false;
     private static ArrayList<String> LAF;
@@ -47,8 +48,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private static SerialPort serialPort;
     private static int LogMax = 10 * 1024;
     private static int TerminalMax = 100 * 1024;
-    /* Snippets */
-    private static final String[] Snippets = new String[16];
     private static int iSnippets = 0;
     private static javax.swing.ImageIcon LED_GREY;
     private static javax.swing.ImageIcon LED_GREEN;
@@ -56,6 +55,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private static javax.swing.ImageIcon LED_BLUE;
     private static boolean LocalEcho = true;
     private final int SendPacketSize = 250;
+    private final String NewFile = "New";
     /* Files tab end */
     private int nSpeed = 9600;
     private ActionListener taskPerformer;
@@ -95,7 +95,6 @@ public class ESPlorer extends javax.swing.JFrame {
     //  String s = new String();
     private String FileName = "script"; // without ext
     private String DownloadedFileName = "";
-    private final String NewFile = "New";
     private int FileCount = 0;
     private String workDir = "";
     private JFileChooser chooser;
@@ -342,12 +341,6 @@ public class ESPlorer extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
-        /* Set the Nimbus look and feel */
-//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        //private javax.swing.JRadioButtonMenuItem MenuItemViewLF2;
         LAF = new ArrayList<String>();
         LAFclass = new ArrayList<String>();
         String laf;
@@ -553,7 +546,6 @@ public class ESPlorer extends javax.swing.JFrame {
         AutodetectFirmware = new javax.swing.JCheckBox();
         JPanel AT_Station = new JPanel();
         Box.Filler topWiFiStaFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
-        JLayeredPane wiFiStationPane = new JLayeredPane();
         JButton cmdGetCWJAP = new JButton();
         JButton cmdSetCWJAP = new JButton();
         SSID = new javax.swing.JTextField();
@@ -619,21 +611,14 @@ public class ESPlorer extends javax.swing.JFrame {
         ServerTimeout = new javax.swing.JTextField();
         JLabel jLabel6 = new JLabel();
         TCP_common = new javax.swing.JLayeredPane();
-        JButton cmdGetCIPSTATUS = new JButton();
-        JButton cmdGetCIPMUX = new JButton();
-        JButton cmdSetCIPMUX1 = new JButton();
-        JButton cmdSetCIPMUX0 = new JButton();
-        JButton cmdGetCIFSR = new JButton();
         WiFi_common = new javax.swing.JLayeredPane();
         JButton cmdGetHelpCWMODE = new JButton();
         JButton cmdSetCWMODE1 = new JButton();
-        JButton cmdGetCWMODE = new JButton();
         JButton cmdSetCWMODE2 = new JButton();
         JButton cmdSetCWLAP = new JButton();
         JButton cmdSetCWMODE3 = new JButton();
         DHCP = new javax.swing.JComboBox();
         DHCPmode = new javax.swing.JComboBox();
-        JButton cmdSetCWDHCP = new JButton();
         JLabel comingSoon1 = new JLabel();
         JLayeredPane rightBasePane = new JLayeredPane();
         JLayeredPane LEDPanel = new JLayeredPane();
@@ -794,7 +779,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalClear.setToolTipText("");
         MenuItemTerminalClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalClearActionPerformed(evt);
             }
         });
         contextMenuTerminal.add(MenuItemTerminalClear);
@@ -806,7 +790,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalCopy.setEnabled(false);
         MenuItemTerminalCopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalCopyActionPerformed(evt);
             }
         });
         contextMenuTerminal.add(MenuItemTerminalCopy);
@@ -2694,13 +2677,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         topWiFiStaFiller.setOpaque(true);
 
-        wiFiStationPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "WiFi Station"));
-        wiFiStationPane.setAlignmentX(0.0F);
-        wiFiStationPane.setAlignmentY(0.0F);
-        wiFiStationPane.setMaximumSize(new java.awt.Dimension(463, 291));
-        wiFiStationPane.setMinimumSize(new java.awt.Dimension(463, 291));
-        wiFiStationPane.setName(""); // NOI18N
-        wiFiStationPane.setOpaque(true);
+
 
         cmdGetCWJAP.setFont(cmdGetCWJAP.getFont().deriveFont((float) 12));
         cmdGetCWJAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
@@ -2712,7 +2689,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCWJAP.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCWJAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCWJAPActionPerformed(evt);
             }
         });
 
@@ -2726,7 +2702,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCWJAP.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdSetCWJAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWJAPActionPerformed(evt);
             }
         });
 
@@ -2772,7 +2747,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCWQAP.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdSetCWQAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWQAPActionPerformed(evt);
             }
         });
 
@@ -2786,7 +2760,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCIPSTAMAC.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCIPSTAMAC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPSTAMACActionPerformed(evt);
             }
         });
 
@@ -2800,7 +2773,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCIPSTAMAC.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdSetCIPSTAMAC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPSTAMACActionPerformed(evt);
             }
         });
 
@@ -2826,7 +2798,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCIPSTA.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCIPSTA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPSTAActionPerformed(evt);
             }
         });
 
@@ -2840,7 +2811,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCIPSTA.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdSetCIPSTA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPSTAActionPerformed(evt);
             }
         });
 
@@ -2850,111 +2820,6 @@ public class ESPlorer extends javax.swing.JFrame {
         StationIP.setMinimumSize(new java.awt.Dimension(210, 23));
         StationIP.setPreferredSize(new java.awt.Dimension(210, 23));
 
-        javax.swing.GroupLayout WiFiStationPaneLayout = new javax.swing.GroupLayout(wiFiStationPane);
-        wiFiStationPane.setLayout(WiFiStationPaneLayout);
-        WiFiStationPaneLayout.setHorizontalGroup(
-                WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(WiFiStationPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(MAC, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCIPSTAMAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(WiFiStationPaneLayout.createSequentialGroup()
-                                                .addGroup(WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(cmdGetCWJAP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(cmdSetCWQAP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(WiFiStationPaneLayout.createSequentialGroup()
-                                                                .addGap(1, 1, 1)
-                                                                .addComponent(cmdGetCIPSTAMAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(WiFiStationPaneLayout.createSequentialGroup()
-                                                                .addComponent(SSID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(PASS, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                                        .addComponent(cmdSetCWJAP, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(cmdGetCIPSTA, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(StationIP, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCIPSTA, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        WiFiStationPaneLayout.setVerticalGroup(
-                WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(WiFiStationPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmdGetCWJAP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(SSID, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(PASS, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(WiFiStationPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmdSetCWQAP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCWJAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdGetCIPSTAMAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(MAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdSetCIPSTAMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdGetCIPSTA, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(StationIP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdSetCIPSTA, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(31, Short.MAX_VALUE))
-        );
-
-        WiFiStationPaneLayout.linkSize(javax.swing.SwingConstants.VERTICAL, cmdGetCIPSTA, cmdGetCWJAP, cmdSetCIPSTA, cmdSetCWQAP);
-
-        WiFiStationPaneLayout.linkSize(javax.swing.SwingConstants.VERTICAL, MAC, StationIP, cmdGetCIPSTAMAC, cmdSetCIPSTAMAC, cmdSetCWJAP);
-
-        wiFiStationPane.setLayer(cmdGetCWJAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdSetCWJAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(SSID, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(PASS, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdSetCWQAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdGetCIPSTAMAC, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdSetCIPSTAMAC, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(MAC, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdGetCIPSTA, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(cmdSetCIPSTA, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFiStationPane.setLayer(StationIP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout AT_StationLayout = new javax.swing.GroupLayout(AT_Station);
-        AT_Station.setLayout(AT_StationLayout);
-        AT_StationLayout.setHorizontalGroup(
-                AT_StationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(topWiFiStaFiller, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(wiFiStationPane, javax.swing.GroupLayout.PREFERRED_SIZE, 460, Short.MAX_VALUE)
-        );
-        AT_StationLayout.setVerticalGroup(
-                AT_StationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AT_StationLayout.createSequentialGroup()
-                                .addComponent(topWiFiStaFiller, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(wiFiStationPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(5, 5, 5))
-        );
-
-        AT_Station.getAccessibleContext().setAccessibleName("");
-        AT_Station.getAccessibleContext().setAccessibleDescription("WiFi AT commands");
-
-        AT_SoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
-        AT_SoftAP.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-            }
-        });
-
-        wiFisoftAPPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "WiFi softAP"));
-        wiFisoftAPPane.setAlignmentX(0.0F);
-        wiFisoftAPPane.setAlignmentY(0.0F);
-        wiFisoftAPPane.setMaximumSize(new java.awt.Dimension(463, 291));
-        wiFisoftAPPane.setMinimumSize(new java.awt.Dimension(463, 291));
-        wiFisoftAPPane.setOpaque(true);
 
         cmdSetCWSAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmdSetCWSAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/server1_start.png"))); // NOI18N
@@ -2966,7 +2831,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCWSAP.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdSetCWSAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWSAPActionPerformed(evt);
             }
         });
 
@@ -2980,7 +2844,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCWSAP.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCWSAP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCWSAPActionPerformed(evt);
             }
         });
 
@@ -2994,7 +2857,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCIPAPMAC.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCIPAPMAC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPAPMACActionPerformed(evt);
             }
         });
 
@@ -3008,238 +2870,10 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCWLIF.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdGetCWLIF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCWLIFActionPerformed(evt);
             }
         });
 
-        SSIDsoftAP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        SSIDsoftAP.setText("SSID");
-        SSIDsoftAP.setToolTipText("Enter WiFi SSID");
-        SSIDsoftAP.setMaximumSize(new java.awt.Dimension(100, 23));
-        SSIDsoftAP.setMinimumSize(new java.awt.Dimension(100, 23));
-        SSIDsoftAP.setPreferredSize(new java.awt.Dimension(100, 23));
-        SSIDsoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
-        SSIDsoftAP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            }
-        });
 
-        PASSsoftAP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        PASSsoftAP.setText("password");
-        PASSsoftAP.setToolTipText("Enter WiFi password");
-        PASSsoftAP.setMaximumSize(new java.awt.Dimension(104, 23));
-        PASSsoftAP.setMinimumSize(new java.awt.Dimension(104, 23));
-        PASSsoftAP.setPreferredSize(new java.awt.Dimension(104, 23));
-        PASSsoftAP.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
-        PASSsoftAP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            }
-        });
-
-        cmdGetCIPAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
-        cmdGetCIPAP.setText("CIPAP Get softAP IP");
-        cmdGetCIPAP.setToolTipText("Get IP address of ESP8266 softAP");
-        cmdGetCIPAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdGetCIPAP.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdGetCIPAP.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdGetCIPAP.setPreferredSize(new java.awt.Dimension(210, 23));
-        cmdGetCIPAP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPAPActionPerformed(evt);
-            }
-        });
-
-        cmdSetCIPAPMAC.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPAPMAC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
-        cmdSetCIPAPMAC.setToolTipText("Set softAP MAC address");
-        cmdSetCIPAPMAC.setLabel("CIPAPMAC= Set MAC softAP");
-        cmdSetCIPAPMAC.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPAPMAC.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAPMAC.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAPMAC.setPreferredSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAPMAC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPAPMACActionPerformed(evt);
-            }
-        });
-
-        try {
-            MAC1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA:AA:AA:AA:AA:AA")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        MAC1.setText("FF:FF:FF:FF:FF:FF");
-        MAC1.setToolTipText("Station MAC address");
-        MAC1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        MAC1.setMaximumSize(new java.awt.Dimension(2108, 23));
-        MAC1.setMinimumSize(new java.awt.Dimension(2108, 23));
-        MAC1.setPreferredSize(new java.awt.Dimension(2108, 23));
-
-        encryption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        encryption.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0 - Open", "1 - WPA_PSK", "2 - WPA2_PSK", "3 - WPA_WPA2_PSK"}));
-        encryption.setSelectedIndex(2);
-        encryption.setToolTipText("Set encryption type softAP");
-        encryption.setMaximumSize(new java.awt.Dimension(104, 23));
-        encryption.setMinimumSize(new java.awt.Dimension(104, 23));
-        encryption.setPreferredSize(new java.awt.Dimension(104, 23));
-
-        channel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        channel.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"channel 1", "channel 2", "channel 3", "channel 4", "channel 5", "channel 6", "channel 7", "channel 8", "channel 9", "channel 10", "channel 11", "channel 12", "channel 13"}));
-        channel.setToolTipText("Set channell ID softAP");
-        channel.setAlignmentX(0.0F);
-        channel.setMaximumSize(new java.awt.Dimension(100, 23));
-        channel.setMinimumSize(new java.awt.Dimension(100, 23));
-        channel.setPreferredSize(new java.awt.Dimension(100, 23));
-
-        softAPIP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        softAPIP.setText("192.168.4.1");
-        softAPIP.setToolTipText("");
-        softAPIP.setMaximumSize(new java.awt.Dimension(210, 23));
-        softAPIP.setMinimumSize(new java.awt.Dimension(210, 23));
-        softAPIP.setPreferredSize(new java.awt.Dimension(210, 23));
-
-        cmdSetCIPAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
-        cmdSetCIPAP.setToolTipText("Set softAP IP address");
-        cmdSetCIPAP.setLabel("CIPAP= Set softAP IP");
-        cmdSetCIPAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPAP.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAP.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAP.setPreferredSize(new java.awt.Dimension(210, 23));
-        cmdSetCIPAP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPAPActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout WiFisoftAPPaneLayout = new javax.swing.GroupLayout(wiFisoftAPPane);
-        wiFisoftAPPane.setLayout(WiFisoftAPPaneLayout);
-        WiFisoftAPPaneLayout.setHorizontalGroup(
-                WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(MAC1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(cmdSetCIPAPMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(cmdGetCIPAP, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(cmdSetCIPAP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                                .addComponent(cmdGetCIPAPMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(cmdSetCWSAP, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                                        .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                                        .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                .addComponent(cmdGetCWSAP, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(cmdGetCWLIF, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                        .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                .addComponent(SSIDsoftAP, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(channel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                .addComponent(PASSsoftAP, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(encryption, 0, 1, Short.MAX_VALUE)))
-                                                                .addComponent(softAPIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        WiFisoftAPPaneLayout.setVerticalGroup(
-                WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(SSIDsoftAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(PASSsoftAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdGetCWSAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                .addGap(4, 4, 4)
-                                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(channel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(encryption, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(WiFisoftAPPaneLayout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(cmdGetCWLIF, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(WiFisoftAPPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmdGetCIPAPMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCWSAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(MAC1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdSetCIPAPMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdGetCIPAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(softAPIP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmdSetCIPAP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(31, Short.MAX_VALUE))
-        );
-        wiFisoftAPPane.setLayer(cmdSetCWSAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdGetCWSAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdGetCIPAPMAC, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdGetCWLIF, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(SSIDsoftAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(PASSsoftAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdGetCIPAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdSetCIPAPMAC, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(MAC1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(encryption, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(channel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(softAPIP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        wiFisoftAPPane.setLayer(cmdSetCIPAP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        topWiFiAPFiller.setOpaque(true);
-
-        javax.swing.GroupLayout AT_SoftAPLayout = new javax.swing.GroupLayout(AT_SoftAP);
-        AT_SoftAP.setLayout(AT_SoftAPLayout);
-        AT_SoftAPLayout.setHorizontalGroup(
-                AT_SoftAPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(AT_SoftAPLayout.createSequentialGroup()
-                                .addGroup(AT_SoftAPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(wiFisoftAPPane, javax.swing.GroupLayout.PREFERRED_SIZE, 457, Short.MAX_VALUE)
-                                        .addComponent(topWiFiAPFiller, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
-        );
-        AT_SoftAPLayout.setVerticalGroup(
-                AT_SoftAPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AT_SoftAPLayout.createSequentialGroup()
-                                .addComponent(topWiFiAPFiller, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wiFisoftAPPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-        );
-        AT_SoftAP.setLayer(wiFisoftAPPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        AT_SoftAP.setLayer(topWiFiAPFiller, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        AT_Client.setToolTipText("TCP/IP related commands");
-        AT_Client.setAlignmentX(0.0F);
-        AT_Client.setAlignmentY(0.0F);
-        AT_Client.setOpaque(false);
-        AT_Client.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
-        AT_Client.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                AT_ClientComponentShown(evt);
-            }
-        });
-
-        topWiFiStaFiller1.setOpaque(true);
 
         common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common parameters for commands", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         common.setMaximumSize(new java.awt.Dimension(445, 54));
@@ -3303,7 +2937,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdGetCIPSTART.setToolTipText("Get the information of param");
         cmdGetCIPSTART.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPSTARTActionPerformed(evt);
             }
         });
 
@@ -3399,7 +3032,6 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdCIPSENDinteractive.setToolTipText("Send data to remote client in interactive mode. After all data sent, type \"+++\"");
         cmdCIPSENDinteractive.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdCIPSENDinteractiveActionPerformed(evt);
             }
         });
 
@@ -3472,168 +3104,6 @@ public class ESPlorer extends javax.swing.JFrame {
                                         .addComponent(jScrollData))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        TCPclientBottomPane.setLayer(common, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(cmdGetCIPSTART, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(UDP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(remote_address, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(remote_port, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(protocol, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(cmdSetCIPSTART, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(jScrollData, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(cmdCIPSEND, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(cmdCIPSENDinteractive, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPclientBottomPane.setLayer(cmdSetCIPCLOSE, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout AT_ClientLayout = new javax.swing.GroupLayout(AT_Client);
-        AT_Client.setLayout(AT_ClientLayout);
-        AT_ClientLayout.setHorizontalGroup(
-                AT_ClientLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AT_ClientLayout.createSequentialGroup()
-                                .addContainerGap(421, Short.MAX_VALUE)
-                                .addComponent(topWiFiStaFiller1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19))
-                        .addComponent(TCPclientBottomPane, javax.swing.GroupLayout.PREFERRED_SIZE, 440, Short.MAX_VALUE)
-        );
-        AT_ClientLayout.setVerticalGroup(
-                AT_ClientLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(AT_ClientLayout.createSequentialGroup()
-                                .addComponent(topWiFiStaFiller1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TCPclientBottomPane, javax.swing.GroupLayout.PREFERRED_SIZE, 377, Short.MAX_VALUE))
-        );
-
-        AT_Client.getAccessibleContext().setAccessibleName("AT_IP");
-        AT_Client.getAccessibleContext().setAccessibleDescription("");
-
-        AT_Server.setOpaque(false);
-        AT_Server.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
-        AT_Server.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                AT_ServerComponentShown(evt);
-            }
-        });
-
-        TCPServerTopFiller.setOpaque(true);
-
-        TCPServerBottomPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        TCPServerBottomPane.setMaximumSize(new java.awt.Dimension(463, 377));
-        TCPServerBottomPane.setMinimumSize(new java.awt.Dimension(463, 377));
-        TCPServerBottomPane.setOpaque(true);
-
-        cmdGetCIPMODE.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPMODE.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
-        cmdGetCIPMODE.setText("CIPMODE? 0 - normal");
-        cmdGetCIPMODE.setToolTipText("Get current transfer mode (0- normal, 1 -unvarnished)");
-        cmdGetCIPMODE.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdGetCIPMODE.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPMODE.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPMODE.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPMODE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPMODEActionPerformed(evt);
-            }
-        });
-
-        cmdSetCIPMODE0.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPMODE0.setText("CIPMODE=0");
-        cmdSetCIPMODE0.setToolTipText("Set current transfer mode to 0 (normal mode)");
-        cmdSetCIPMODE0.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPMODE0.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE0.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE0.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPMODE0ActionPerformed(evt);
-            }
-        });
-
-        cmdSetCIPMODE1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPMODE1.setText("CIPMODE=1");
-        cmdSetCIPMODE1.setToolTipText("Set current transfer mode to 1 (unvarnished mode)");
-        cmdSetCIPMODE1.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPMODE1.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE1.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE1.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPMODE1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPMODE1ActionPerformed(evt);
-            }
-        });
-
-        cmdSetCIPSERVER.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPSERVER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/web_server_start.png"))); // NOI18N
-        cmdSetCIPSERVER.setText("CIPSERVER Start/Stop");
-        cmdSetCIPSERVER.setToolTipText("Set TCP server (Start and down)");
-        cmdSetCIPSERVER.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPSERVER.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSERVER.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSERVER.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSERVER.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPSERVERActionPerformed(evt);
-            }
-        });
-
-        ServerMode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        ServerMode.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0 - Delete Server", "1 - Create Server"}));
-        ServerMode.setSelectedIndex(1);
-        ServerMode.setToolTipText("Select MODE for CIPSERVER command");
-        ServerMode.setAlignmentX(0.0F);
-        ServerMode.setMaximumSize(new java.awt.Dimension(120, 23));
-        ServerMode.setMinimumSize(new java.awt.Dimension(120, 23));
-        ServerMode.setPreferredSize(new java.awt.Dimension(120, 23));
-        ServerMode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ServerModeActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("port");
-
-        ServerPort.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ServerPort.setText("80");
-        ServerPort.setMaximumSize(new java.awt.Dimension(100, 23));
-        ServerPort.setMinimumSize(new java.awt.Dimension(100, 23));
-        ServerPort.setPreferredSize(new java.awt.Dimension(100, 23));
-
-        cmdGetCIPSTO.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPSTO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
-        cmdGetCIPSTO.setText("CIPSTO?");
-        cmdGetCIPSTO.setToolTipText("Get current server timeout");
-        cmdGetCIPSTO.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdGetCIPSTO.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPSTO.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPSTO.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdGetCIPSTO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPSTOActionPerformed(evt);
-            }
-        });
-
-        cmdSetCIPSTO.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPSTO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
-        cmdSetCIPSTO.setText("CIPSTO=");
-        cmdSetCIPSTO.setToolTipText("Set current server timeout");
-        cmdSetCIPSTO.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCIPSTO.setMaximumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSTO.setMinimumSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSTO.setPreferredSize(new java.awt.Dimension(120, 23));
-        cmdSetCIPSTO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPSTOActionPerformed(evt);
-            }
-        });
-
-        ServerTimeout.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ServerTimeout.setText("60");
-        ServerTimeout.setToolTipText("Set server timeout ");
-        ServerTimeout.setMaximumSize(new java.awt.Dimension(120, 23));
-        ServerTimeout.setMinimumSize(new java.awt.Dimension(120, 23));
-        ServerTimeout.setPreferredSize(new java.awt.Dimension(120, 23));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Server timeout");
@@ -3730,51 +3200,6 @@ public class ESPlorer extends javax.swing.JFrame {
         TCP_common.setOpaque(true);
         TCP_common.setLayout(new java.awt.FlowLayout());
 
-        cmdGetCIPSTATUS.setText("CIPSTATUS");
-        cmdGetCIPSTATUS.setToolTipText("Get information about connection ( 2 - got IP, 3 - Connected, 4 - Disconnected )");
-        cmdGetCIPSTATUS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPSTATUSActionPerformed(evt);
-            }
-        });
-        TCP_common.add(cmdGetCIPSTATUS);
-
-        cmdGetCIPMUX.setText("CIPMUX?");
-        cmdGetCIPMUX.setToolTipText("Get information about current mode: Single or Multiple connection allowed");
-        cmdGetCIPMUX.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIPMUXActionPerformed(evt);
-            }
-        });
-        TCP_common.add(cmdGetCIPMUX);
-
-        cmdSetCIPMUX1.setText("CIPMUX=1");
-        cmdSetCIPMUX1.setToolTipText("Set mode for Multiple connections allowed");
-        cmdSetCIPMUX1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPMUX1ActionPerformed(evt);
-            }
-        });
-        TCP_common.add(cmdSetCIPMUX1);
-
-        cmdSetCIPMUX0.setText("CIPMUX=0");
-        cmdSetCIPMUX0.setToolTipText("Set mode for Single only connection allowed");
-        cmdSetCIPMUX0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPMUX0ActionPerformed(evt);
-            }
-        });
-        TCP_common.add(cmdSetCIPMUX0);
-
-        cmdGetCIFSR.setText("CIFSR");
-        cmdGetCIFSR.setToolTipText("Get local IP address (softAP or Station)");
-        cmdGetCIFSR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCIFSRActionPerformed(evt);
-            }
-        });
-        TCP_common.add(cmdGetCIFSR);
-
         WiFi_common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common WiFi commands"));
         WiFi_common.setAlignmentX(0.0F);
         WiFi_common.setAlignmentY(0.0F);
@@ -3810,46 +3235,8 @@ public class ESPlorer extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE1, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
 
-        cmdSetCWMODE1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWMODE1ActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdSetCWMODE1);
-
-        cmdGetCWMODE.setText("CWMODE? - Get current mode");
-        cmdGetCWMODE.setToolTipText("Query ESP8266’s current WiFi mode. (CommandWifiMODE)");
-        cmdGetCWMODE.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdGetCWMODE.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdGetCWMODE.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdGetCWMODE.setPreferredSize(new java.awt.Dimension(210, 23));
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdGetCWMODE, org.jdesktop.beansbinding.BeanProperty.create("font"));
-        bindingGroup.addBinding(binding);
-
-        cmdGetCWMODE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGetCWMODEActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdGetCWMODE);
-
-        cmdSetCWMODE2.setText("CWMODE=2 softAP");
-        cmdSetCWMODE2.setToolTipText("Set ESP8266 WiFi mode 2 - Soft Access Point mode");
-        cmdSetCWMODE2.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCWMODE2.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdSetCWMODE2.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdSetCWMODE2.setPreferredSize(new java.awt.Dimension(210, 23));
-
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE2, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
-
-        cmdSetCWMODE2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWMODE2ActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdSetCWMODE2);
 
         cmdSetCWLAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/search again.png"))); // NOI18N
         cmdSetCWLAP.setText("CWLAP - Get AP list");
@@ -3862,13 +3249,6 @@ public class ESPlorer extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWLAP, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
 
-        cmdSetCWLAP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWLAPActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdSetCWLAP);
-
         cmdSetCWMODE3.setText("CWMODE=3 softAP + Station");
         cmdSetCWMODE3.setToolTipText("Set ESP8266 WiFi mode 3 - Soft Access Point mode + Station");
         cmdSetCWMODE3.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -3878,13 +3258,6 @@ public class ESPlorer extends javax.swing.JFrame {
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE3, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
-
-        cmdSetCWMODE3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWMODE3ActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdSetCWMODE3);
 
         DHCP.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0 - Enable DHCP", "1 - Disable DHCP"}));
         DHCP.setMaximumSize(new java.awt.Dimension(114, 23));
@@ -3898,20 +3271,6 @@ public class ESPlorer extends javax.swing.JFrame {
         DHCPmode.setMinimumSize(new java.awt.Dimension(90, 23));
         DHCPmode.setPreferredSize(new java.awt.Dimension(90, 23));
         WiFi_common.add(DHCPmode);
-
-        cmdSetCWDHCP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCWDHCP.setText("AT+CWDHCP  DHCP control");
-        cmdSetCWDHCP.setToolTipText("Enable/Disable DHCP");
-        cmdSetCWDHCP.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        cmdSetCWDHCP.setMaximumSize(new java.awt.Dimension(210, 23));
-        cmdSetCWDHCP.setMinimumSize(new java.awt.Dimension(210, 23));
-        cmdSetCWDHCP.setPreferredSize(new java.awt.Dimension(210, 23));
-        cmdSetCWDHCP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCWDHCPActionPerformed(evt);
-            }
-        });
-        WiFi_common.add(cmdSetCWDHCP);
 
         comingSoon1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comingSoon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -5689,37 +5048,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CommandActionPerformed
 
-    private void AT_GMRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AT_GMRActionPerformed
-        btnSend("AT+GMR");
-    }//GEN-LAST:event_AT_GMRActionPerformed
 
-    private void cmdGetCWMODEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCWMODEActionPerformed
-        btnSend("AT+CWMODE?");
-    }//GEN-LAST:event_cmdGetCWMODEActionPerformed
-
-    private void cmdSetCWMODE1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWMODE1ActionPerformed
-        btnSend("AT+CWMODE=1");
-    }//GEN-LAST:event_cmdSetCWMODE1ActionPerformed
-
-    private void cmdSetCWMODE2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWMODE2ActionPerformed
-        btnSend("AT+CWMODE=2");
-    }//GEN-LAST:event_cmdSetCWMODE2ActionPerformed
-
-    private void cmdSetCWMODE3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWMODE3ActionPerformed
-        btnSend("AT+CWMODE=3");
-    }//GEN-LAST:event_cmdSetCWMODE3ActionPerformed
-
-    private void cmdSetCWLAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWLAPActionPerformed
-        btnSend("AT+CWLAP");
-    }//GEN-LAST:event_cmdSetCWLAPActionPerformed
-
-    private void cmdGetCIPSTATUSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPSTATUSActionPerformed
-        btnSend("AT+CIPSTATUS");
-    }//GEN-LAST:event_cmdGetCIPSTATUSActionPerformed
-
-    private void cmdGetCIPSTARTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPSTARTActionPerformed
-        btnSend("AT+CIPSTART=?");
-    }//GEN-LAST:event_cmdGetCIPSTARTActionPerformed
 
     private void cmdSetCIPSTARTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
         String cmd = "AT+CIPSTART=";
@@ -5741,21 +5070,7 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
     }//GEN-LAST:event_cmdSetCIPSTARTActionPerformed
 
-    private void UPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UPDATEActionPerformed
-        btnSend("AT+CIUPDATE");
-    }//GEN-LAST:event_UPDATEActionPerformed
 
-    private void cmdGetCIPMUXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPMUXActionPerformed
-        btnSend("AT+CIPMUX?");
-    }//GEN-LAST:event_cmdGetCIPMUXActionPerformed
-
-    private void cmdSetCIPMUX1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPMUX1ActionPerformed
-        btnSend("AT+CIPMUX=1");
-    }//GEN-LAST:event_cmdSetCIPMUX1ActionPerformed
-
-    private void cmdSetCIPMUX0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPMUX0ActionPerformed
-        btnSend("AT+CIPMUX=0");
-    }//GEN-LAST:event_cmdSetCIPMUX0ActionPerformed
 
     private void cmdCIPSENDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCIPSENDActionPerformed
         String cmd = "AT+CIPSEND=";
@@ -5767,10 +5082,6 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
         btnSend(data.getText());
     }//GEN-LAST:event_cmdCIPSENDActionPerformed
-
-    private void cmdCIPSENDinteractiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCIPSENDinteractiveActionPerformed
-        btnSend("AT+CIPSEND");
-    }//GEN-LAST:event_cmdCIPSENDinteractiveActionPerformed
 
     private void cmdSetCIPCLOSEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPCLOSEActionPerformed
         String cmd = "AT+CIPCLOSE";
@@ -5806,18 +5117,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFontDec.setText(dec);
     }//GEN-LAST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
 
-    private void MenuItemTerminalCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalCopyActionPerformed
-        Terminal.copy();
-    }//GEN-LAST:event_MenuItemTerminalCopyActionPerformed
-
-    private void MenuItemTerminalClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalClearActionPerformed
-        Terminal.setText("");
-    }//GEN-LAST:event_MenuItemTerminalClearActionPerformed
-
-    private void cmdGetCIFSRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIFSRActionPerformed
-        btnSend("AT+CIFSR");
-    }//GEN-LAST:event_cmdGetCIFSRActionPerformed
-
     private void cmdSetCIPSERVERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSERVERActionPerformed
         String cmd = "AT+CIPSERVER=";
         cmd += Integer.toString(ServerMode.getSelectedIndex()).trim();
@@ -5827,18 +5126,6 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
     }//GEN-LAST:event_cmdSetCIPSERVERActionPerformed
 
-    private void cmdGetCIPMODEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPMODEActionPerformed
-        btnSend("AT+CIPMODE?");
-    }//GEN-LAST:event_cmdGetCIPMODEActionPerformed
-
-    private void cmdSetCIPMODE0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPMODE0ActionPerformed
-        btnSend("AT+CIPMODE=0");
-    }//GEN-LAST:event_cmdSetCIPMODE0ActionPerformed
-
-    private void cmdSetCIPMODE1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPMODE1ActionPerformed
-        btnSend("AT+CIPMODE=1");
-    }//GEN-LAST:event_cmdSetCIPMODE1ActionPerformed
-
     private void ServerModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ServerModeActionPerformed
         if (ServerMode.getSelectedIndex() == 1) { // create
             ServerPort.setEnabled(true);
@@ -5847,66 +5134,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ServerModeActionPerformed
 
-    private void cmdGetCIPSTOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPSTOActionPerformed
-        btnSend("AT+CIPSTO?");
-    }//GEN-LAST:event_cmdGetCIPSTOActionPerformed
 
-    private void cmdSetCIPSTOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTOActionPerformed
-        btnSend("AT+CIPSTO=" + ServerTimeout.getText().trim());
-    }//GEN-LAST:event_cmdSetCIPSTOActionPerformed
-
-    private void cmdSetCIPAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPAPActionPerformed
-        btnSend("AT+CIPAP=\"" + softAPIP.getText() + "\"");
-    }//GEN-LAST:event_cmdSetCIPAPActionPerformed
-
-    private void cmdSetCIPSTAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTAActionPerformed
-        btnSend("AT+CIPSTA=\"" + StationIP.getText() + "\"");
-    }//GEN-LAST:event_cmdSetCIPSTAActionPerformed
-
-    private void cmdGetCIPAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPAPActionPerformed
-        btnSend("AT+CIPAP?");
-    }//GEN-LAST:event_cmdGetCIPAPActionPerformed
-
-    private void cmdGetCIPSTAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPSTAActionPerformed
-        btnSend("AT+CIPSTA?");
-    }//GEN-LAST:event_cmdGetCIPSTAActionPerformed
-
-    private void cmdSetCIPAPMACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPAPMACActionPerformed
-        btnSend("AT+CIPAPMAC=\"" + MAC.getText() + "\"");
-    }//GEN-LAST:event_cmdSetCIPAPMACActionPerformed
-
-    private void cmdGetCIPAPMACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPAPMACActionPerformed
-        btnSend("AT+CIPAPMAC?");
-    }//GEN-LAST:event_cmdGetCIPAPMACActionPerformed
-
-    private void cmdSetCIPSTAMACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTAMACActionPerformed
-        btnSend("AT+CIPSTAMAC=\"" + MAC.getText() + "\"");
-    }//GEN-LAST:event_cmdSetCIPSTAMACActionPerformed
-
-    private void cmdGetCIPSTAMACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCIPSTAMACActionPerformed
-        btnSend("AT+CIPSTAMAC?");
-    }//GEN-LAST:event_cmdGetCIPSTAMACActionPerformed
-
-    private void cmdSetCWDHCPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWDHCPActionPerformed
-        btnSend("AT+CWDHCP=" + Integer.toString(DHCPmode.getSelectedIndex()) + "," + Integer.toString(DHCP.getSelectedIndex()));
-    }//GEN-LAST:event_cmdSetCWDHCPActionPerformed
-
-    private void cmdGetCWLIFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCWLIFActionPerformed
-        btnSend("AT+CWLIF");
-    }//GEN-LAST:event_cmdGetCWLIFActionPerformed
-
-    private void cmdSetCWSAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWSAPActionPerformed
-        int ch = channel.getSelectedIndex() + 1;
-        btnSend("AT+CWSAP=\"" + SSIDsoftAP.getText() + "\",\"" + PASSsoftAP.getText() + "\"," + Integer.toString(ch) + "," + encryption.getSelectedIndex());
-    }//GEN-LAST:event_cmdSetCWSAPActionPerformed
-
-    private void cmdGetCWSAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCWSAPActionPerformed
-        btnSend("AT+CWSAP?");
-    }//GEN-LAST:event_cmdGetCWSAPActionPerformed
-
-    private void cmdSetCWQAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWQAPActionPerformed
-        btnSend("AT+CWQAP");
-    }//GEN-LAST:event_cmdSetCWQAPActionPerformed
 
     private void PASSFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSFocusGained
         if (PASS.getText().trim().equals("password")) {
@@ -5919,14 +5147,6 @@ public class ESPlorer extends javax.swing.JFrame {
             SSID.setText("");
         }
     }//GEN-LAST:event_SSIDFocusGained
-
-    private void cmdSetCWJAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCWJAPActionPerformed
-        btnSend("AT+CWJAP=\"" + SSID.getText() + "\",\"" + PASS.getText() + "\"");
-    }//GEN-LAST:event_cmdSetCWJAPActionPerformed
-
-    private void cmdGetCWJAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGetCWJAPActionPerformed
-        btnSend("AT+CWJAP?");
-    }//GEN-LAST:event_cmdGetCWJAPActionPerformed
 
     private void AT_StationComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_StationComponentShown
         WiFi_common.setVisible(true);
@@ -6152,7 +5372,6 @@ public class ESPlorer extends javax.swing.JFrame {
                 sb.append(line).append('\n');
             }
             TextEditor1.get(iTab).setText(sb.toString());
-            success = true;
         } catch (Exception ex) {
             log(ex.toString());
 //                log(ex.getStackTrace().toString());
