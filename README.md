@@ -1,8 +1,10 @@
-[![Stories in Ready](https://badge.waffle.io/4refr0nt/ESPlorer.png?label=ready&title=Ready)](https://waffle.io/4refr0nt/ESPlorer)
 ESPlorer
 ========
 
-[![Join the chat at https://gitter.im/4refr0nt/ESPlorer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/4refr0nt/ESPlorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+###Changes by h0uz3
+There was so much wrong with the original implementation (dead code and a ton of generated lines of code in one single java class), I am currently in the process or refactoring.
+This is going to be a lot different than the original, at least concerning the code base...
+
 Integrated Development Environment (IDE) for ESP8266 developers
 
 ###Package Description
