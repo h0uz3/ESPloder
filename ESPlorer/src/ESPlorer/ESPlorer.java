@@ -1403,7 +1403,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSendSelected.setToolTipText("Send selected block to ESP");
         ButtonSendSelected.setHideActionText(true);
         ButtonSendSelected.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        ButtonSendSelected.setLabel("Block");
+        ButtonSendSelected.setText("Block");
         ButtonSendSelected.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonSendSelected.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonSendSelected.setPreferredSize(new java.awt.Dimension(40, 40));
@@ -3506,7 +3506,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SendCommand.setToolTipText("");
         SendCommand.setAlignmentY(0.0F);
         SendCommand.setEnabled(false);
-        SendCommand.setLabel("Send");
+        SendCommand.setText("Send");
         SendCommand.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SendCommand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4278,7 +4278,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuFile.add(jSeparator2);
 
         menuItemFileExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
-        menuItemFileExit.setLabel("Exit");
+        menuItemFileExit.setText("Exit");
         menuItemFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             }
