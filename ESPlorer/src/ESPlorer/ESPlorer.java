@@ -103,14 +103,14 @@ public class ESPlorer extends javax.swing.JFrame {
     private OutputStreamWriter osw = null;
     private BufferedWriter bw = null;
 
-    private javax.swing.JDialog About;
+    private javax.swing.JDialog aboutDialog;
     private javax.swing.JCheckBoxMenuItem AlwaysOnTop;
     private javax.swing.JSlider AnswerDelay;
     private javax.swing.JLabel AnswerDelayLabel;
     private javax.swing.JCheckBox AutoScroll;
     private javax.swing.JCheckBox AutodetectFirmware;
     private javax.swing.JLabel Busy;
-    private javax.swing.JButton ButtonCopy;
+    private javax.swing.JButton copyButton;
     private javax.swing.JButton ButtonCut;
     private javax.swing.JButton ButtonFileClose;
     private javax.swing.JButton ButtonFileNew;
@@ -424,7 +424,7 @@ public class ESPlorer extends javax.swing.JFrame {
         JMenuItem menuItemLogFontDec = new JMenuItem();
         ButtonGroup MUXGroup = new ButtonGroup();
         ButtonGroup firmware = new ButtonGroup();
-        About = new javax.swing.JDialog();
+        aboutDialog = new javax.swing.JDialog();
         JLabel appName = new JLabel();
         JLabel version1 = new JLabel();
         JButton donate = new JButton();
@@ -453,7 +453,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonRedo = new javax.swing.JButton();
         JToolBar.Separator jSeparator8 = new JToolBar.Separator();
         ButtonCut = new javax.swing.JButton();
-        ButtonCopy = new javax.swing.JButton();
+        copyButton = new javax.swing.JButton();
         ButtonPaste = new javax.swing.JButton();
         JToolBar.Separator jSeparator6 = new JToolBar.Separator();
         ButtonSendSelected = new javax.swing.JButton();
@@ -982,13 +982,13 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuLog.add(menuItemLogFontDec);
 
-        About.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        About.setTitle("About");
-        About.setIconImage(null);
-        About.setMinimumSize(new java.awt.Dimension(406, 250));
-        About.setModalityType(java.awt.Dialog.ModalityType.DOCUMENT_MODAL);
-        About.setResizable(false);
-        About.addFocusListener(new java.awt.event.FocusAdapter() {
+        aboutDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        aboutDialog.setTitle("aboutDialog");
+        aboutDialog.setIconImage(null);
+        aboutDialog.setMinimumSize(new java.awt.Dimension(406, 250));
+        aboutDialog.setModalityType(java.awt.Dialog.ModalityType.DOCUMENT_MODAL);
+        aboutDialog.setResizable(false);
+        aboutDialog.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 AboutFocusLost(evt);
             }
@@ -1028,8 +1028,8 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout AboutLayout = new javax.swing.GroupLayout(About.getContentPane());
-        About.getContentPane().setLayout(AboutLayout);
+        javax.swing.GroupLayout AboutLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(AboutLayout);
         AboutLayout.setHorizontalGroup(
                 AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(author, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1358,25 +1358,25 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         FilesToolBar.add(ButtonCut);
 
-        ButtonCopy.setAction(MenuItemEditCopy.getAction());
-        ButtonCopy.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
-        ButtonCopy.setText("Copy");
-        ButtonCopy.setToolTipText("Copy");
-        ButtonCopy.setEnabled(false);
-        ButtonCopy.setHideActionText(true);
-        ButtonCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        ButtonCopy.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        ButtonCopy.setMaximumSize(new java.awt.Dimension(40, 40));
-        ButtonCopy.setMinimumSize(new java.awt.Dimension(40, 40));
-        ButtonCopy.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        ButtonCopy.addActionListener(new java.awt.event.ActionListener() {
+        copyButton.setAction(MenuItemEditCopy.getAction());
+        copyButton.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        copyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
+        copyButton.setText("Copy");
+        copyButton.setToolTipText("Copy");
+        copyButton.setEnabled(false);
+        copyButton.setHideActionText(true);
+        copyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        copyButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        copyButton.setMaximumSize(new java.awt.Dimension(40, 40));
+        copyButton.setMinimumSize(new java.awt.Dimension(40, 40));
+        copyButton.setPreferredSize(new java.awt.Dimension(40, 40));
+        copyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        copyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonCopyActionPerformed(evt);
             }
         });
-        FilesToolBar.add(ButtonCopy);
+        FilesToolBar.add(copyButton);
 
         ButtonPaste.setAction(MenuItemEditPaste.getAction());
         ButtonPaste.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -3522,7 +3522,6 @@ public class ESPlorer extends javax.swing.JFrame {
         CR.setIconTextGap(0);
         CR.setMargin(new java.awt.Insets(0, 0, 0, 0));
         CR.setName(""); // NOI18N
-        CR.setNextFocusableComponent(Command);
 
         Command.setEditable(true);
         Command.setMaximumRowCount(20);
@@ -3668,7 +3667,6 @@ public class ESPlorer extends javax.swing.JFrame {
         Log.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Log.setMargin(new java.awt.Insets(0, 0, 0, 0));
         Log.setName("Log"); // NOI18N
-        Log.setNextFocusableComponent(SendCommand);
         Log.setSelectionColor(new java.awt.Color(204, 0, 0));
         Log.setSelectionEnd(0);
         Log.addCaretListener(new javax.swing.event.CaretListener() {
@@ -4797,7 +4795,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         menuHelp.setText("?");
 
-        MenuItemHelpAbout.setText("About");
+        MenuItemHelpAbout.setText("aboutDialog");
         MenuItemHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MenuItemHelpAboutActionPerformed(evt);
@@ -5462,7 +5460,7 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuItemEditorCopy.setEnabled(false);
             MenuItemEditCopy.setEnabled(false);
             ButtonCut.setEnabled(false);
-            ButtonCopy.setEnabled(false);
+            copyButton.setEnabled(false);
             MenuItemEditSendSelected.setEnabled(false);
             MenuItemEditorSendSelected.setEnabled(false);
             ButtonSendSelected.setEnabled(false);
@@ -5472,7 +5470,7 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuItemEditorCopy.setEnabled(true);
             MenuItemEditCopy.setEnabled(true);
             ButtonCut.setEnabled(true);
-            ButtonCopy.setEnabled(true);
+            copyButton.setEnabled(true);
             MenuItemEditSendSelected.setEnabled(pOpen);
             MenuItemEditorSendSelected.setEnabled(pOpen);
             ButtonSendSelected.setEnabled(pOpen);
@@ -6206,12 +6204,12 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_DonateActionPerformed
 
     private void MenuItemHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpAboutActionPerformed
-        About.setLocationRelativeTo(null);
-        About.setVisible(true);
+        aboutDialog.setLocationRelativeTo(null);
+        aboutDialog.setVisible(true);
     }//GEN-LAST:event_MenuItemHelpAboutActionPerformed
 
     private void AboutFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AboutFocusLost
-        About.dispose();
+        aboutDialog.dispose();
     }//GEN-LAST:event_AboutFocusLost
 
     private void HomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomePageActionPerformed
