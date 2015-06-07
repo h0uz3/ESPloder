@@ -27,11 +27,11 @@ Code snippets
 Detailed logging
 and more, more more…
 
-###How to build
-##Needed tools
+##How to build
+###Needed tools
 Java 1.7 or newer
 Ant
-##Checking out and building the project
+###Checking out and building the project
 - Check out using git.
 - Enter project root.
 - Type "ant" and hit Enter.
