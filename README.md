@@ -27,16 +27,12 @@ Code snippets
 Detailed logging
 and more, more more…
 
-###Required libraries for build
-[jSSC](https://code.google.com/p/java-simple-serial-connector/)
-[rSyntaxTextArea](http://fifesoft.com/rsyntaxtextarea/)
-
-###Discuss
-[English esp8266.com](http://www.esp8266.com/viewtopic.php?f=22&t=882)
-[Russian esp8266.ru](http://esp8266.ru/forum/threads/esplorer.34/)
-
-###Home Page
-[http://esp8266.ru/ESPlorer/](http://esp8266.ru/esplorer/)
-
-###Latest binaries download
-[esp8266.ru](http://esp8266.ru/esplorer/#download)
+###How to build
+##Needed tools
+Java 1.7 or newer
+Ant
+##Checking out and building the project
+- Check out using git.
+- Enter project root.
+- Type "ant" and hit Enter.
+- The executable jar file will be in the "dist" directory. You can start it from console using java -jar ESPlorer.jar.
