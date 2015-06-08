@@ -7109,29 +7109,29 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void CommandsSetNodeMCU() {
         Command.removeAllItems();
-        Command.addItem(new String("=node.heap()"));
-        Command.addItem(new String("=node.chipid()"));
-        Command.addItem(new String("file.close()"));
-        Command.addItem(new String("file.remove(\"\")"));
-        Command.addItem(new String("dofile(\"\")"));
-        Command.addItem(new String("wifi.setmode(wifi.STATION)"));
-        Command.addItem(new String("wifi.setmode(wifi.SOFTAP)"));
-        Command.addItem(new String("wifi.setmode(wifi.STATIONAP)"));
-        Command.addItem(new String("=wifi.getmode()"));
-        Command.addItem(new String("wifi.sta.config(\"myssid\",\"mypassword\")"));
-        Command.addItem(new String("=wifi.sta.getip()"));
-        Command.addItem(new String("=wifi.ap.getip()"));
-        Command.addItem(new String("=wifi.sta.getmac()"));
-        Command.addItem(new String("=wifi.ap.getmac()"));
-        Command.addItem(new String("=wifi.sta.status()"));
-        Command.addItem(new String("=tmr.now()"));
+        Command.addItem("=node.heap()");
+        Command.addItem("=node.chipid()");
+        Command.addItem("file.close()");
+        Command.addItem("file.remove(\"\")");
+        Command.addItem("dofile(\"\")");
+        Command.addItem("wifi.setmode(wifi.STATION)");
+        Command.addItem("wifi.setmode(wifi.SOFTAP)");
+        Command.addItem("wifi.setmode(wifi.STATIONAP)");
+        Command.addItem("=wifi.getmode()");
+        Command.addItem("wifi.sta.config(\"myssid\",\"mypassword\")");
+        Command.addItem("=wifi.sta.getip()");
+        Command.addItem("=wifi.ap.getip()");
+        Command.addItem("=wifi.sta.getmac()");
+        Command.addItem("=wifi.ap.getmac()");
+        Command.addItem("=wifi.sta.status()");
+        Command.addItem("=tmr.now()");
     }
 
     private void CommandsSetAT() {
         Command.removeAllItems();
-        Command.addItem(new String("AT"));
-        Command.addItem(new String("AT+GMR"));
-        Command.addItem(new String("AT+RST"));
+        Command.addItem("AT");
+        Command.addItem("AT+GMR");
+        Command.addItem("AT+RST");
     }
 
     private void inc_j() {
@@ -8261,7 +8261,7 @@ public class ESPlorer extends javax.swing.JFrame {
         while (pos1 <= l) {
             pos2 = pos1 + size;
             if (pos2 > l) pos2 = l;
-            fragment = new String(TextEditor1.get(iTab).getText().substring(pos1, pos2));
+            fragment = TextEditor1.get(iTab).getText().substring(pos1, pos2);
             sendBuf.add(fragment);
             pos1 += size;
         }
