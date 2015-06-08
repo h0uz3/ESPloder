@@ -2677,7 +2677,6 @@ public class ESPlorer extends javax.swing.JFrame {
         topWiFiStaFiller.setOpaque(true);
 
 
-
         cmdGetCWJAP.setFont(cmdGetCWJAP.getFont().deriveFont((float) 12));
         cmdGetCWJAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
         cmdGetCWJAP.setText("CWJAP? - Connection info");
@@ -2871,7 +2870,6 @@ public class ESPlorer extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             }
         });
-
 
 
         common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common parameters for commands", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -5046,7 +5044,6 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_CommandActionPerformed
 
 
-
     private void cmdSetCIPSTARTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
         String cmd = "AT+CIPSTART=";
         if (multi.isSelected()) {
@@ -5066,7 +5063,6 @@ public class ESPlorer extends javax.swing.JFrame {
         }
         btnSend(cmd);
     }//GEN-LAST:event_cmdSetCIPSTARTActionPerformed
-
 
 
     private void cmdCIPSENDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCIPSENDActionPerformed
@@ -5130,7 +5126,6 @@ public class ESPlorer extends javax.swing.JFrame {
             ServerPort.setEnabled(false);
         }
     }//GEN-LAST:event_ServerModeActionPerformed
-
 
 
     private void PASSFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSFocusGained
@@ -5386,15 +5381,15 @@ public class ESPlorer extends javax.swing.JFrame {
 //                log(ex.getStackTrace().toString());
             log("Internal error 103: can't close stream.");
         }
-            TextEditor1.get(iTab).setCaretPosition(0);
-            FileChanged.set(iTab, false);
-            TextEditor1.get(iTab).discardAllEdits();
-            UpdateEditorButtons();
-            FileLabelUpdate();
-            if (UseExternalEditor.isSelected()) {
-                TextEditor1.get(iTab).setEditable(false);
-            }
-            log("Loading " + FileName + ": Success.");
+        TextEditor1.get(iTab).setCaretPosition(0);
+        FileChanged.set(iTab, false);
+        TextEditor1.get(iTab).discardAllEdits();
+        UpdateEditorButtons();
+        FileLabelUpdate();
+        if (UseExternalEditor.isSelected()) {
+            TextEditor1.get(iTab).setEditable(false);
+        }
+        log("Loading " + FileName + ": Success.");
         return true;
     }
 
