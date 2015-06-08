@@ -551,11 +551,6 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdGetCWSAP = new JButton();
         JButton cmdGetCIPAPMAC = new JButton();
         JButton cmdGetCWLIF = new JButton();
-        JTextField SSIDsoftAP = new JTextField();
-        JTextField PASSsoftAP = new JTextField();
-        JComboBox encryption = new JComboBox();
-        JComboBox channel = new JComboBox();
-        JTextField softAPIP = new JTextField();
         JLayeredPane TCPclientBottomPane = new JLayeredPane();
         JPanel common = new JPanel();
         conn_id = new javax.swing.JComboBox();
