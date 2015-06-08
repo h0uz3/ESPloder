@@ -142,8 +142,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JCheckBox Condensed;
     private javax.swing.JPopupMenu ContextMenuEditor;
     private javax.swing.JTextField CustomPortName;
-    private javax.swing.JComboBox DHCP;
-    private javax.swing.JComboBox DHCPmode;
     private javax.swing.JSlider Delay;
     private javax.swing.JLabel DelayLabel;
     private javax.swing.JButton DonateSmall;
@@ -176,7 +174,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JLabel LineDelayLabel;
     private javax.swing.JTextArea Log;
     private javax.swing.JTextField LogMaxSize;
-    private javax.swing.JFormattedTextField MAC;
     private javax.swing.JMenuItem MenuItemESPFormat;
     private javax.swing.JMenuItem MenuItemESPReset;
     private javax.swing.JMenuItem MenuItemEditCopy;
@@ -232,7 +229,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JRadioButton OptionMicroPython;
     private javax.swing.JRadioButton OptionNodeMCU;
     private javax.swing.JTextField PASS;
-    private javax.swing.JTextField PASSsoftAP;
     private javax.swing.JComboBox<String> Port;
     private javax.swing.JLabel PortCTS;
     private javax.swing.JToggleButton PortDTR;
@@ -245,12 +241,10 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JLayeredPane RightSnippetsPane;
     private javax.swing.JSplitPane RightSplitPane;
     private javax.swing.JTextField SSID;
-    private javax.swing.JTextField SSIDsoftAP;
     private javax.swing.JScrollPane ScrollLog;
     private javax.swing.JButton SendCommand;
     private javax.swing.JComboBox ServerMode;
     private javax.swing.JTextField ServerPort;
-    private javax.swing.JTextField ServerTimeout;
     private javax.swing.JButton SnippetCancelEdit;
     private javax.swing.JButton SnippetEdit0;
     private javax.swing.JButton SnippetEdit1;
@@ -275,7 +269,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JLayeredPane SnippetTopPane;
     private javax.swing.JLabel SnippetsBusy;
     private javax.swing.JComboBox Speed;
-    private javax.swing.JTextField StationIP;
     private javax.swing.JLayeredPane TCP_common;
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea Terminal;
     private javax.swing.JTextField TerminalMaxSize;
@@ -286,16 +279,13 @@ public class ESPlorer extends javax.swing.JFrame {
     private javax.swing.JCheckBox UseExternalEditor;
     private javax.swing.JLayeredPane WiFi_common;
     private javax.swing.ButtonGroup buttonGroupLF;
-    private javax.swing.JComboBox channel;
     private javax.swing.JButton cmdNodeRestart;
     private javax.swing.JComboBox conn_id;
     private javax.swing.JTextArea data;
-    private javax.swing.JComboBox encryption;
     private javax.swing.JRadioButton multi;
     private javax.swing.JComboBox protocol;
     private javax.swing.JTextField remote_address;
     private javax.swing.JTextField remote_port;
-    private javax.swing.JTextField softAPIP;
     private javax.swing.JTextField udp_local_port;
     private javax.swing.JTextField udp_mode;
     /* Files tab start */
@@ -552,24 +542,24 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdSetCWQAP = new JButton();
         JButton cmdGetCIPSTAMAC = new JButton();
         JButton cmdSetCIPSTAMAC = new JButton();
-        MAC = new javax.swing.JFormattedTextField();
+        JFormattedTextField MAC = new JFormattedTextField();
         JButton cmdGetCIPSTA = new JButton();
         JButton cmdSetCIPSTA = new JButton();
-        StationIP = new javax.swing.JTextField();
+        JTextField stationIP = new JTextField();
         JLayeredPane AT_SoftAP = new JLayeredPane();
         JLayeredPane wiFisoftAPPane = new JLayeredPane();
         JButton cmdSetCWSAP = new JButton();
         JButton cmdGetCWSAP = new JButton();
         JButton cmdGetCIPAPMAC = new JButton();
         JButton cmdGetCWLIF = new JButton();
-        SSIDsoftAP = new javax.swing.JTextField();
-        PASSsoftAP = new javax.swing.JTextField();
+        JTextField SSIDsoftAP = new JTextField();
+        JTextField PASSsoftAP = new JTextField();
         JButton cmdGetCIPAP = new JButton();
         JButton cmdSetCIPAPMAC = new JButton();
         JFormattedTextField MAC1 = new JFormattedTextField();
-        encryption = new javax.swing.JComboBox();
-        channel = new javax.swing.JComboBox();
-        softAPIP = new javax.swing.JTextField();
+        JComboBox encryption = new JComboBox();
+        JComboBox channel = new JComboBox();
+        JTextField softAPIP = new JTextField();
         JButton cmdSetCIPAP = new JButton();
         Box.Filler topWiFiAPFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JPanel AT_Client = new JPanel();
@@ -607,7 +597,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ServerPort = new javax.swing.JTextField();
         JButton cmdGetCIPSTO = new JButton();
         JButton cmdSetCIPSTO = new JButton();
-        ServerTimeout = new javax.swing.JTextField();
+        JTextField serverTimeout = new JTextField();
         JLabel jLabel6 = new JLabel();
         TCP_common = new javax.swing.JLayeredPane();
         WiFi_common = new javax.swing.JLayeredPane();
@@ -616,8 +606,8 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdSetCWMODE2 = new JButton();
         JButton cmdSetCWLAP = new JButton();
         JButton cmdSetCWMODE3 = new JButton();
-        DHCP = new javax.swing.JComboBox();
-        DHCPmode = new javax.swing.JComboBox();
+        JComboBox DHCP = new JComboBox();
+        JComboBox DHCPmode = new JComboBox();
         JLabel comingSoon1 = new JLabel();
         JLayeredPane rightBasePane = new JLayeredPane();
         JLayeredPane LEDPanel = new JLayeredPane();
@@ -2812,11 +2802,11 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        StationIP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        StationIP.setText("192.168.1.50");
-        StationIP.setMaximumSize(new java.awt.Dimension(210, 23));
-        StationIP.setMinimumSize(new java.awt.Dimension(210, 23));
-        StationIP.setPreferredSize(new java.awt.Dimension(210, 23));
+        stationIP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        stationIP.setText("192.168.1.50");
+        stationIP.setMaximumSize(new java.awt.Dimension(210, 23));
+        stationIP.setMinimumSize(new java.awt.Dimension(210, 23));
+        stationIP.setPreferredSize(new java.awt.Dimension(210, 23));
 
 
         cmdSetCWSAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -3117,7 +3107,7 @@ public class ESPlorer extends javax.swing.JFrame {
                                                 .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
                                                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(ServerTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(serverTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                         .addComponent(cmdSetCIPMODE1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(cmdGetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -3152,7 +3142,7 @@ public class ESPlorer extends javax.swing.JFrame {
                                 .addComponent(cmdGetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(ServerTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(serverTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel6))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cmdSetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3167,7 +3157,7 @@ public class ESPlorer extends javax.swing.JFrame {
         TCPServerBottomPane.setLayer(ServerPort, javax.swing.JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdGetCIPSTO, javax.swing.JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdSetCIPSTO, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(ServerTimeout, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(serverTimeout, javax.swing.JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout AT_ServerLayout = new javax.swing.GroupLayout(AT_Server);
