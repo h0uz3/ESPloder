@@ -535,7 +535,6 @@ public class ESPlorer extends javax.swing.JFrame {
         UseCustomPortName = new javax.swing.JCheckBox();
         JLabel jLabel10 = new JLabel();
         AutodetectFirmware = new javax.swing.JCheckBox();
-        JPanel AT_Station = new JPanel();
         Box.Filler topWiFiStaFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JButton cmdGetCWJAP = new JButton();
         JButton cmdSetCWJAP = new JButton();
@@ -548,24 +547,15 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdGetCIPSTA = new JButton();
         JButton cmdSetCIPSTA = new JButton();
         JTextField stationIP = new JTextField();
-        JLayeredPane AT_SoftAP = new JLayeredPane();
-        JLayeredPane wiFisoftAPPane = new JLayeredPane();
         JButton cmdSetCWSAP = new JButton();
         JButton cmdGetCWSAP = new JButton();
         JButton cmdGetCIPAPMAC = new JButton();
         JButton cmdGetCWLIF = new JButton();
         JTextField SSIDsoftAP = new JTextField();
         JTextField PASSsoftAP = new JTextField();
-        JButton cmdGetCIPAP = new JButton();
-        JButton cmdSetCIPAPMAC = new JButton();
-        JFormattedTextField MAC1 = new JFormattedTextField();
         JComboBox encryption = new JComboBox();
         JComboBox channel = new JComboBox();
         JTextField softAPIP = new JTextField();
-        JButton cmdSetCIPAP = new JButton();
-        Box.Filler topWiFiAPFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
-        JPanel AT_Client = new JPanel();
-        Box.Filler topWiFiStaFiller1 = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JLayeredPane TCPclientBottomPane = new JLayeredPane();
         JPanel common = new JPanel();
         conn_id = new javax.swing.JComboBox();
@@ -5331,7 +5321,6 @@ public class ESPlorer extends javax.swing.JFrame {
     }
 
     private boolean LoadFile() {
-        boolean success;
         if (isFileNew()) {
             UpdateEditorButtons();
             log("Internal error 101: FileTab is NewFile.");
