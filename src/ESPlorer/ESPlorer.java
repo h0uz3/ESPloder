@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -4826,6 +4827,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 try {
                     Thread.sleep(200L);
                 } catch (Exception e) {
+
                 }
             } else {
                 return;
@@ -5879,9 +5881,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 "_dl() " +
                 "_dl=nil\n";
         s = cmd.split("\r?\n");
-        for (String subs : s) {
-            sendBuf.add(subs);
-        }
+        Collections.addAll(sendBuf, s);
         log("Downloader: Starting...");
         startTime = System.currentTimeMillis();
         SendLock();
