@@ -8,6 +8,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.Document;
 import java.awt.*;
@@ -758,7 +759,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
 
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
-                ContextMenuTerminalPopupMenuWillBecomeVisible(evt);
+                ContextMenuTerminalPopupMenuWillBecomeVisible();
             }
         });
 
@@ -789,7 +790,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFontInc.setText("Inc font size");
         MenuItemTerminalFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalFontIncActionPerformed(evt);
+                MenuItemTerminalFontIncActionPerformed();
             }
         });
         contextMenuTerminal.add(MenuItemTerminalFontInc);
@@ -799,7 +800,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFontDec.setText("Dec font size");
         MenuItemTerminalFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalFontDecActionPerformed(evt);
+                MenuItemTerminalFontDecActionPerformed();
             }
         });
         contextMenuTerminal.add(MenuItemTerminalFontDec);
@@ -811,7 +812,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalReset.setEnabled(false);
         MenuItemTerminalReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalResetActionPerformed(evt);
+                MenuItemTerminalResetActionPerformed();
             }
         });
         contextMenuTerminal.add(MenuItemTerminalReset);
@@ -822,7 +823,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFormat.setEnabled(false);
         MenuItemTerminalFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemTerminalFormatActionPerformed(evt);
+                MenuItemTerminalFormatActionPerformed();
             }
         });
         contextMenuTerminal.add(MenuItemTerminalFormat);
@@ -834,7 +835,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorUndo.setEnabled(false);
         MenuItemEditorUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorUndoActionPerformed(evt);
+                MenuItemEditorUndoActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorUndo);
@@ -846,7 +847,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorRedo.setEnabled(false);
         MenuItemEditorRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorRedoActionPerformed(evt);
+                MenuItemEditorRedoActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorRedo);
@@ -858,7 +859,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorSendSelected.setToolTipText("Send selected fragment to ESP");
         MenuItemEditorSendSelected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorSendSelectedActionPerformed(evt);
+                MenuItemEditorSendSelectedActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorSendSelected);
@@ -869,7 +870,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorSendLine.setToolTipText("Send current line to ESP");
         MenuItemEditorSendLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorSendLineActionPerformed(evt);
+                MenuItemEditorSendLineActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorSendLine);
@@ -881,7 +882,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorCut.setEnabled(false);
         MenuItemEditorCut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorCutActionPerformed(evt);
+                MenuItemEditorCutActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorCut);
@@ -892,7 +893,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorCopy.setEnabled(false);
         MenuItemEditorCopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorCopyActionPerformed(evt);
+                MenuItemEditorCopyActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorCopy);
@@ -903,7 +904,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditorPaste.setEnabled(false);
         MenuItemEditorPaste.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorPasteActionPerformed(evt);
+                MenuItemEditorPasteActionPerformed();
             }
         });
         ContextMenuEditor.add(MenuItemEditorPaste);
@@ -914,7 +915,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemEditorFontInc.setText("Inc font size");
         menuItemEditorFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorFontIncActionPerformed(evt);
+                MenuItemEditorFontIncActionPerformed();
             }
         });
         ContextMenuEditor.add(menuItemEditorFontInc);
@@ -924,7 +925,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemEditorFontDec.setText("Dec font size");
         menuItemEditorFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditorFontDecActionPerformed(evt);
+                MenuItemEditorFontDecActionPerformed();
             }
         });
         ContextMenuEditor.add(menuItemEditorFontDec);
@@ -935,7 +936,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemLogClear.setToolTipText("");
         MenuItemLogClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLogClearActionPerformed(evt);
+                MenuItemLogClearActionPerformed();
             }
         });
         contextMenuLog.add(MenuItemLogClear);
@@ -945,7 +946,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLogClose.setToolTipText("");
         menuItemLogClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLogCloseActionPerformed(evt);
+                MenuItemLogCloseActionPerformed();
             }
         });
         contextMenuLog.add(menuItemLogClose);
@@ -956,7 +957,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLogFontInc.setText("Inc font size");
         menuItemLogFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLogFontIncActionPerformed(evt);
+                MenuItemLogFontIncActionPerformed();
             }
         });
         contextMenuLog.add(menuItemLogFontInc);
@@ -966,7 +967,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLogFontDec.setText("Dec font size");
         menuItemLogFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLogFontDecActionPerformed(evt);
+                MenuItemLogFontDecActionPerformed();
             }
         });
         contextMenuLog.add(menuItemLogFontDec);
@@ -979,7 +980,7 @@ public class ESPlorer extends javax.swing.JFrame {
         aboutDialog.setResizable(false);
         aboutDialog.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                AboutFocusLost(evt);
+                AboutFocusLost();
             }
         });
 
@@ -996,7 +997,7 @@ public class ESPlorer extends javax.swing.JFrame {
         donate.setToolTipText("If you'd like to make a one-time donation to ESPlorer author, you can use PayPal to make it fast and easy.");
         donate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DonateActionPerformed(evt);
+                DonateActionPerformed();
             }
         });
 
@@ -1013,7 +1014,7 @@ public class ESPlorer extends javax.swing.JFrame {
         homePage.setPreferredSize(new java.awt.Dimension(200, 55));
         homePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HomePageActionPerformed(evt);
+                HomePageActionPerformed();
             }
         });
 
@@ -1087,12 +1088,12 @@ public class ESPlorer extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1024, 768));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                formFocusGained(evt);
+                formFocusGained();
             }
         });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
+                formComponentResized();
             }
         });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -1111,11 +1112,11 @@ public class ESPlorer extends javax.swing.JFrame {
             }
 
             public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
+                formWindowClosing();
             }
 
             public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+                formWindowOpened();
             }
         });
 
@@ -1134,7 +1135,7 @@ public class ESPlorer extends javax.swing.JFrame {
         LeftTab.setMinimumSize(new java.awt.Dimension(100, 100));
         LeftTab.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                LeftTabStateChanged(evt);
+                LeftTabStateChanged();
             }
         });
 
@@ -1147,7 +1148,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         nodeMCU.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
-                NodeMCUComponentShown(evt);
+                NodeMCUComponentShown();
             }
         });
 
@@ -1186,7 +1187,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonFileNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileNewActionPerformed(evt);
+                ButtonFileNewActionPerformed();
             }
         });
         FilesToolBar.add(ButtonFileNew);
@@ -1224,7 +1225,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonFileReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileReloadActionPerformed(evt);
+                ButtonFileReloadActionPerformed();
             }
         });
         FilesToolBar.add(ButtonFileReload);
@@ -1242,7 +1243,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonFileSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonFileSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileSaveActionPerformed(evt);
+                ButtonFileSaveActionPerformed();
             }
         });
         FilesToolBar.add(ButtonFileSave);
@@ -1262,7 +1263,7 @@ public class ESPlorer extends javax.swing.JFrame {
         buttonFileSaveAll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         buttonFileSaveAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileSaveAllActionPerformed(evt);
+                ButtonFileSaveAllActionPerformed();
             }
         });
         FilesToolBar.add(buttonFileSaveAll);
@@ -1283,7 +1284,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonFileClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileCloseActionPerformed(evt);
+                ButtonFileCloseActionPerformed();
             }
         });
         FilesToolBar.add(ButtonFileClose);
@@ -1303,7 +1304,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonUndo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonUndoActionPerformed(evt);
+                ButtonUndoActionPerformed();
             }
         });
         FilesToolBar.add(ButtonUndo);
@@ -1322,7 +1323,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonRedo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonRedoActionPerformed(evt);
+                ButtonRedoActionPerformed();
             }
         });
         FilesToolBar.add(ButtonRedo);
@@ -1342,7 +1343,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonCut.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonCut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonCutActionPerformed(evt);
+                ButtonCutActionPerformed();
             }
         });
         FilesToolBar.add(ButtonCut);
@@ -1362,7 +1363,7 @@ public class ESPlorer extends javax.swing.JFrame {
         copyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         copyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonCopyActionPerformed(evt);
+                ButtonCopyActionPerformed();
             }
         });
         FilesToolBar.add(copyButton);
@@ -1381,7 +1382,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonPaste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonPaste.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonPasteActionPerformed(evt);
+                ButtonPasteActionPerformed();
             }
         });
         FilesToolBar.add(ButtonPaste);
@@ -1403,7 +1404,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonSendSelected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSendSelectedActionPerformed(evt);
+                ButtonSendSelectedActionPerformed();
             }
         });
         FilesToolBar.add(ButtonSendSelected);
@@ -1421,14 +1422,14 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSendLine.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ButtonSendLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSendLineActionPerformed(evt);
+                ButtonSendLineActionPerformed();
             }
         });
         FilesToolBar.add(ButtonSendLine);
 
         FilesTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                FilesTabbedPaneStateChanged(evt);
+                FilesTabbedPaneStateChanged();
             }
         });
 
@@ -1455,7 +1456,7 @@ public class ESPlorer extends javax.swing.JFrame {
         textEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
         textEditor.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                TextEditorCaretUpdate(evt);
+                TextEditorCaretUpdate();
             }
         });
         textEditor.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1464,12 +1465,12 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         textEditor.addActiveLineRangeListener(new org.fife.ui.rsyntaxtextarea.ActiveLineRangeListener() {
             public void activeLineRangeChanged(org.fife.ui.rsyntaxtextarea.ActiveLineRangeEvent evt) {
-                TextEditorActiveLineRangeChanged(evt);
+                TextEditorActiveLineRangeChanged();
             }
         });
         textEditor.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                TextEditorCaretPositionChanged(evt);
+                TextEditorCaretPositionChanged();
             }
 
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
@@ -1477,7 +1478,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         textEditor.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                TextEditorKeyTyped(evt);
+                TextEditorKeyTyped();
             }
         });
         textScroll.setViewportView(textEditor);
@@ -1526,7 +1527,7 @@ public class ESPlorer extends javax.swing.JFrame {
         fileCompile.setPreferredSize(new java.awt.Dimension(127, 30));
         fileCompile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileCompileActionPerformed(evt);
+                FileCompileActionPerformed();
             }
         });
         LeftExtraButtons.add(fileCompile);
@@ -1555,7 +1556,7 @@ public class ESPlorer extends javax.swing.JFrame {
         fileCompileDoLC.setPreferredSize(new java.awt.Dimension(127, 30));
         fileCompileDoLC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileCompileDoLCActionPerformed(evt);
+                FileCompileDoLCActionPerformed();
             }
         });
         LeftExtraButtons.add(fileCompileDoLC);
@@ -1600,7 +1601,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileSaveESP.setPreferredSize(new java.awt.Dimension(127, 30));
         FileSaveESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileSaveESPActionPerformed(evt);
+                FileSaveESPActionPerformed();
             }
         });
         leftMainButtons.add(FileSaveESP);
@@ -1616,7 +1617,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileSendESP.setPreferredSize(new java.awt.Dimension(127, 30));
         FileSendESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileSendESPActionPerformed(evt);
+                FileSendESPActionPerformed();
             }
         });
         leftMainButtons.add(FileSendESP);
@@ -1632,7 +1633,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileDo.setPreferredSize(new java.awt.Dimension(127, 30));
         FileDo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileDoActionPerformed(evt);
+                FileDoActionPerformed();
             }
         });
         leftMainButtons.add(FileDo);
@@ -1648,7 +1649,7 @@ public class ESPlorer extends javax.swing.JFrame {
         filesUpload.setPreferredSize(new java.awt.Dimension(127, 30));
         filesUpload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FilesUploadActionPerformed(evt);
+                FilesUploadActionPerformed();
             }
         });
         leftMainButtons.add(filesUpload);
@@ -1710,7 +1711,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdNodeRestart.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdNodeRestart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdNodeRestartActionPerformed(evt);
+                cmdNodeRestartActionPerformed();
             }
         });
 
@@ -1749,7 +1750,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdNodeSleep.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdNodeSleep.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdNodeSleepActionPerformed(evt);
+                cmdNodeSleepActionPerformed();
             }
         });
 
@@ -1762,7 +1763,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdListFiles.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdListFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdListFilesActionPerformed(evt);
+                cmdListFilesActionPerformed();
             }
         });
 
@@ -1775,7 +1776,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdTimerStop.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdTimerStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdTimerStopActionPerformed(evt);
+                cmdTimerStopActionPerformed();
             }
         });
 
@@ -1859,7 +1860,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit0.setText("Edit Snippet0");
         SnippetEdit0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit0ActionPerformed(evt);
+                SnippetEdit0ActionPerformed();
             }
         });
 
@@ -1867,7 +1868,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit1.setText("Edit Snippet1");
         SnippetEdit1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit1ActionPerformed(evt);
+                SnippetEdit1ActionPerformed();
             }
         });
 
@@ -1875,7 +1876,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit2.setText("Edit Snippet2");
         SnippetEdit2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit2ActionPerformed(evt);
+                SnippetEdit2ActionPerformed();
             }
         });
 
@@ -1883,7 +1884,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit3.setText("Edit Snippet3");
         SnippetEdit3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit3ActionPerformed(evt);
+                SnippetEdit3ActionPerformed();
             }
         });
 
@@ -1891,7 +1892,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit4.setText("Edit Snippet4");
         SnippetEdit4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit4ActionPerformed(evt);
+                SnippetEdit4ActionPerformed();
             }
         });
 
@@ -1899,7 +1900,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit5.setText("Edit Snippet5");
         SnippetEdit5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit5ActionPerformed(evt);
+                SnippetEdit5ActionPerformed();
             }
         });
 
@@ -1907,7 +1908,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit6.setText("Edit Snippet6");
         SnippetEdit6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit6ActionPerformed(evt);
+                SnippetEdit6ActionPerformed();
             }
         });
 
@@ -1915,7 +1916,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit7.setText("Edit Snippet7");
         SnippetEdit7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit7ActionPerformed(evt);
+                SnippetEdit7ActionPerformed();
             }
         });
 
@@ -1923,7 +1924,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit8.setText("Edit Snippet8");
         SnippetEdit8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit8ActionPerformed(evt);
+                SnippetEdit8ActionPerformed();
             }
         });
 
@@ -1931,7 +1932,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit9.setText("Edit Snippet9");
         SnippetEdit9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit9ActionPerformed(evt);
+                SnippetEdit9ActionPerformed();
             }
         });
 
@@ -1939,7 +1940,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit10.setText("Edit Snippet10");
         SnippetEdit10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit10ActionPerformed(evt);
+                SnippetEdit10ActionPerformed();
             }
         });
 
@@ -1947,7 +1948,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit11.setText("Edit Snippet11");
         SnippetEdit11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit11ActionPerformed(evt);
+                SnippetEdit11ActionPerformed();
             }
         });
 
@@ -1955,7 +1956,7 @@ public class ESPlorer extends javax.swing.JFrame {
         snippetEdit12.setText("Edit Snippet12");
         snippetEdit12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit12ActionPerformed(evt);
+                SnippetEdit12ActionPerformed();
             }
         });
 
@@ -1963,7 +1964,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit13.setText("Edit Snippet13");
         SnippetEdit13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit13ActionPerformed(evt);
+                SnippetEdit13ActionPerformed();
             }
         });
 
@@ -1971,7 +1972,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit14.setText("Edit Snippet14");
         SnippetEdit14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit14ActionPerformed(evt);
+                SnippetEdit14ActionPerformed();
             }
         });
 
@@ -1979,7 +1980,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetEdit15.setText("Edit Snippet15");
         SnippetEdit15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetEdit15ActionPerformed(evt);
+                SnippetEdit15ActionPerformed();
             }
         });
 
@@ -2069,7 +2070,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetSave.setMargin(new java.awt.Insets(2, 2, 2, 2));
         SnippetSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetSaveActionPerformed(evt);
+                SnippetSaveActionPerformed();
             }
         });
 
@@ -2081,7 +2082,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetRun.setMargin(new java.awt.Insets(2, 2, 2, 2));
         SnippetRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetRunActionPerformed(evt);
+                SnippetRunActionPerformed();
             }
         });
 
@@ -2100,14 +2101,14 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetCancelEdit.setMargin(new java.awt.Insets(2, 2, 2, 2));
         SnippetCancelEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SnippetCancelEditActionPerformed(evt);
+                SnippetCancelEditActionPerformed();
             }
         });
 
         Condensed.setText("Condensed executing");
         Condensed.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                CondensedItemStateChanged(evt);
+                CondensedItemStateChanged();
             }
         });
 
@@ -2200,7 +2201,7 @@ public class ESPlorer extends javax.swing.JFrame {
         OptionNodeMCU.setToolTipText("");
         OptionNodeMCU.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                OptionNodeMCUItemStateChanged(evt);
+                OptionNodeMCUItemStateChanged();
             }
         });
 
@@ -2210,7 +2211,7 @@ public class ESPlorer extends javax.swing.JFrame {
         OptionMicroPython.setEnabled(false);
         OptionMicroPython.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                OptionMicroPythonItemStateChanged(evt);
+                OptionMicroPythonItemStateChanged();
             }
         });
 
@@ -2242,7 +2243,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAutoSaveDisk.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         FileAutoSaveDisk.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                FileAutoSaveDiskItemStateChanged(evt);
+                FileAutoSaveDiskItemStateChanged();
             }
         });
 
@@ -2254,7 +2255,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAutoSaveESP.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         FileAutoSaveESP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                FileAutoSaveESPItemStateChanged(evt);
+                FileAutoSaveESPItemStateChanged();
             }
         });
 
@@ -2266,7 +2267,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAutoRun.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         FileAutoRun.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                FileAutoRunItemStateChanged(evt);
+                FileAutoRunItemStateChanged();
             }
         });
 
@@ -2277,7 +2278,7 @@ public class ESPlorer extends javax.swing.JFrame {
         EditorTheme.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Default", "Dark", "Eclipse", "IDEA", "Visual Studio", "Default-alt"}));
         EditorTheme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditorThemeActionPerformed(evt);
+                EditorThemeActionPerformed();
             }
         });
 
@@ -2288,7 +2289,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UseExternalEditor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         UseExternalEditor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                UseExternalEditorItemStateChanged(evt);
+                UseExternalEditorItemStateChanged();
             }
         });
 
@@ -2369,7 +2370,7 @@ public class ESPlorer extends javax.swing.JFrame {
         AnswerDelay.setValue(3);
         AnswerDelay.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                AnswerDelayStateChanged(evt);
+                AnswerDelayStateChanged();
             }
         });
 
@@ -2378,7 +2379,7 @@ public class ESPlorer extends javax.swing.JFrame {
         DumbMode.setToolTipText("");
         DumbMode.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                DumbModeItemStateChanged(evt);
+                DumbModeItemStateChanged();
             }
         });
 
@@ -2406,7 +2407,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         LineDelay.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                LineDelayStateChanged(evt);
+                LineDelayStateChanged();
             }
         });
 
@@ -2419,7 +2420,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         TurboMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TurboModeActionPerformed(evt);
+                TurboModeActionPerformed();
             }
         });
 
@@ -2489,7 +2490,7 @@ public class ESPlorer extends javax.swing.JFrame {
         TerminalMaxSize.setToolTipText("");
         TerminalMaxSize.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                TerminalMaxSizeFocusLost(evt);
+                TerminalMaxSizeFocusLost();
             }
         });
 
@@ -2498,7 +2499,7 @@ public class ESPlorer extends javax.swing.JFrame {
         LogMaxSize.setToolTipText("");
         LogMaxSize.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                LogMaxSizeFocusLost(evt);
+                LogMaxSizeFocusLost();
             }
         });
         LogMaxSize.addActionListener(new java.awt.event.ActionListener() {
@@ -2558,7 +2559,7 @@ public class ESPlorer extends javax.swing.JFrame {
         CustomPortName.setMinimumSize(new java.awt.Dimension(50, 19));
         CustomPortName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                CustomPortNameFocusLost(evt);
+                CustomPortNameFocusLost();
             }
         });
 
@@ -2567,7 +2568,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UseCustomPortName.setToolTipText("Use custom serial port name (AutoScan will be disabled)");
         UseCustomPortName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UseCustomPortNameActionPerformed(evt);
+                UseCustomPortNameActionPerformed();
             }
         });
 
@@ -2581,7 +2582,7 @@ public class ESPlorer extends javax.swing.JFrame {
         AutodetectFirmware.setToolTipText("Use custom serial port name (AutoScan will be disabled)");
         AutodetectFirmware.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                AutodetectFirmwareItemStateChanged(evt);
+                AutodetectFirmwareItemStateChanged();
             }
         });
 
@@ -2701,7 +2702,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SSID.setPreferredSize(new java.awt.Dimension(100, 23));
         SSID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                SSIDFocusGained(evt);
+                SSIDFocusGained();
             }
         });
         SSID.addActionListener(new java.awt.event.ActionListener() {
@@ -2717,7 +2718,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PASS.setPreferredSize(new java.awt.Dimension(104, 23));
         PASS.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                PASSFocusGained(evt);
+                PASSFocusGained();
             }
         });
         PASS.addActionListener(new java.awt.event.ActionListener() {
@@ -3011,7 +3012,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdCIPSEND.setToolTipText("Send data to remote client");
         cmdCIPSEND.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdCIPSENDActionPerformed(evt);
+                cmdCIPSENDActionPerformed();
             }
         });
 
@@ -3027,7 +3028,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdSetCIPCLOSE.setToolTipText("Close current connection in Single mode and close connection <ID> in Multiple mode");
         cmdSetCIPCLOSE.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPCLOSEActionPerformed(evt);
+                cmdSetCIPCLOSEActionPerformed();
             }
         });
 
@@ -3308,7 +3309,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PortDTR.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         PortDTR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PortDTRActionPerformed(evt);
+                PortDTRActionPerformed();
             }
         });
 
@@ -3320,7 +3321,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PortRTS.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         PortRTS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PortRTSActionPerformed(evt);
+                PortRTSActionPerformed();
             }
         });
 
@@ -3347,7 +3348,7 @@ public class ESPlorer extends javax.swing.JFrame {
         Speed.setPreferredSize(new java.awt.Dimension(80, 25));
         Speed.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                SpeedItemStateChanged(evt);
+                SpeedItemStateChanged();
             }
         });
         Speed.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -3356,7 +3357,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         Speed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SpeedActionPerformed(evt);
+                SpeedActionPerformed();
             }
         });
 
@@ -3378,7 +3379,7 @@ public class ESPlorer extends javax.swing.JFrame {
         AutoScroll.setPreferredSize(new java.awt.Dimension(60, 25));
         AutoScroll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AutoScrollActionPerformed(evt);
+                AutoScrollActionPerformed();
             }
         });
 
@@ -3405,7 +3406,7 @@ public class ESPlorer extends javax.swing.JFrame {
         EOL.setPreferredSize(new java.awt.Dimension(60, 25));
         EOL.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                EOLItemStateChanged(evt);
+                EOLItemStateChanged();
             }
         });
 
@@ -3705,7 +3706,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileFormat.setPreferredSize(new java.awt.Dimension(130, 25));
         FileFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileFormatActionPerformed(evt);
+                FileFormatActionPerformed();
             }
         });
         FileManagerPane.add(FileFormat);
@@ -3720,7 +3721,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileSystemInfo.setPreferredSize(new java.awt.Dimension(130, 25));
         FileSystemInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileSystemInfoActionPerformed(evt);
+                FileSystemInfoActionPerformed();
             }
         });
         FileManagerPane.add(FileSystemInfo);
@@ -3735,7 +3736,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileListReload.setPreferredSize(new java.awt.Dimension(130, 25));
         FileListReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileListReloadActionPerformed(evt);
+                FileListReloadActionPerformed();
             }
         });
         FileManagerPane.add(FileListReload);
@@ -3778,7 +3779,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileRename.setPreferredSize(new java.awt.Dimension(130, 25));
         FileRename.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileRenameActionPerformed(evt);
+                FileRenameActionPerformed();
             }
         });
 
@@ -3816,7 +3817,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet0.setText("Snippet0");
         ButtonSnippet0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet0ActionPerformed(evt);
+                ButtonSnippet0ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet0);
@@ -3826,7 +3827,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet1.setText("Snippet1");
         ButtonSnippet1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet1ActionPerformed(evt);
+                ButtonSnippet1ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet1);
@@ -3836,7 +3837,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet2.setText("Snippet2");
         ButtonSnippet2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet2ActionPerformed(evt);
+                ButtonSnippet2ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet2);
@@ -3846,7 +3847,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet3.setText("Snippet3");
         ButtonSnippet3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet3ActionPerformed(evt);
+                ButtonSnippet3ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet3);
@@ -3857,7 +3858,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet4.setToolTipText("");
         ButtonSnippet4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet4ActionPerformed(evt);
+                ButtonSnippet4ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet4);
@@ -3867,7 +3868,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet5.setText("Snippet5");
         ButtonSnippet5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet5ActionPerformed(evt);
+                ButtonSnippet5ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet5);
@@ -3877,7 +3878,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet6.setText("Snippet6");
         ButtonSnippet6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet6ActionPerformed(evt);
+                ButtonSnippet6ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet6);
@@ -3887,7 +3888,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet7.setText("Snippet7");
         ButtonSnippet7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet7ActionPerformed(evt);
+                ButtonSnippet7ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet7);
@@ -3897,7 +3898,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet8.setText("Snippet8");
         ButtonSnippet8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet8ActionPerformed(evt);
+                ButtonSnippet8ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet8);
@@ -3907,7 +3908,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet9.setText("Snippet9");
         ButtonSnippet9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet9ActionPerformed(evt);
+                ButtonSnippet9ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet9);
@@ -3917,7 +3918,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet10.setText("Snippet10");
         ButtonSnippet10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet10ActionPerformed(evt);
+                ButtonSnippet10ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet10);
@@ -3927,7 +3928,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet11.setText("Snippet11");
         ButtonSnippet11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet11ActionPerformed(evt);
+                ButtonSnippet11ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet11);
@@ -3937,7 +3938,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet12.setText("Snippet12");
         ButtonSnippet12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet12ActionPerformed(evt);
+                ButtonSnippet12ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet12);
@@ -3947,7 +3948,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet13.setText("Snippet13");
         ButtonSnippet13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet13ActionPerformed(evt);
+                ButtonSnippet13ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet13);
@@ -3957,7 +3958,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet14.setText("Snippet14");
         ButtonSnippet14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet14ActionPerformed(evt);
+                ButtonSnippet14ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet14);
@@ -3966,7 +3967,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ButtonSnippet15.setText("Snippet15");
         ButtonSnippet15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonSnippet15ActionPerformed(evt);
+                ButtonSnippet15ActionPerformed();
             }
         });
         RightSnippetsPane.add(ButtonSnippet15);
@@ -3994,7 +3995,7 @@ public class ESPlorer extends javax.swing.JFrame {
         logo.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         logo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logoMouseClicked(evt);
+                logoMouseClicked();
             }
         });
 
@@ -4008,7 +4009,7 @@ public class ESPlorer extends javax.swing.JFrame {
         nodeHeap.setPreferredSize(new java.awt.Dimension(87, 30));
         nodeHeap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NodeHeapActionPerformed(evt);
+                NodeHeapActionPerformed();
             }
         });
         RightExtraButtons.add(nodeHeap);
@@ -4021,7 +4022,7 @@ public class ESPlorer extends javax.swing.JFrame {
         nodeInfo.setPreferredSize(new java.awt.Dimension(87, 30));
         nodeInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NodeInfoActionPerformed(evt);
+                NodeInfoActionPerformed();
             }
         });
         RightExtraButtons.add(nodeInfo);
@@ -4035,7 +4036,7 @@ public class ESPlorer extends javax.swing.JFrame {
         nodeChipID.setPreferredSize(new java.awt.Dimension(87, 30));
         nodeChipID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NodeChipIDActionPerformed(evt);
+                NodeChipIDActionPerformed();
             }
         });
         RightExtraButtons.add(nodeChipID);
@@ -4049,7 +4050,7 @@ public class ESPlorer extends javax.swing.JFrame {
         nodeFlashID.setPreferredSize(new java.awt.Dimension(87, 30));
         nodeFlashID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NodeFlashIDActionPerformed(evt);
+                NodeFlashIDActionPerformed();
             }
         });
         RightExtraButtons.add(nodeFlashID);
@@ -4064,7 +4065,7 @@ public class ESPlorer extends javax.swing.JFrame {
         NodeReset.setPreferredSize(new java.awt.Dimension(87, 30));
         NodeReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NodeResetActionPerformed(evt);
+                NodeResetActionPerformed();
             }
         });
         RightExtraButtons.add(NodeReset);
@@ -4077,7 +4078,7 @@ public class ESPlorer extends javax.swing.JFrame {
         DonateSmall.setPreferredSize(new java.awt.Dimension(100, 35));
         DonateSmall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DonateSmallActionPerformed(evt);
+                DonateSmallActionPerformed();
             }
         });
 
@@ -4143,7 +4144,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileNew.setToolTipText("File New");
         MenuItemFileNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileNewActionPerformed(evt);
+                MenuItemFileNewActionPerformed();
             }
         });
         menuFile.add(MenuItemFileNew);
@@ -4153,7 +4154,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileOpen.setText("<html><u>O</u>pen from disk");
         MenuItemFileOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileOpenActionPerformed(evt);
+                MenuItemFileOpenActionPerformed();
             }
         });
         menuFile.add(MenuItemFileOpen);
@@ -4165,7 +4166,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileReload.setEnabled(false);
         MenuItemFileReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileReloadActionPerformed(evt);
+                MenuItemFileReloadActionPerformed();
             }
         });
         menuFile.add(MenuItemFileReload);
@@ -4175,7 +4176,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileSave.setText("<html><u>S</u>ave to disk");
         MenuItemFileSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileSaveActionPerformed(evt);
+                MenuItemFileSaveActionPerformed();
             }
         });
         menuFile.add(MenuItemFileSave);
@@ -4199,7 +4200,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileClose.setText("Close");
         MenuItemFileClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileCloseActionPerformed(evt);
+                MenuItemFileCloseActionPerformed();
             }
         });
         menuFile.add(MenuItemFileClose);
@@ -4214,7 +4215,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         MenuItemFileSaveESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileSaveESPActionPerformed(evt);
+                MenuItemFileSaveESPActionPerformed();
             }
         });
         menuFile.add(MenuItemFileSaveESP);
@@ -4229,7 +4230,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileSendESP.setText("<html>S<u>e</u>nd to ESP");
         MenuItemFileSendESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileSendESPActionPerformed(evt);
+                MenuItemFileSendESPActionPerformed();
             }
         });
         menuFile.add(MenuItemFileSendESP);
@@ -4245,7 +4246,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileDo.setText("<html><u>D</u>oFile on ESP");
         MenuItemFileDo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileDoActionPerformed(evt);
+                MenuItemFileDoActionPerformed();
             }
         });
         menuFile.add(MenuItemFileDo);
@@ -4256,7 +4257,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemFileRemoveESP.setText("<html><u>R</u>emove from ESP");
         MenuItemFileRemoveESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemFileRemoveESPActionPerformed(evt);
+                MenuItemFileRemoveESPActionPerformed();
             }
         });
         menuFile.add(MenuItemFileRemoveESP);
@@ -4280,7 +4281,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditUndo.setEnabled(false);
         MenuItemEditUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditUndoActionPerformed(evt);
+                MenuItemEditUndoActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditUndo);
@@ -4291,7 +4292,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditRedo.setEnabled(false);
         MenuItemEditRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditRedoActionPerformed(evt);
+                MenuItemEditRedoActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditRedo);
@@ -4303,7 +4304,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditCut.setEnabled(false);
         MenuItemEditCut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditCutActionPerformed(evt);
+                MenuItemEditCutActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditCut);
@@ -4314,7 +4315,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditCopy.setEnabled(false);
         MenuItemEditCopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditCopyActionPerformed(evt);
+                MenuItemEditCopyActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditCopy);
@@ -4326,7 +4327,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditPaste.setEnabled(false);
         MenuItemEditPaste.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditPasteActionPerformed(evt);
+                MenuItemEditPasteActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditPaste);
@@ -4342,7 +4343,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         MenuItemEditSendSelected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditSendSelectedActionPerformed(evt);
+                MenuItemEditSendSelectedActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditSendSelected);
@@ -4353,7 +4354,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemEditSendLine.setToolTipText("Send current line from code editor window to ESP");
         MenuItemEditSendLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemEditSendLineActionPerformed(evt);
+                MenuItemEditSendLineActionPerformed();
             }
         });
         menuEdit.add(MenuItemEditSendLine);
@@ -4369,7 +4370,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemESPReset.setEnabled(false);
         MenuItemESPReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemESPResetActionPerformed(evt);
+                MenuItemESPResetActionPerformed();
             }
         });
         menuESP.add(MenuItemESPReset);
@@ -4380,7 +4381,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemESPFormat.setEnabled(false);
         MenuItemESPFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemESPFormatActionPerformed(evt);
+                MenuItemESPFormatActionPerformed();
             }
         });
         menuESP.add(MenuItemESPFormat);
@@ -4399,7 +4400,7 @@ public class ESPlorer extends javax.swing.JFrame {
         AlwaysOnTop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AlwaysOnTop.png"))); // NOI18N
         AlwaysOnTop.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                AlwaysOnTopItemStateChanged(evt);
+                AlwaysOnTopItemStateChanged();
             }
         });
         MenuView.add(AlwaysOnTop);
@@ -4411,12 +4412,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/backup.png"))); // NOI18N
         MenuItemViewLog.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewLogItemStateChanged(evt);
+                MenuItemViewLogItemStateChanged();
             }
         });
         MenuItemViewLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewLogActionPerformed(evt);
+                MenuItemViewLogActionPerformed();
             }
         });
         MenuView.add(MenuItemViewLog);
@@ -4427,7 +4428,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemViewClearLog.setToolTipText("Clear log window");
         menuItemViewClearLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewClearLogActionPerformed(evt);
+                MenuItemViewClearLogActionPerformed();
             }
         });
         MenuView.add(menuItemViewClearLog);
@@ -4438,7 +4439,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemViewClearTerminal.setToolTipText("Clear terminal window");
         menuItemViewClearTerminal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewClearTerminalActionPerformed(evt);
+                MenuItemViewClearTerminalActionPerformed();
             }
         });
         MenuView.add(menuItemViewClearTerminal);
@@ -4449,12 +4450,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewToolbar.setToolTipText("Enable/disable files toolbar at top left");
         MenuItemViewToolbar.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewToolbarItemStateChanged(evt);
+                MenuItemViewToolbarItemStateChanged();
             }
         });
         MenuItemViewToolbar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewToolbarActionPerformed(evt);
+                MenuItemViewToolbarActionPerformed();
             }
         });
         MenuView.add(MenuItemViewToolbar);
@@ -4464,12 +4465,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewLeftExtra.setEnabled(false);
         MenuItemViewLeftExtra.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewLeftExtraItemStateChanged(evt);
+                MenuItemViewLeftExtraItemStateChanged();
             }
         });
         MenuItemViewLeftExtra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewLeftExtraActionPerformed(evt);
+                MenuItemViewLeftExtraActionPerformed();
             }
         });
         MenuView.add(MenuItemViewLeftExtra);
@@ -4479,12 +4480,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewSnippets.setToolTipText("Enable/disable Snippets panel");
         MenuItemViewSnippets.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewSnippetsItemStateChanged(evt);
+                MenuItemViewSnippetsItemStateChanged();
             }
         });
         MenuItemViewSnippets.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewSnippetsActionPerformed(evt);
+                MenuItemViewSnippetsActionPerformed();
             }
         });
         MenuView.add(MenuItemViewSnippets);
@@ -4494,12 +4495,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewFileManager.setToolTipText("Enable/disable FileManager panel at right");
         MenuItemViewFileManager.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewFileManagerItemStateChanged(evt);
+                MenuItemViewFileManagerItemStateChanged();
             }
         });
         MenuItemViewFileManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewFileManagerActionPerformed(evt);
+                MenuItemViewFileManagerActionPerformed();
             }
         });
         MenuView.add(MenuItemViewFileManager);
@@ -4509,12 +4510,12 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewRightExtra.setToolTipText("Enable/disable Extra buttons panel at bottom right");
         MenuItemViewRightExtra.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewRightExtraItemStateChanged(evt);
+                MenuItemViewRightExtraItemStateChanged();
             }
         });
         MenuItemViewRightExtra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewRightExtraActionPerformed(evt);
+                MenuItemViewRightExtraActionPerformed();
             }
         });
         MenuView.add(MenuItemViewRightExtra);
@@ -4524,7 +4525,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewDonate.setToolTipText("Enable/disable Extra buttons panel at bottom right");
         MenuItemViewDonate.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewDonateItemStateChanged(evt);
+                MenuItemViewDonateItemStateChanged();
             }
         });
         MenuItemViewDonate.addActionListener(new java.awt.event.ActionListener() {
@@ -4539,7 +4540,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewTermFontInc.setText("Terminal font size inc");
         MenuItemViewTermFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewTermFontIncActionPerformed(evt);
+                MenuItemViewTermFontIncActionPerformed();
             }
         });
         MenuView.add(MenuItemViewTermFontInc);
@@ -4549,7 +4550,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewTermFontDec.setText("Terminal font size dec");
         MenuItemViewTermFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewTermFontDecActionPerformed(evt);
+                MenuItemViewTermFontDecActionPerformed();
             }
         });
         MenuView.add(MenuItemViewTermFontDec);
@@ -4560,7 +4561,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewEditorFontInc.setText("Editor font size inc");
         MenuItemViewEditorFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewEditorFontIncActionPerformed(evt);
+                MenuItemViewEditorFontIncActionPerformed();
             }
         });
         MenuView.add(MenuItemViewEditorFontInc);
@@ -4570,7 +4571,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewEditorFontDec.setText("Editor font size dec");
         MenuItemViewEditorFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewEditorFontDecActionPerformed(evt);
+                MenuItemViewEditorFontDecActionPerformed();
             }
         });
         MenuView.add(MenuItemViewEditorFontDec);
@@ -4581,7 +4582,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewLogFontInc.setText("Log font size inc");
         MenuItemViewLogFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewLogFontIncActionPerformed(evt);
+                MenuItemViewLogFontIncActionPerformed();
             }
         });
         MenuView.add(MenuItemViewLogFontInc);
@@ -4591,7 +4592,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemViewLogFontDec.setText("Log font size dec");
         MenuItemViewLogFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewLogFontDecActionPerformed(evt);
+                MenuItemViewLogFontDecActionPerformed();
             }
         });
         MenuView.add(MenuItemViewLogFontDec);
@@ -4600,7 +4601,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemViewFontDefault.setText("Reset all font size to default");
         menuItemViewFontDefault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemViewFontDefaultActionPerformed(evt);
+                MenuItemViewFontDefaultActionPerformed();
             }
         });
         MenuView.add(menuItemViewFontDefault);
@@ -4626,7 +4627,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksAPIcn.setToolTipText("Open doc NodeMCU API Chinese in browser");
         menuItemLinksAPIcn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIcnActionPerformed(evt);
+                MenuItemLinksAPIcnActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksAPIcn);
@@ -4635,7 +4636,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksAPIen.setToolTipText("Open doc NodeMCU API English in browser");
         menuItemLinksAPIen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIenActionPerformed(evt);
+                MenuItemLinksAPIenActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksAPIen);
@@ -4644,7 +4645,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksAPIru.setToolTipText("Open doc NodeMCU API Russian in browser");
         menuItemLinksAPIru.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIruActionPerformed(evt);
+                MenuItemLinksAPIruActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksAPIru);
@@ -4653,7 +4654,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksChangelog.setToolTipText("Open NodeMCU changelog in browser");
         menuItemLinksChangelog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksChangelogActionPerformed(evt);
+                MenuItemLinksChangelogActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksChangelog);
@@ -4663,7 +4664,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksDownloadLatestFirmware.setToolTipText("Download NodeMCU latest firmware (stable version)");
         menuItemLinksDownloadLatestFirmware.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestFirmwareActionPerformed(evt);
+                MenuItemLinksDownloadLatestFirmwareActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksDownloadLatestFirmware);
@@ -4672,7 +4673,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksDownloadLatestDev.setToolTipText("Download NodeMCU latest firmware (dev version)");
         menuItemLinksDownloadLatestDev.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestDevActionPerformed(evt);
+                MenuItemLinksDownloadLatestDevActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksDownloadLatestDev);
@@ -4681,7 +4682,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksDownloadLatestFlasher.setToolTipText("Download latest version of NodeMCU Flasher x32 or x64");
         menuItemLinksDownloadLatestFlasher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestFlasherActionPerformed(evt);
+                MenuItemLinksDownloadLatestFlasherActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksDownloadLatestFlasher);
@@ -4691,7 +4692,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksBuyDevBoard.setToolTipText("Buy NodeMCU development boards on Aliexpress");
         menuItemLinksBuyDevBoard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyDevBoardActionPerformed(evt);
+                MenuItemLinksBuyDevBoardActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksBuyDevBoard);
@@ -4700,7 +4701,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksBuyESP8266.setToolTipText("Buy ESP8266 ESP-01 ESP-02 ... ESP-12 modules on Aliexpress");
         menuItemLinksBuyESP8266.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyESP8266ActionPerformed(evt);
+                MenuItemLinksBuyESP8266ActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksBuyESP8266);
@@ -4709,7 +4710,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksBuyESD12.setToolTipText("Buy ESP8266 ESD-12 4M flash board");
         menuItemLinksBuyESD12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyESD12ActionPerformed(evt);
+                MenuItemLinksBuyESD12ActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksBuyESD12);
@@ -4718,7 +4719,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksBuyOther.setToolTipText("Buy any electronics and other on Aliexpress");
         menuItemLinksBuyOther.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyOtherActionPerformed(evt);
+                MenuItemLinksBuyOtherActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksBuyOther);
@@ -4728,7 +4729,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksESPlorerForumEn.setToolTipText("Link to ESP8266.COM forum, ESPlorer topic, English");
         menuItemLinksESPlorerForumEn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerForumEnActionPerformed(evt);
+                MenuItemLinksESPlorerForumEnActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksESPlorerForumEn);
@@ -4737,7 +4738,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksESPlorerForumRu.setToolTipText("Link to ESP8266.RU forum, ESPlorer topic, Russian");
         menuItemLinksESPlorerForumRu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerForumRuActionPerformed(evt);
+                MenuItemLinksESPlorerForumRuActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksESPlorerForumRu);
@@ -4746,7 +4747,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksESPlorerLatest.setToolTipText("Link to ESP8266.RU, download ESPlorer latest");
         menuItemLinksESPlorerLatest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerLatestActionPerformed(evt);
+                MenuItemLinksESPlorerLatestActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksESPlorerLatest);
@@ -4755,7 +4756,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksESPlorerSource.setToolTipText("Link to GITHUB for download ESPlorer source code");
         menuItemLinksESPlorerSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerSourceActionPerformed(evt);
+                MenuItemLinksESPlorerSourceActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksESPlorerSource);
@@ -4764,7 +4765,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksESPlorerHome.setToolTipText("Link to ESP8266.RU, ESPlorer HomePage");
         menuItemLinksESPlorerHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerHomeActionPerformed(evt);
+                MenuItemLinksESPlorerHomeActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksESPlorerHome);
@@ -4773,7 +4774,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuItemLinksDonate.setToolTipText("You can make donation for ESPlorer developer");
         menuItemLinksDonate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDonateActionPerformed(evt);
+                MenuItemLinksDonateActionPerformed();
             }
         });
         menuLinks.add(menuItemLinksDonate);
@@ -4785,7 +4786,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemHelpAbout.setText("aboutDialog");
         MenuItemHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemHelpAboutActionPerformed(evt);
+                MenuItemHelpAboutActionPerformed();
             }
         });
         menuHelp.add(MenuItemHelpAbout);
@@ -4812,7 +4813,7 @@ public class ESPlorer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SpeedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpeedActionPerformed
+    private void SpeedActionPerformed() {//GEN-FIRST:event_SpeedActionPerformed
         if (portJustOpen) {
             log("ERROR: Communication with MCU not established.");
             return;
@@ -4837,7 +4838,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateLED();
     }//GEN-LAST:event_SpeedActionPerformed
 
-    private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+    private void OpenActionPerformed(ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
         if (Open.isSelected()) {
             if (pOpen) {
                 return;
@@ -4957,7 +4958,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void formWindowOpened() {//GEN-FIRST:event_formWindowOpened
         PortFinder();
         this.setTitle("ESPlorer");
         ProgressBar.setVisible(false);
@@ -5034,7 +5035,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_CommandActionPerformed
 
 
-    private void cmdSetCIPSTARTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
+    private void cmdSetCIPSTARTActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
         String cmd = "AT+CIPSTART=";
         if (multi.isSelected()) {
             cmd += conn_id.getSelectedItem().toString() + ",";
@@ -5055,7 +5056,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdSetCIPSTARTActionPerformed
 
 
-    private void cmdCIPSENDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCIPSENDActionPerformed
+    private void cmdCIPSENDActionPerformed() {//GEN-FIRST:event_cmdCIPSENDActionPerformed
         String cmd = "AT+CIPSEND=";
         String len = Integer.toString(data.getText().length());
         if (multi.isSelected()) {
@@ -5066,7 +5067,7 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(data.getText());
     }//GEN-LAST:event_cmdCIPSENDActionPerformed
 
-    private void cmdSetCIPCLOSEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPCLOSEActionPerformed
+    private void cmdSetCIPCLOSEActionPerformed() {//GEN-FIRST:event_cmdSetCIPCLOSEActionPerformed
         String cmd = "AT+CIPCLOSE";
         if (multi.isSelected()) {
             cmd += "=" + conn_id.getSelectedItem().toString();
@@ -5074,11 +5075,11 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
     }//GEN-LAST:event_cmdSetCIPCLOSEActionPerformed
 
-    private void ButtonFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileNewActionPerformed
+    private void ButtonFileNewActionPerformed() {//GEN-FIRST:event_ButtonFileNewActionPerformed
         MenuItemFileNew.doClick();
     }//GEN-LAST:event_ButtonFileNewActionPerformed
 
-    private void ContextMenuTerminalPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
+    private void ContextMenuTerminalPopupMenuWillBecomeVisible() {//GEN-FIRST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
         try {
             MenuItemTerminalCopy.setEnabled(Terminal.getSelectedText().length() > 0);
         } catch (Exception e) {
@@ -5100,7 +5101,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFontDec.setText(dec);
     }//GEN-LAST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
 
-    private void cmdSetCIPSERVERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSERVERActionPerformed
+    private void cmdSetCIPSERVERActionPerformed() {//GEN-FIRST:event_cmdSetCIPSERVERActionPerformed
         String cmd = "AT+CIPSERVER=";
         cmd += Integer.toString(ServerMode.getSelectedIndex()).trim();
         if (ServerMode.getSelectedIndex() == 1) {
@@ -5109,7 +5110,7 @@ public class ESPlorer extends javax.swing.JFrame {
         btnSend(cmd);
     }//GEN-LAST:event_cmdSetCIPSERVERActionPerformed
 
-    private void ServerModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ServerModeActionPerformed
+    private void ServerModeActionPerformed() {//GEN-FIRST:event_ServerModeActionPerformed
         if (ServerMode.getSelectedIndex() == 1) { // create
             ServerPort.setEnabled(true);
         } else {
@@ -5118,39 +5119,39 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_ServerModeActionPerformed
 
 
-    private void PASSFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PASSFocusGained
+    private void PASSFocusGained() {//GEN-FIRST:event_PASSFocusGained
         if (PASS.getText().trim().equals("password")) {
             PASS.setText("");
         }
     }//GEN-LAST:event_PASSFocusGained
 
-    private void SSIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SSIDFocusGained
+    private void SSIDFocusGained() {//GEN-FIRST:event_SSIDFocusGained
         if (SSID.getText().trim().equals("SSID")) {
             SSID.setText("");
         }
     }//GEN-LAST:event_SSIDFocusGained
 
-    private void AT_StationComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_StationComponentShown
+    private void AT_StationComponentShown() {//GEN-FIRST:event_AT_StationComponentShown
         WiFi_common.setVisible(true);
         TCP_common.setVisible(false);
     }//GEN-LAST:event_AT_StationComponentShown
 
-    private void AT_ClientComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_ClientComponentShown
+    private void AT_ClientComponentShown() {//GEN-FIRST:event_AT_ClientComponentShown
         WiFi_common.setVisible(false);
         TCP_common.setVisible(true);
     }//GEN-LAST:event_AT_ClientComponentShown
 
-    private void AT_ServerComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_AT_ServerComponentShown
+    private void AT_ServerComponentShown() {//GEN-FIRST:event_AT_ServerComponentShown
         WiFi_common.setVisible(false);
         TCP_common.setVisible(true);
     }//GEN-LAST:event_AT_ServerComponentShown
 
-    private void MenuItemViewLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogActionPerformed
+    private void MenuItemViewLogActionPerformed() {//GEN-FIRST:event_MenuItemViewLogActionPerformed
         isLogShow();
         prefs.putBoolean(Constants.SHOW_LOG, MenuItemViewLog.isSelected());
     }//GEN-LAST:event_MenuItemViewLogActionPerformed
 
-    private void MenuItemFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileSaveActionPerformed
+    private void MenuItemFileSaveActionPerformed() {//GEN-FIRST:event_MenuItemFileSaveActionPerformed
         SaveFile();
         if (FileAutoSaveESP.isSelected()) {
             SaveFileESP();
@@ -5232,7 +5233,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return success;
     }
 
-    private void MenuItemFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileNewActionPerformed
+    private void MenuItemFileNewActionPerformed() {//GEN-FIRST:event_MenuItemFileNewActionPerformed
         FileNew("");
     }//GEN-LAST:event_MenuItemFileNewActionPerformed
 
@@ -5248,7 +5249,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void MenuItemEditCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditCutActionPerformed
+    private void MenuItemEditCutActionPerformed() {//GEN-FIRST:event_MenuItemEditCutActionPerformed
         if (UseExternalEditor.isSelected()) {
             return;
         }
@@ -5256,11 +5257,11 @@ public class ESPlorer extends javax.swing.JFrame {
         FileChanged.set(iTab, true);
     }//GEN-LAST:event_MenuItemEditCutActionPerformed
 
-    private void MenuItemEditCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditCopyActionPerformed
+    private void MenuItemEditCopyActionPerformed() {//GEN-FIRST:event_MenuItemEditCopyActionPerformed
         TextEditor1.get(iTab).copy();
     }//GEN-LAST:event_MenuItemEditCopyActionPerformed
 
-    private void MenuItemEditPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditPasteActionPerformed
+    private void MenuItemEditPasteActionPerformed() {//GEN-FIRST:event_MenuItemEditPasteActionPerformed
         if (UseExternalEditor.isSelected()) {
             return;
         }
@@ -5269,7 +5270,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemEditPasteActionPerformed
 
     // File open
-    private void MenuItemFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileOpenActionPerformed
+    private void MenuItemFileOpenActionPerformed() {//GEN-FIRST:event_MenuItemFileOpenActionPerformed
         OpenFile();
     }//GEN-LAST:event_MenuItemFileOpenActionPerformed
 
@@ -5383,7 +5384,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return true;
     }
 
-    private void DelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DelayStateChanged
+    private void DelayStateChanged(ChangeEvent evt) {//GEN-FIRST:event_DelayStateChanged
         DelayLabel.setText("Delay after answer = " + Integer.toString(Delay.getValue()) + " ms");
         prefs.putInt(Constants.DELAY, Delay.getValue());
         PrefsFlush();
@@ -5401,39 +5402,39 @@ public class ESPlorer extends javax.swing.JFrame {
         return success;
     }
 
-    private void ButtonFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileOpenActionPerformed
+    private void ButtonFileOpenActionPerformed(ActionEvent evt) {//GEN-FIRST:event_ButtonFileOpenActionPerformed
         MenuItemFileOpen.doClick();
     }//GEN-LAST:event_ButtonFileOpenActionPerformed
 
-    private void ButtonFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileSaveActionPerformed
+    private void ButtonFileSaveActionPerformed() {//GEN-FIRST:event_ButtonFileSaveActionPerformed
         MenuItemFileSave.doClick();
     }//GEN-LAST:event_ButtonFileSaveActionPerformed
 
-    private void ButtonCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCutActionPerformed
+    private void ButtonCutActionPerformed() {//GEN-FIRST:event_ButtonCutActionPerformed
         MenuItemEditCut.doClick();
     }//GEN-LAST:event_ButtonCutActionPerformed
 
-    private void ButtonCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCopyActionPerformed
+    private void ButtonCopyActionPerformed() {//GEN-FIRST:event_ButtonCopyActionPerformed
         MenuItemEditCopy.doClick();
     }//GEN-LAST:event_ButtonCopyActionPerformed
 
-    private void ButtonPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonPasteActionPerformed
+    private void ButtonPasteActionPerformed() {//GEN-FIRST:event_ButtonPasteActionPerformed
         MenuItemEditPaste.doClick();
     }//GEN-LAST:event_ButtonPasteActionPerformed
 
-    private void MenuItemEditorCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorCutActionPerformed
+    private void MenuItemEditorCutActionPerformed() {//GEN-FIRST:event_MenuItemEditorCutActionPerformed
         MenuItemEditCut.doClick();
     }//GEN-LAST:event_MenuItemEditorCutActionPerformed
 
-    private void MenuItemEditorCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorCopyActionPerformed
+    private void MenuItemEditorCopyActionPerformed() {//GEN-FIRST:event_MenuItemEditorCopyActionPerformed
         MenuItemEditCopy.doClick();
     }//GEN-LAST:event_MenuItemEditorCopyActionPerformed
 
-    private void MenuItemEditorPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorPasteActionPerformed
+    private void MenuItemEditorPasteActionPerformed() {//GEN-FIRST:event_MenuItemEditorPasteActionPerformed
         MenuItemEditPaste.doClick();
     }//GEN-LAST:event_MenuItemEditorPasteActionPerformed
 
-    private void MenuItemLogClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLogClearActionPerformed
+    private void MenuItemLogClearActionPerformed() {//GEN-FIRST:event_MenuItemLogClearActionPerformed
         Log.setText("");
     }//GEN-LAST:event_MenuItemLogClearActionPerformed
 
@@ -5564,33 +5565,33 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+    private void formFocusGained() {//GEN-FIRST:event_formFocusGained
         UpdateEditorButtons();
         UpdateButtons();
     }//GEN-LAST:event_formFocusGained
 
-    private void NodeMCUComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_NodeMCUComponentShown
+    private void NodeMCUComponentShown() {//GEN-FIRST:event_NodeMCUComponentShown
         UpdateEditorButtons();
         UpdateButtons();
     }//GEN-LAST:event_NodeMCUComponentShown
 
-    private void ButtonFileReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileReloadActionPerformed
+    private void ButtonFileReloadActionPerformed() {//GEN-FIRST:event_ButtonFileReloadActionPerformed
         MenuItemFileReload.doClick();
     }//GEN-LAST:event_ButtonFileReloadActionPerformed
 
-    private void MenuItemFileReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileReloadActionPerformed
+    private void MenuItemFileReloadActionPerformed() {//GEN-FIRST:event_MenuItemFileReloadActionPerformed
         ReloadFile();
     }//GEN-LAST:event_MenuItemFileReloadActionPerformed
 
-    private void MenuItemFileCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileCloseActionPerformed
+    private void MenuItemFileCloseActionPerformed() {//GEN-FIRST:event_MenuItemFileCloseActionPerformed
         CloseFile();
     }//GEN-LAST:event_MenuItemFileCloseActionPerformed
 
-    private void ButtonFileCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileCloseActionPerformed
+    private void ButtonFileCloseActionPerformed() {//GEN-FIRST:event_ButtonFileCloseActionPerformed
         MenuItemFileClose.doClick();
     }//GEN-LAST:event_ButtonFileCloseActionPerformed
 
-    private void FileSaveESPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSaveESPActionPerformed
+    private void FileSaveESPActionPerformed() {//GEN-FIRST:event_FileSaveESPActionPerformed
         if (FileSaveESP.isSelected()) {  // start sending
             if (TextEditor1.get(iTab).getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "File empty.");
@@ -5608,19 +5609,19 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_FileSaveESPActionPerformed
 
-    private void MenuItemViewClearTerminalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewClearTerminalActionPerformed
+    private void MenuItemViewClearTerminalActionPerformed() {//GEN-FIRST:event_MenuItemViewClearTerminalActionPerformed
         MenuItemTerminalClear.doClick();
     }//GEN-LAST:event_MenuItemViewClearTerminalActionPerformed
 
-    private void MenuItemViewClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewClearLogActionPerformed
+    private void MenuItemViewClearLogActionPerformed() {//GEN-FIRST:event_MenuItemViewClearLogActionPerformed
         MenuItemLogClear.doClick();
     }//GEN-LAST:event_MenuItemViewClearLogActionPerformed
 
-    private void AlwaysOnTopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_AlwaysOnTopItemStateChanged
+    private void AlwaysOnTopItemStateChanged() {//GEN-FIRST:event_AlwaysOnTopItemStateChanged
         this.setAlwaysOnTop(AlwaysOnTop.isSelected());
     }//GEN-LAST:event_AlwaysOnTopItemStateChanged
 
-    private void cmdNodeRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNodeRestartActionPerformed
+    private void cmdNodeRestartActionPerformed() {//GEN-FIRST:event_cmdNodeRestartActionPerformed
         if (!OptionNodeMCU.isSelected()) {
             return;
         }
@@ -5667,74 +5668,74 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cmdNodeRestartActionPerformed
 
-    private void cmdNodeChipIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNodeChipIDActionPerformed
+    private void cmdNodeChipIDActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdNodeChipIDActionPerformed
         btnSend("print(node.chipid())");
     }//GEN-LAST:event_cmdNodeChipIDActionPerformed
 
-    private void cmdNodeHeapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNodeHeapActionPerformed
+    private void cmdNodeHeapActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdNodeHeapActionPerformed
         btnSend("print(node.heap())");
     }//GEN-LAST:event_cmdNodeHeapActionPerformed
 
-    private void cmdNodeSleepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNodeSleepActionPerformed
+    private void cmdNodeSleepActionPerformed() {//GEN-FIRST:event_cmdNodeSleepActionPerformed
         int returnVal = Dialog("This function can only be used in the condition that esp8266 PIN32(RST) and PIN8(XPD_DCDC) are connected together.", JOptionPane.YES_NO_OPTION);
         if (returnVal == JOptionPane.YES_OPTION) {
             btnSend("node.dsleep(10000)");
         }
     }//GEN-LAST:event_cmdNodeSleepActionPerformed
 
-    private void MenuItemEditUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditUndoActionPerformed
+    private void MenuItemEditUndoActionPerformed() {//GEN-FIRST:event_MenuItemEditUndoActionPerformed
         if (TextEditor1.get(iTab).canUndo()) {
             TextEditor1.get(iTab).undoLastAction();
         }
     }//GEN-LAST:event_MenuItemEditUndoActionPerformed
 
-    private void MenuItemEditRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditRedoActionPerformed
+    private void MenuItemEditRedoActionPerformed() {//GEN-FIRST:event_MenuItemEditRedoActionPerformed
         if (TextEditor1.get(iTab).canRedo()) {
             TextEditor1.get(iTab).redoLastAction();
         }
     }//GEN-LAST:event_MenuItemEditRedoActionPerformed
 
-    private void ButtonUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonUndoActionPerformed
+    private void ButtonUndoActionPerformed() {//GEN-FIRST:event_ButtonUndoActionPerformed
         MenuItemEditUndo.doClick();
     }//GEN-LAST:event_ButtonUndoActionPerformed
 
-    private void ButtonRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRedoActionPerformed
+    private void ButtonRedoActionPerformed() {//GEN-FIRST:event_ButtonRedoActionPerformed
         MenuItemEditRedo.doClick();
     }//GEN-LAST:event_ButtonRedoActionPerformed
 
-    private void MenuItemEditorRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorRedoActionPerformed
+    private void MenuItemEditorRedoActionPerformed() {//GEN-FIRST:event_MenuItemEditorRedoActionPerformed
         MenuItemEditRedo.doClick();
     }//GEN-LAST:event_MenuItemEditorRedoActionPerformed
 
-    private void MenuItemEditorUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorUndoActionPerformed
+    private void MenuItemEditorUndoActionPerformed() {//GEN-FIRST:event_MenuItemEditorUndoActionPerformed
         MenuItemEditUndo.doClick();
     }//GEN-LAST:event_MenuItemEditorUndoActionPerformed
 
-    private void TextEditorCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_TextEditorCaretUpdate
+    private void TextEditorCaretUpdate() {//GEN-FIRST:event_TextEditorCaretUpdate
         UpdateEditorButtons();
     }//GEN-LAST:event_TextEditorCaretUpdate
 
-    private void FilesTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_FilesTabbedPaneStateChanged
+    private void FilesTabbedPaneStateChanged() {//GEN-FIRST:event_FilesTabbedPaneStateChanged
         FileLabelUpdate();
         //   if (iTab > 0) FilesTabbedPane.setTitleAt(iTab, Integer.toString(iTab));
     }//GEN-LAST:event_FilesTabbedPaneStateChanged
 
-    private void TextEditorCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_TextEditorCaretPositionChanged
+    private void TextEditorCaretPositionChanged() {//GEN-FIRST:event_TextEditorCaretPositionChanged
         UpdateEditorButtons();
     }//GEN-LAST:event_TextEditorCaretPositionChanged
 
-    private void TextEditorActiveLineRangeChanged(org.fife.ui.rsyntaxtextarea.ActiveLineRangeEvent evt) {//GEN-FIRST:event_TextEditorActiveLineRangeChanged
+    private void TextEditorActiveLineRangeChanged() {//GEN-FIRST:event_TextEditorActiveLineRangeChanged
         UpdateEditorButtons();
     }//GEN-LAST:event_TextEditorActiveLineRangeChanged
 
-    private void EditorThemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditorThemeActionPerformed
+    private void EditorThemeActionPerformed() {//GEN-FIRST:event_EditorThemeActionPerformed
         int n = EditorTheme.getSelectedIndex();
         prefs.putInt(Constants.COLOR_THEME, n);
         PrefsFlush();
         SetTheme(n, true); // for all
     }//GEN-LAST:event_EditorThemeActionPerformed
 
-    private void TextEditorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextEditorKeyTyped
+    private void TextEditorKeyTyped() {//GEN-FIRST:event_TextEditorKeyTyped
         if (UseExternalEditor.isSelected()) {
             return;
         }
@@ -5744,7 +5745,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_TextEditorKeyTyped
 
-    private void FileSendESPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSendESPActionPerformed
+    private void FileSendESPActionPerformed() {//GEN-FIRST:event_FileSendESPActionPerformed
         if (FileSendESP.isSelected()) {
             if (TextEditor1.get(iTab).getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "File empty.");
@@ -5757,13 +5758,13 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_FileSendESPActionPerformed
 
-    private void AnswerDelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_AnswerDelayStateChanged
+    private void AnswerDelayStateChanged() {//GEN-FIRST:event_AnswerDelayStateChanged
         AnswerDelayLabel.setText("Answer timout = " + Integer.toString(AnswerDelay.getValue()) + " s");
         prefs.putInt(Constants.TIMEOUT, AnswerDelay.getValue());
         PrefsFlush();
     }//GEN-LAST:event_AnswerDelayStateChanged
 
-    private void cmdListFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListFilesActionPerformed
+    private void cmdListFilesActionPerformed() {//GEN-FIRST:event_cmdListFilesActionPerformed
         ListFiles();
     }//GEN-LAST:event_cmdListFilesActionPerformed
 
@@ -6108,15 +6109,15 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void ButtonSendSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSendSelectedActionPerformed
+    private void ButtonSendSelectedActionPerformed() {//GEN-FIRST:event_ButtonSendSelectedActionPerformed
         MenuItemEditSendSelected.doClick();
     }//GEN-LAST:event_ButtonSendSelectedActionPerformed
 
-    private void MenuItemEditorSendSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorSendSelectedActionPerformed
+    private void MenuItemEditorSendSelectedActionPerformed() {//GEN-FIRST:event_MenuItemEditorSendSelectedActionPerformed
         MenuItemEditSendSelected.doClick();
     }//GEN-LAST:event_MenuItemEditorSendSelectedActionPerformed
 
-    private void MenuItemEditSendSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditSendSelectedActionPerformed
+    private void MenuItemEditSendSelectedActionPerformed() {//GEN-FIRST:event_MenuItemEditSendSelectedActionPerformed
         int l;
         if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Scripts
             try {
@@ -6137,7 +6138,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemEditSendSelectedActionPerformed
 
-    private void MenuItemFileRemoveESPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileRemoveESPActionPerformed
+    private void MenuItemFileRemoveESPActionPerformed() {//GEN-FIRST:event_MenuItemFileRemoveESPActionPerformed
         String ft = iFile.get(iTab).getName();
         if (ft.length() == 0) {
             log("FileRemoveESP: FAIL. Can't remove file from ESP without name.");
@@ -6155,52 +6156,52 @@ public class ESPlorer extends javax.swing.JFrame {
         FileListReload.doClick();
     }
 
-    private void MenuItemFileSaveESPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileSaveESPActionPerformed
+    private void MenuItemFileSaveESPActionPerformed() {//GEN-FIRST:event_MenuItemFileSaveESPActionPerformed
         if (!FileSaveESP.isSelected()) {
             FileSaveESP.doClick();
         }
     }//GEN-LAST:event_MenuItemFileSaveESPActionPerformed
 
-    private void cmdTimerStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTimerStopActionPerformed
+    private void cmdTimerStopActionPerformed() {//GEN-FIRST:event_cmdTimerStopActionPerformed
         String cmd = "tmr.stop(" + Integer.toString(TimerNumber.getSelectedIndex()) + ")";
         btnSend(cmd);
     }//GEN-LAST:event_cmdTimerStopActionPerformed
 
-    private void NodeResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeResetActionPerformed
+    private void NodeResetActionPerformed() {//GEN-FIRST:event_NodeResetActionPerformed
         cmdNodeRestart.doClick();
     }//GEN-LAST:event_NodeResetActionPerformed
 
-    private void FileDoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileDoActionPerformed
+    private void FileDoActionPerformed() {//GEN-FIRST:event_FileDoActionPerformed
         String cmd = "dofile('" + iFile.get(iTab).getName() + "')";
         btnSend(cmd);
     }//GEN-LAST:event_FileDoActionPerformed
 
-    private void MenuItemLogCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLogCloseActionPerformed
+    private void MenuItemLogCloseActionPerformed() {//GEN-FIRST:event_MenuItemLogCloseActionPerformed
         MenuItemViewLog.doClick();
     }//GEN-LAST:event_MenuItemLogCloseActionPerformed
 
-    private void MenuItemTerminalResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalResetActionPerformed
+    private void MenuItemTerminalResetActionPerformed() {//GEN-FIRST:event_MenuItemTerminalResetActionPerformed
         MenuItemESPReset.doClick();
     }//GEN-LAST:event_MenuItemTerminalResetActionPerformed
 
-    private void DonateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateActionPerformed
+    private void DonateActionPerformed() {//GEN-FIRST:event_DonateActionPerformed
         goLink(donate_uri);
     }//GEN-LAST:event_DonateActionPerformed
 
-    private void MenuItemHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpAboutActionPerformed
+    private void MenuItemHelpAboutActionPerformed() {//GEN-FIRST:event_MenuItemHelpAboutActionPerformed
         aboutDialog.setLocationRelativeTo(null);
         aboutDialog.setVisible(true);
     }//GEN-LAST:event_MenuItemHelpAboutActionPerformed
 
-    private void AboutFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AboutFocusLost
+    private void AboutFocusLost() {//GEN-FIRST:event_AboutFocusLost
         aboutDialog.dispose();
     }//GEN-LAST:event_AboutFocusLost
 
-    private void HomePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomePageActionPerformed
+    private void HomePageActionPerformed() {//GEN-FIRST:event_HomePageActionPerformed
         goLink(homepage_uri);
     }//GEN-LAST:event_HomePageActionPerformed
 
-    private void LeftTabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LeftTabStateChanged
+    private void LeftTabStateChanged() {//GEN-FIRST:event_LeftTabStateChanged
         if (LeftTab.getSelectedIndex() == 0) {  // NodeMCU & Python
             CommandsSetNodeMCU();
         } else if (LeftTab.getSelectedIndex() == 1) {  // AT
@@ -6264,7 +6265,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    private void SnippetEdit0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit0ActionPerformed
+    private void SnippetEdit0ActionPerformed() {//GEN-FIRST:event_SnippetEdit0ActionPerformed
         SnippetEdit(0);
     }//GEN-LAST:event_SnippetEdit0ActionPerformed
 
@@ -6291,7 +6292,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetName.setText(prefs.get("Snippet" + n + "name", "Snippet" + n));
     }
 
-    private void SnippetSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetSaveActionPerformed
+    private void SnippetSaveActionPerformed() {//GEN-FIRST:event_SnippetSaveActionPerformed
         SnippetName.setEnabled(false);
         SnippetSave.setEnabled(false);
         SnippetRun.setEnabled(true);
@@ -6344,136 +6345,136 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetText.discardAllEdits();
     }//GEN-LAST:event_SnippetSaveActionPerformed
 
-    private void SnippetEdit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit1ActionPerformed
+    private void SnippetEdit1ActionPerformed() {//GEN-FIRST:event_SnippetEdit1ActionPerformed
         SnippetEdit(1);
     }//GEN-LAST:event_SnippetEdit1ActionPerformed
 
-    private void SnippetEdit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit2ActionPerformed
+    private void SnippetEdit2ActionPerformed() {//GEN-FIRST:event_SnippetEdit2ActionPerformed
         SnippetEdit(2);
     }//GEN-LAST:event_SnippetEdit2ActionPerformed
 
-    private void SnippetEdit3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit3ActionPerformed
+    private void SnippetEdit3ActionPerformed() {//GEN-FIRST:event_SnippetEdit3ActionPerformed
         SnippetEdit(3);
     }//GEN-LAST:event_SnippetEdit3ActionPerformed
 
-    private void SnippetEdit4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit4ActionPerformed
+    private void SnippetEdit4ActionPerformed() {//GEN-FIRST:event_SnippetEdit4ActionPerformed
         SnippetEdit(4);
     }//GEN-LAST:event_SnippetEdit4ActionPerformed
 
-    private void SnippetEdit5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit5ActionPerformed
+    private void SnippetEdit5ActionPerformed() {//GEN-FIRST:event_SnippetEdit5ActionPerformed
         SnippetEdit(5);
     }//GEN-LAST:event_SnippetEdit5ActionPerformed
 
-    private void SnippetEdit6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit6ActionPerformed
+    private void SnippetEdit6ActionPerformed() {//GEN-FIRST:event_SnippetEdit6ActionPerformed
         SnippetEdit(6);
     }//GEN-LAST:event_SnippetEdit6ActionPerformed
 
-    private void SnippetEdit7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit7ActionPerformed
+    private void SnippetEdit7ActionPerformed() {//GEN-FIRST:event_SnippetEdit7ActionPerformed
         SnippetEdit(7);
     }//GEN-LAST:event_SnippetEdit7ActionPerformed
     // End of variables declaration//GEN-END:variables
 
-    private void SnippetEdit8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit8ActionPerformed
+    private void SnippetEdit8ActionPerformed() {//GEN-FIRST:event_SnippetEdit8ActionPerformed
         SnippetEdit(8);
     }//GEN-LAST:event_SnippetEdit8ActionPerformed
 
-    private void SnippetEdit9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit9ActionPerformed
+    private void SnippetEdit9ActionPerformed() {//GEN-FIRST:event_SnippetEdit9ActionPerformed
         SnippetEdit(9);
     }//GEN-LAST:event_SnippetEdit9ActionPerformed
 
-    private void SnippetEdit10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit10ActionPerformed
+    private void SnippetEdit10ActionPerformed() {//GEN-FIRST:event_SnippetEdit10ActionPerformed
         SnippetEdit(10);
     }//GEN-LAST:event_SnippetEdit10ActionPerformed
 
-    private void SnippetEdit11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit11ActionPerformed
+    private void SnippetEdit11ActionPerformed() {//GEN-FIRST:event_SnippetEdit11ActionPerformed
         SnippetEdit(11);
     }//GEN-LAST:event_SnippetEdit11ActionPerformed
 
-    private void SnippetEdit12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit12ActionPerformed
+    private void SnippetEdit12ActionPerformed() {//GEN-FIRST:event_SnippetEdit12ActionPerformed
         SnippetEdit(12);
     }//GEN-LAST:event_SnippetEdit12ActionPerformed
 
-    private void SnippetEdit13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit13ActionPerformed
+    private void SnippetEdit13ActionPerformed() {//GEN-FIRST:event_SnippetEdit13ActionPerformed
         SnippetEdit(13);
     }//GEN-LAST:event_SnippetEdit13ActionPerformed
 
-    private void SnippetEdit14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit14ActionPerformed
+    private void SnippetEdit14ActionPerformed() {//GEN-FIRST:event_SnippetEdit14ActionPerformed
         SnippetEdit(14);
     }//GEN-LAST:event_SnippetEdit14ActionPerformed
 
-    private void SnippetEdit15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetEdit15ActionPerformed
+    private void SnippetEdit15ActionPerformed() {//GEN-FIRST:event_SnippetEdit15ActionPerformed
         SnippetEdit(15);
     }//GEN-LAST:event_SnippetEdit15ActionPerformed
 
-    private void ButtonSnippet0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet0ActionPerformed
+    private void ButtonSnippet0ActionPerformed() {//GEN-FIRST:event_ButtonSnippet0ActionPerformed
         DoSnippet(0);
     }//GEN-LAST:event_ButtonSnippet0ActionPerformed
 
-    private void SnippetRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetRunActionPerformed
+    private void SnippetRunActionPerformed() {//GEN-FIRST:event_SnippetRunActionPerformed
         SendToESP(SnippetText.getText());
     }//GEN-LAST:event_SnippetRunActionPerformed
 
-    private void ButtonSnippet1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet1ActionPerformed
+    private void ButtonSnippet1ActionPerformed() {//GEN-FIRST:event_ButtonSnippet1ActionPerformed
         DoSnippet(1);
     }//GEN-LAST:event_ButtonSnippet1ActionPerformed
 
-    private void ButtonSnippet2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet2ActionPerformed
+    private void ButtonSnippet2ActionPerformed() {//GEN-FIRST:event_ButtonSnippet2ActionPerformed
         DoSnippet(2);
     }//GEN-LAST:event_ButtonSnippet2ActionPerformed
 
-    private void ButtonSnippet3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet3ActionPerformed
+    private void ButtonSnippet3ActionPerformed() {//GEN-FIRST:event_ButtonSnippet3ActionPerformed
         DoSnippet(3);
     }//GEN-LAST:event_ButtonSnippet3ActionPerformed
 
-    private void ButtonSnippet4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet4ActionPerformed
+    private void ButtonSnippet4ActionPerformed() {//GEN-FIRST:event_ButtonSnippet4ActionPerformed
         DoSnippet(4);
     }//GEN-LAST:event_ButtonSnippet4ActionPerformed
 
-    private void ButtonSnippet5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet5ActionPerformed
+    private void ButtonSnippet5ActionPerformed() {//GEN-FIRST:event_ButtonSnippet5ActionPerformed
         DoSnippet(5);
     }//GEN-LAST:event_ButtonSnippet5ActionPerformed
 
-    private void ButtonSnippet6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet6ActionPerformed
+    private void ButtonSnippet6ActionPerformed() {//GEN-FIRST:event_ButtonSnippet6ActionPerformed
         DoSnippet(6);
     }//GEN-LAST:event_ButtonSnippet6ActionPerformed
 
-    private void ButtonSnippet7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet7ActionPerformed
+    private void ButtonSnippet7ActionPerformed() {//GEN-FIRST:event_ButtonSnippet7ActionPerformed
         DoSnippet(7);
     }//GEN-LAST:event_ButtonSnippet7ActionPerformed
 
-    private void ButtonSnippet8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet8ActionPerformed
+    private void ButtonSnippet8ActionPerformed() {//GEN-FIRST:event_ButtonSnippet8ActionPerformed
         DoSnippet(8);
     }//GEN-LAST:event_ButtonSnippet8ActionPerformed
 
-    private void ButtonSnippet9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet9ActionPerformed
+    private void ButtonSnippet9ActionPerformed() {//GEN-FIRST:event_ButtonSnippet9ActionPerformed
         DoSnippet(9);
     }//GEN-LAST:event_ButtonSnippet9ActionPerformed
 
-    private void ButtonSnippet10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet10ActionPerformed
+    private void ButtonSnippet10ActionPerformed() {//GEN-FIRST:event_ButtonSnippet10ActionPerformed
         DoSnippet(10);
     }//GEN-LAST:event_ButtonSnippet10ActionPerformed
 
-    private void ButtonSnippet11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet11ActionPerformed
+    private void ButtonSnippet11ActionPerformed() {//GEN-FIRST:event_ButtonSnippet11ActionPerformed
         DoSnippet(11);
     }//GEN-LAST:event_ButtonSnippet11ActionPerformed
 
-    private void ButtonSnippet12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet12ActionPerformed
+    private void ButtonSnippet12ActionPerformed() {//GEN-FIRST:event_ButtonSnippet12ActionPerformed
         DoSnippet(12);
     }//GEN-LAST:event_ButtonSnippet12ActionPerformed
 
-    private void ButtonSnippet13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet13ActionPerformed
+    private void ButtonSnippet13ActionPerformed() {//GEN-FIRST:event_ButtonSnippet13ActionPerformed
         DoSnippet(13);
     }//GEN-LAST:event_ButtonSnippet13ActionPerformed
 
-    private void ButtonSnippet14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet14ActionPerformed
+    private void ButtonSnippet14ActionPerformed() {//GEN-FIRST:event_ButtonSnippet14ActionPerformed
         DoSnippet(14);
     }//GEN-LAST:event_ButtonSnippet14ActionPerformed
 
-    private void ButtonSnippet15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSnippet15ActionPerformed
+    private void ButtonSnippet15ActionPerformed() {//GEN-FIRST:event_ButtonSnippet15ActionPerformed
         DoSnippet(15);
     }//GEN-LAST:event_ButtonSnippet15ActionPerformed
 
-    private void OptionNodeMCUItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_OptionNodeMCUItemStateChanged
+    private void OptionNodeMCUItemStateChanged() {//GEN-FIRST:event_OptionNodeMCUItemStateChanged
         if (OptionNodeMCU.isSelected()) {
             prefs.put(Constants.FIRMWARE, "NodeMCU");
             PrefsFlush();
@@ -6481,7 +6482,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_OptionNodeMCUItemStateChanged
 
-    private void OptionMicroPythonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_OptionMicroPythonItemStateChanged
+    private void OptionMicroPythonItemStateChanged() {//GEN-FIRST:event_OptionMicroPythonItemStateChanged
         if (OptionMicroPython.isSelected()) {
             prefs.put(Constants.FIRMWARE, "MicroPython");
             PrefsFlush();
@@ -6489,28 +6490,28 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_OptionMicroPythonItemStateChanged
 
-    private void FileAutoSaveDiskItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoSaveDiskItemStateChanged
+    private void FileAutoSaveDiskItemStateChanged() {//GEN-FIRST:event_FileAutoSaveDiskItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_SAVE_DISK, FileAutoSaveDisk.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoSaveDiskItemStateChanged
 
-    private void FileAutoSaveESPItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoSaveESPItemStateChanged
+    private void FileAutoSaveESPItemStateChanged() {//GEN-FIRST:event_FileAutoSaveESPItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_SAVE_ESP, FileAutoSaveESP.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoSaveESPItemStateChanged
 
-    private void FileAutoRunItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FileAutoRunItemStateChanged
+    private void FileAutoRunItemStateChanged() {//GEN-FIRST:event_FileAutoRunItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_RUN, FileAutoRun.isSelected());
         PrefsFlush();
     }//GEN-LAST:event_FileAutoRunItemStateChanged
 
-    private void LineDelayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LineDelayStateChanged
+    private void LineDelayStateChanged() {//GEN-FIRST:event_LineDelayStateChanged
         LineDelayLabel.setText("Line delay for \"Dumb Mode\" = " + Integer.toString(LineDelay.getValue()) + " ms");
         prefs.putInt(Constants.LINE_DELAY, LineDelay.getValue());
         PrefsFlush();
     }//GEN-LAST:event_LineDelayStateChanged
 
-    private void DumbModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_DumbModeItemStateChanged
+    private void DumbModeItemStateChanged() {//GEN-FIRST:event_DumbModeItemStateChanged
         if (DumbMode.isSelected()) {
             DelayLabel.setEnabled(false);
             Delay.setEnabled(false);
@@ -6533,11 +6534,11 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_DumbModeItemStateChanged
 
-    private void ButtonSendLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSendLineActionPerformed
+    private void ButtonSendLineActionPerformed() {//GEN-FIRST:event_ButtonSendLineActionPerformed
         MenuItemEditSendLine.doClick();
     }//GEN-LAST:event_ButtonSendLineActionPerformed
 
-    private void MenuItemEditSendLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditSendLineActionPerformed
+    private void MenuItemEditSendLineActionPerformed() {//GEN-FIRST:event_MenuItemEditSendLineActionPerformed
         int nLine;
         if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Scripts
             nLine = TextEditor1.get(iTab).getCaretLineNumber();
@@ -6550,31 +6551,31 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemEditSendLineActionPerformed
 
-    private void MenuItemFileSendESPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileSendESPActionPerformed
+    private void MenuItemFileSendESPActionPerformed() {//GEN-FIRST:event_MenuItemFileSendESPActionPerformed
         FileSendESP.doClick();
     }//GEN-LAST:event_MenuItemFileSendESPActionPerformed
 
-    private void MenuItemEditorSendLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorSendLineActionPerformed
+    private void MenuItemEditorSendLineActionPerformed() {//GEN-FIRST:event_MenuItemEditorSendLineActionPerformed
         MenuItemEditSendLine.doClick();
     }//GEN-LAST:event_MenuItemEditorSendLineActionPerformed
 
-    private void ButtonFileSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFileSaveAllActionPerformed
+    private void ButtonFileSaveAllActionPerformed() {//GEN-FIRST:event_ButtonFileSaveAllActionPerformed
         MenuItemFileSaveAll.doClick();
     }//GEN-LAST:event_ButtonFileSaveAllActionPerformed
 
-    private void MenuItemFileDoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemFileDoActionPerformed
+    private void MenuItemFileDoActionPerformed() {//GEN-FIRST:event_MenuItemFileDoActionPerformed
         FileDo.doClick();
     }//GEN-LAST:event_MenuItemFileDoActionPerformed
 
-    private void MenuItemTerminalFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalFontDecActionPerformed
+    private void MenuItemTerminalFontDecActionPerformed() {//GEN-FIRST:event_MenuItemTerminalFontDecActionPerformed
         MenuItemViewTermFontDec.doClick();
     }//GEN-LAST:event_MenuItemTerminalFontDecActionPerformed
 
-    private void MenuItemTerminalFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalFontIncActionPerformed
+    private void MenuItemTerminalFontIncActionPerformed() {//GEN-FIRST:event_MenuItemTerminalFontIncActionPerformed
         MenuItemViewTermFontInc.doClick();
     }//GEN-LAST:event_MenuItemTerminalFontIncActionPerformed
 
-    private void MenuItemViewTermFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewTermFontIncActionPerformed
+    private void MenuItemViewTermFontIncActionPerformed() {//GEN-FIRST:event_MenuItemViewTermFontIncActionPerformed
         int size = Terminal.getFont().getSize();
         if (size < Constants.TERMINAL_FONT_SIZE_MAX) {
             Terminal.setFont(Terminal.getFont().deriveFont(Terminal.getFont().getSize() + 1f));
@@ -6585,7 +6586,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontIncActionPerformed
 
-    private void MenuItemViewTermFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewTermFontDecActionPerformed
+    private void MenuItemViewTermFontDecActionPerformed() {//GEN-FIRST:event_MenuItemViewTermFontDecActionPerformed
         int size = Terminal.getFont().getSize();
         if (size > Constants.TERMINAL_FONT_SIZE_MIN) {
             Terminal.setFont(Terminal.getFont().deriveFont(Terminal.getFont().getSize() - 1f));
@@ -6596,7 +6597,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontDecActionPerformed
 
-    private void MenuItemViewEditorFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewEditorFontIncActionPerformed
+    private void MenuItemViewEditorFontIncActionPerformed() {//GEN-FIRST:event_MenuItemViewEditorFontIncActionPerformed
         int size = TextEditor1.get(iTab).getFont().getSize();
         if (size < Constants.EDITOR_FONT_SIZE_MAX) {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(TextEditor1.get(iTab).getFont().getSize() + 1f));
@@ -6608,7 +6609,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontIncActionPerformed
 
-    private void MenuItemViewEditorFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewEditorFontDecActionPerformed
+    private void MenuItemViewEditorFontDecActionPerformed() {//GEN-FIRST:event_MenuItemViewEditorFontDecActionPerformed
         int size = TextEditor1.get(iTab).getFont().getSize();
         if (size > Constants.EDITOR_FONT_SIZE_MIN) {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(TextEditor1.get(iTab).getFont().getSize() - 1f));
@@ -6620,7 +6621,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontDecActionPerformed
 
-    private void MenuItemViewFontDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewFontDefaultActionPerformed
+    private void MenuItemViewFontDefaultActionPerformed() {//GEN-FIRST:event_MenuItemViewFontDefaultActionPerformed
         prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT);
         prefs.putFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT);
         prefs.putFloat(Constants.LOG_FONT_SIZE, Constants.LOG_FONT_SIZE_DEFAULT);
@@ -6630,15 +6631,15 @@ public class ESPlorer extends javax.swing.JFrame {
         Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_DEFAULT));
     }//GEN-LAST:event_MenuItemViewFontDefaultActionPerformed
 
-    private void MenuItemEditorFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorFontIncActionPerformed
+    private void MenuItemEditorFontIncActionPerformed() {//GEN-FIRST:event_MenuItemEditorFontIncActionPerformed
         MenuItemViewEditorFontInc.doClick();
     }//GEN-LAST:event_MenuItemEditorFontIncActionPerformed
 
-    private void MenuItemEditorFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemEditorFontDecActionPerformed
+    private void MenuItemEditorFontDecActionPerformed() {//GEN-FIRST:event_MenuItemEditorFontDecActionPerformed
         MenuItemViewEditorFontDec.doClick();
     }//GEN-LAST:event_MenuItemEditorFontDecActionPerformed
 
-    private void MenuItemViewLogFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogFontIncActionPerformed
+    private void MenuItemViewLogFontIncActionPerformed() {//GEN-FIRST:event_MenuItemViewLogFontIncActionPerformed
         int size = Log.getFont().getSize();
         if (size < Constants.LOG_FONT_SIZE_MAX) {
             Log.setFont(Log.getFont().deriveFont(Log.getFont().getSize() + 1f));
@@ -6649,7 +6650,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontIncActionPerformed
 
-    private void MenuItemViewLogFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLogFontDecActionPerformed
+    private void MenuItemViewLogFontDecActionPerformed() {//GEN-FIRST:event_MenuItemViewLogFontDecActionPerformed
         int size = Log.getFont().getSize();
         if (size > Constants.LOG_FONT_SIZE_MIN) {
             Log.setFont(Log.getFont().deriveFont(Log.getFont().getSize() - 1f));
@@ -6660,20 +6661,20 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontDecActionPerformed
 
-    private void MenuItemLogFontIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLogFontIncActionPerformed
+    private void MenuItemLogFontIncActionPerformed() {//GEN-FIRST:event_MenuItemLogFontIncActionPerformed
         MenuItemViewLogFontInc.doClick();
     }//GEN-LAST:event_MenuItemLogFontIncActionPerformed
 
-    private void MenuItemLogFontDecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLogFontDecActionPerformed
+    private void MenuItemLogFontDecActionPerformed() {//GEN-FIRST:event_MenuItemLogFontDecActionPerformed
         MenuItemViewLogFontDec.doClick();
     }//GEN-LAST:event_MenuItemLogFontDecActionPerformed
 
-    private void SpeedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_SpeedItemStateChanged
+    private void SpeedItemStateChanged() {//GEN-FIRST:event_SpeedItemStateChanged
         nSpeed = Integer.parseInt((String) Speed.getSelectedItem());
 
     }//GEN-LAST:event_SpeedItemStateChanged
 
-    private void LogMaxSizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_LogMaxSizeFocusLost
+    private void LogMaxSizeFocusLost() {//GEN-FIRST:event_LogMaxSizeFocusLost
         try {
             LogMax = Integer.parseInt(LogMaxSize.getText()) * 1024;
         } catch (Exception e) {
@@ -6688,7 +6689,7 @@ public class ESPlorer extends javax.swing.JFrame {
         log("Log max size set to " + Integer.toString(LogMax / 1024) + " KB");
     }//GEN-LAST:event_LogMaxSizeFocusLost
 
-    private void TerminalMaxSizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TerminalMaxSizeFocusLost
+    private void TerminalMaxSizeFocusLost() {//GEN-FIRST:event_TerminalMaxSizeFocusLost
         try {
             TerminalMax = Integer.parseInt(TerminalMaxSize.getText()) * 1024;
         } catch (Exception e) {
@@ -6703,7 +6704,7 @@ public class ESPlorer extends javax.swing.JFrame {
         log("Terminal max size set to " + Integer.toString(TerminalMax / 1024) + " KB");
     }//GEN-LAST:event_TerminalMaxSizeFocusLost
 
-    private void SnippetCancelEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SnippetCancelEditActionPerformed
+    private void SnippetCancelEditActionPerformed() {//GEN-FIRST:event_SnippetCancelEditActionPerformed
         if (SnippetText.canUndo() || SnippetText.canRedo()) {
             this.setAlwaysOnTop(false);
             int returnVal = JOptionPane.showConfirmDialog(null, "Discard any changes and CANCEL edit this snippet without saving?", "Attention", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -6725,7 +6726,7 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetText.setBackground(SnippetTopPane.getBackground());
     }//GEN-LAST:event_SnippetCancelEditActionPerformed
 
-    private void TurboModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TurboModeActionPerformed
+    private void TurboModeActionPerformed() {//GEN-FIRST:event_TurboModeActionPerformed
         if (TurboMode.isSelected()) {
             DumbMode.setEnabled(false);
             DumbMode.setSelected(false);
@@ -6736,7 +6737,7 @@ public class ESPlorer extends javax.swing.JFrame {
         PrefsFlush();
     }//GEN-LAST:event_TurboModeActionPerformed
 
-    private void MenuItemESPResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemESPResetActionPerformed
+    private void MenuItemESPResetActionPerformed() {//GEN-FIRST:event_MenuItemESPResetActionPerformed
         if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             cmdNodeRestart.doClick();
         } else if (LeftTab.getSelectedIndex() == 1) {     // AT TAB
@@ -6744,7 +6745,7 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemESPResetActionPerformed
 
-    private void MenuItemESPFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemESPFormatActionPerformed
+    private void MenuItemESPFormatActionPerformed() {//GEN-FIRST:event_MenuItemESPFormatActionPerformed
         if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             int isFormat = Dialog("Format ESP flash data area and remove ALL files. Are you sure?", JOptionPane.YES_NO_OPTION);
             if (isFormat == JOptionPane.YES_OPTION) {
@@ -6753,35 +6754,35 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemESPFormatActionPerformed
 
-    private void MenuItemTerminalFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemTerminalFormatActionPerformed
+    private void MenuItemTerminalFormatActionPerformed() {//GEN-FIRST:event_MenuItemTerminalFormatActionPerformed
         MenuItemESPFormat.doClick();
     }//GEN-LAST:event_MenuItemTerminalFormatActionPerformed
 
-    private void MenuItemLinksAPIenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksAPIenActionPerformed
+    private void MenuItemLinksAPIenActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIenActionPerformed
         goLink(api_en_uri);
     }//GEN-LAST:event_MenuItemLinksAPIenActionPerformed
 
-    private void MenuItemLinksAPIruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksAPIruActionPerformed
+    private void MenuItemLinksAPIruActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIruActionPerformed
         goLink(api_ru_uri);
     }//GEN-LAST:event_MenuItemLinksAPIruActionPerformed
 
-    private void MenuItemLinksChangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksChangelogActionPerformed
+    private void MenuItemLinksChangelogActionPerformed() {//GEN-FIRST:event_MenuItemLinksChangelogActionPerformed
         goLink(changelog_uri);
     }//GEN-LAST:event_MenuItemLinksChangelogActionPerformed
 
-    private void MenuItemLinksDownloadLatestFirmwareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksDownloadLatestFirmwareActionPerformed
+    private void MenuItemLinksDownloadLatestFirmwareActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestFirmwareActionPerformed
         goLink(nodemcu_download_latest_uri);
     }//GEN-LAST:event_MenuItemLinksDownloadLatestFirmwareActionPerformed
 
-    private void MenuItemLinksAPIcnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksAPIcnActionPerformed
+    private void MenuItemLinksAPIcnActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIcnActionPerformed
         goLink(api_cn_uri);
     }//GEN-LAST:event_MenuItemLinksAPIcnActionPerformed
 
-    private void CustomPortNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CustomPortNameFocusLost
+    private void CustomPortNameFocusLost() {//GEN-FIRST:event_CustomPortNameFocusLost
         prefs.put(Constants.CUSTOM_PORT_NAME, CustomPortName.getText());
     }//GEN-LAST:event_CustomPortNameFocusLost
 
-    private void FileCompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompileActionPerformed
+    private void FileCompileActionPerformed() {//GEN-FIRST:event_FileCompileActionPerformed
         String cmd = "node.compile('" + iFile.get(iTab).getName() + "')";
         btnSend(cmd);
         try {
@@ -6792,14 +6793,14 @@ public class ESPlorer extends javax.swing.JFrame {
         FileListReload.doClick();
     }//GEN-LAST:event_FileCompileActionPerformed
 
-    private void FileCompileDoLCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileCompileDoLCActionPerformed
+    private void FileCompileDoLCActionPerformed() {//GEN-FIRST:event_FileCompileDoLCActionPerformed
         String fn = iFile.get(iTab).getName();
         String[] part = fn.split(".");
         String cmd = "node.compile('" + fn + "')\r\ndofile(\"" + part[0] + ".lc" + "\")";
         btnSend(cmd);
     }//GEN-LAST:event_FileCompileDoLCActionPerformed
 
-    private void logoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoMouseClicked
+    private void logoMouseClicked() {//GEN-FIRST:event_logoMouseClicked
         MenuItemHelpAbout.doClick();
     }//GEN-LAST:event_logoMouseClicked
 
@@ -6809,16 +6810,16 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RightFilesSplitPanePropertyChange
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+    private void formComponentResized() {//GEN-FIRST:event_formComponentResized
         isFileManagerShow();
     }//GEN-LAST:event_formComponentResized
 
-    private void FilesUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FilesUploadActionPerformed
+    private void FilesUploadActionPerformed() {//GEN-FIRST:event_FilesUploadActionPerformed
         //log(evt.paramString());
         UploadFiles();
     }//GEN-LAST:event_FilesUploadActionPerformed
 
-    private void FileListReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileListReloadActionPerformed
+    private void FileListReloadActionPerformed() {//GEN-FIRST:event_FileListReloadActionPerformed
         ListFiles();
     }//GEN-LAST:event_FileListReloadActionPerformed
 
@@ -6834,52 +6835,52 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_FileAsButton1ActionPerformed
 
-    private void NodeInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeInfoActionPerformed
+    private void NodeInfoActionPerformed() {//GEN-FIRST:event_NodeInfoActionPerformed
         btnSend("=node.info()");
     }//GEN-LAST:event_NodeInfoActionPerformed
 
-    private void NodeChipIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeChipIDActionPerformed
+    private void NodeChipIDActionPerformed() {//GEN-FIRST:event_NodeChipIDActionPerformed
         btnSend("=node.chipid()");
     }//GEN-LAST:event_NodeChipIDActionPerformed
 
-    private void NodeFlashIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeFlashIDActionPerformed
+    private void NodeFlashIDActionPerformed() {//GEN-FIRST:event_NodeFlashIDActionPerformed
         btnSend("=node.flashid()");
     }//GEN-LAST:event_NodeFlashIDActionPerformed
 
-    private void NodeHeapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NodeHeapActionPerformed
+    private void NodeHeapActionPerformed() {//GEN-FIRST:event_NodeHeapActionPerformed
         btnSend("=node.heap()");
     }//GEN-LAST:event_NodeHeapActionPerformed
 
-    private void FileFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileFormatActionPerformed
+    private void FileFormatActionPerformed() {//GEN-FIRST:event_FileFormatActionPerformed
         MenuItemESPFormat.doClick();
     }//GEN-LAST:event_FileFormatActionPerformed
 
-    private void MenuItemViewSnippetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewSnippetsActionPerformed
+    private void MenuItemViewSnippetsActionPerformed() {//GEN-FIRST:event_MenuItemViewSnippetsActionPerformed
         prefs.putBoolean(Constants.SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
         isRightSnippetsShow();
     }//GEN-LAST:event_MenuItemViewSnippetsActionPerformed
 
-    private void MenuItemViewFileManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewFileManagerActionPerformed
+    private void MenuItemViewFileManagerActionPerformed() {//GEN-FIRST:event_MenuItemViewFileManagerActionPerformed
         prefs.putBoolean(Constants.SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
         isFileManagerShow();
     }//GEN-LAST:event_MenuItemViewFileManagerActionPerformed
 
-    private void MenuItemViewRightExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewRightExtraActionPerformed
+    private void MenuItemViewRightExtraActionPerformed() {//GEN-FIRST:event_MenuItemViewRightExtraActionPerformed
         RightExtraButtons.setVisible(MenuItemViewRightExtra.isSelected());
         prefs.putBoolean(Constants.SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
     }//GEN-LAST:event_MenuItemViewRightExtraActionPerformed
 
-    private void MenuItemViewToolbarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewToolbarActionPerformed
+    private void MenuItemViewToolbarActionPerformed() {//GEN-FIRST:event_MenuItemViewToolbarActionPerformed
         prefs.putBoolean(Constants.SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
         isToolbarShow();
     }//GEN-LAST:event_MenuItemViewToolbarActionPerformed
 
-    private void MenuItemViewLeftExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLeftExtraActionPerformed
+    private void MenuItemViewLeftExtraActionPerformed() {//GEN-FIRST:event_MenuItemViewLeftExtraActionPerformed
         prefs.putBoolean(Constants.SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
         isLeftExtraShow();
     }//GEN-LAST:event_MenuItemViewLeftExtraActionPerformed
 
-    private void UseCustomPortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UseCustomPortNameActionPerformed
+    private void UseCustomPortNameActionPerformed() {//GEN-FIRST:event_UseCustomPortNameActionPerformed
         Port.setEnabled(!UseCustomPortName.isSelected());
         Port.setVisible(!UseCustomPortName.isSelected());
         CustomPortName.setEnabled(UseCustomPortName.isSelected());
@@ -6892,11 +6893,11 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RightSplitPanePropertyChange
 
-    private void AutoScrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoScrollActionPerformed
+    private void AutoScrollActionPerformed() {//GEN-FIRST:event_AutoScrollActionPerformed
         prefs.putBoolean(Constants.AUTO_SCROLL, AutoScroll.isSelected());
     }//GEN-LAST:event_AutoScrollActionPerformed
 
-    private void PortDTRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortDTRActionPerformed
+    private void PortDTRActionPerformed() {//GEN-FIRST:event_PortDTRActionPerformed
         prefs.putBoolean(Constants.PORT_DTR, PortDTR.isSelected());
         try {
             serialPort.setDTR(PortDTR.isSelected());
@@ -6913,7 +6914,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateLED();
     }//GEN-LAST:event_PortDTRActionPerformed
 
-    private void PortRTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PortRTSActionPerformed
+    private void PortRTSActionPerformed() {//GEN-FIRST:event_PortRTSActionPerformed
         prefs.putBoolean(Constants.PORT_RTS, PortRTS.isSelected());
         try {
             serialPort.setRTS(PortRTS.isSelected());
@@ -6930,46 +6931,46 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateLED();
     }//GEN-LAST:event_PortRTSActionPerformed
 
-    private void UseExternalEditorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_UseExternalEditorItemStateChanged
+    private void UseExternalEditorItemStateChanged() {//GEN-FIRST:event_UseExternalEditorItemStateChanged
         prefs.putBoolean(Constants.USE_EXT_EDITOR, UseExternalEditor.isSelected());
         UpdateButtons();
     }//GEN-LAST:event_UseExternalEditorItemStateChanged
 
-    private void MenuItemViewToolbarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewToolbarItemStateChanged
+    private void MenuItemViewToolbarItemStateChanged() {//GEN-FIRST:event_MenuItemViewToolbarItemStateChanged
         prefs.putBoolean(Constants.SHOW_TOOLBAR, MenuItemViewToolbar.isSelected());
         isToolbarShow();
     }//GEN-LAST:event_MenuItemViewToolbarItemStateChanged
 
-    private void MenuItemViewLeftExtraItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewLeftExtraItemStateChanged
+    private void MenuItemViewLeftExtraItemStateChanged() {//GEN-FIRST:event_MenuItemViewLeftExtraItemStateChanged
         prefs.putBoolean(Constants.SHOW_EXTRA_LEFT, MenuItemViewLeftExtra.isSelected());
         isLeftExtraShow();
     }//GEN-LAST:event_MenuItemViewLeftExtraItemStateChanged
 
-    private void MenuItemViewSnippetsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewSnippetsItemStateChanged
+    private void MenuItemViewSnippetsItemStateChanged() {//GEN-FIRST:event_MenuItemViewSnippetsItemStateChanged
         prefs.putBoolean(Constants.SHOW_SNIP_RIGHT, MenuItemViewSnippets.isSelected());
         isRightSnippetsShow();
     }//GEN-LAST:event_MenuItemViewSnippetsItemStateChanged
 
-    private void MenuItemViewFileManagerItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewFileManagerItemStateChanged
+    private void MenuItemViewFileManagerItemStateChanged() {//GEN-FIRST:event_MenuItemViewFileManagerItemStateChanged
         prefs.putBoolean(Constants.SHOW_FM_RIGHT, MenuItemViewFileManager.isSelected());
         isFileManagerShow();
     }//GEN-LAST:event_MenuItemViewFileManagerItemStateChanged
 
-    private void MenuItemViewRightExtraItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewRightExtraItemStateChanged
+    private void MenuItemViewRightExtraItemStateChanged() {//GEN-FIRST:event_MenuItemViewRightExtraItemStateChanged
         RightExtraButtons.setVisible(MenuItemViewRightExtra.isSelected());
         prefs.putBoolean(Constants.SHOW_EXTRA_RIGHT, MenuItemViewRightExtra.isSelected());
     }//GEN-LAST:event_MenuItemViewRightExtraItemStateChanged
 
-    private void MenuItemViewLogItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewLogItemStateChanged
+    private void MenuItemViewLogItemStateChanged() {//GEN-FIRST:event_MenuItemViewLogItemStateChanged
         isLogShow();
         prefs.putBoolean(Constants.SHOW_LOG, MenuItemViewLog.isSelected());
     }//GEN-LAST:event_MenuItemViewLogItemStateChanged
 
-    private void FileSystemInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSystemInfoActionPerformed
+    private void FileSystemInfoActionPerformed() {//GEN-FIRST:event_FileSystemInfoActionPerformed
         FileSystemInfo();
     }//GEN-LAST:event_FileSystemInfoActionPerformed
 
-    private void FileRenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileRenameActionPerformed
+    private void FileRenameActionPerformed() {//GEN-FIRST:event_FileRenameActionPerformed
         btnSend("file.rename(\"" + FileRenameLabel.getText() + "\",\"" + FileRename.getText().trim() + "\")");
         try {
             Thread.sleep(200L);
@@ -6978,64 +6979,64 @@ public class ESPlorer extends javax.swing.JFrame {
         FileListReload.doClick();
     }//GEN-LAST:event_FileRenameActionPerformed
 
-    private void MenuItemViewDonateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MenuItemViewDonateItemStateChanged
+    private void MenuItemViewDonateItemStateChanged() {//GEN-FIRST:event_MenuItemViewDonateItemStateChanged
         DonateSmall.setVisible(!MenuItemViewDonate.isSelected());
         prefs.putBoolean(Constants.SHOW_DONATE, MenuItemViewDonate.isSelected());
     }//GEN-LAST:event_MenuItemViewDonateItemStateChanged
 
-    private void DonateSmallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateSmallActionPerformed
+    private void DonateSmallActionPerformed() {//GEN-FIRST:event_DonateSmallActionPerformed
         goLink(donate_uri);
     }//GEN-LAST:event_DonateSmallActionPerformed
 
-    private void MenuItemLinksDownloadLatestFlasherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksDownloadLatestFlasherActionPerformed
+    private void MenuItemLinksDownloadLatestFlasherActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestFlasherActionPerformed
         goLink(flasher_uri);
     }//GEN-LAST:event_MenuItemLinksDownloadLatestFlasherActionPerformed
 
-    private void MenuItemLinksBuyDevBoardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksBuyDevBoardActionPerformed
+    private void MenuItemLinksBuyDevBoardActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyDevBoardActionPerformed
         goLink(buy_nodeMCU);
     }//GEN-LAST:event_MenuItemLinksBuyDevBoardActionPerformed
 
-    private void MenuItemLinksBuyESP8266ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksBuyESP8266ActionPerformed
+    private void MenuItemLinksBuyESP8266ActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyESP8266ActionPerformed
         goLink(buy_esp8266);
     }//GEN-LAST:event_MenuItemLinksBuyESP8266ActionPerformed
 
-    private void MenuItemLinksBuyESD12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksBuyESD12ActionPerformed
+    private void MenuItemLinksBuyESD12ActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyESD12ActionPerformed
         goLink(buy_esd12);
     }//GEN-LAST:event_MenuItemLinksBuyESD12ActionPerformed
 
-    private void MenuItemLinksESPlorerForumEnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksESPlorerForumEnActionPerformed
+    private void MenuItemLinksESPlorerForumEnActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerForumEnActionPerformed
         goLink(esp8266com_uri);
     }//GEN-LAST:event_MenuItemLinksESPlorerForumEnActionPerformed
 
-    private void MenuItemLinksESPlorerForumRuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksESPlorerForumRuActionPerformed
+    private void MenuItemLinksESPlorerForumRuActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerForumRuActionPerformed
         goLink(esp8266ru_uri);
     }//GEN-LAST:event_MenuItemLinksESPlorerForumRuActionPerformed
 
-    private void MenuItemLinksESPlorerLatestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksESPlorerLatestActionPerformed
+    private void MenuItemLinksESPlorerLatestActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerLatestActionPerformed
         goLink(esplorer_latest);
     }//GEN-LAST:event_MenuItemLinksESPlorerLatestActionPerformed
 
-    private void MenuItemLinksESPlorerSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksESPlorerSourceActionPerformed
+    private void MenuItemLinksESPlorerSourceActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerSourceActionPerformed
         goLink(esplorer_source);
     }//GEN-LAST:event_MenuItemLinksESPlorerSourceActionPerformed
 
-    private void MenuItemLinksESPlorerHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksESPlorerHomeActionPerformed
+    private void MenuItemLinksESPlorerHomeActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerHomeActionPerformed
         goLink(homepage_uri);
     }//GEN-LAST:event_MenuItemLinksESPlorerHomeActionPerformed
 
-    private void MenuItemLinksDonateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksDonateActionPerformed
+    private void MenuItemLinksDonateActionPerformed() {//GEN-FIRST:event_MenuItemLinksDonateActionPerformed
         goLink(donate_uri);
     }//GEN-LAST:event_MenuItemLinksDonateActionPerformed
 
-    private void MenuItemLinksBuyOtherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksBuyOtherActionPerformed
+    private void MenuItemLinksBuyOtherActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyOtherActionPerformed
         goLink(buy_other);
     }//GEN-LAST:event_MenuItemLinksBuyOtherActionPerformed
 
-    private void MenuItemLinksDownloadLatestDevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemLinksDownloadLatestDevActionPerformed
+    private void MenuItemLinksDownloadLatestDevActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestDevActionPerformed
         goLink(nodemcu_download_dev_uri);
     }//GEN-LAST:event_MenuItemLinksDownloadLatestDevActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    private void formWindowClosing() {//GEN-FIRST:event_formWindowClosing
         AppClose();
     }//GEN-LAST:event_formWindowClosing
 
@@ -7058,15 +7059,15 @@ public class ESPlorer extends javax.swing.JFrame {
         System.exit(0);
     }
 
-    private void EOLItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_EOLItemStateChanged
+    private void EOLItemStateChanged() {//GEN-FIRST:event_EOLItemStateChanged
         Terminal.setEOLMarkersVisible(EOL.isSelected());
     }//GEN-LAST:event_EOLItemStateChanged
 
-    private void CondensedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CondensedItemStateChanged
+    private void CondensedItemStateChanged() {//GEN-FIRST:event_CondensedItemStateChanged
         prefs.putBoolean(Constants.CONDENSED, Condensed.isSelected());
     }//GEN-LAST:event_CondensedItemStateChanged
 
-    private void AutodetectFirmwareItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_AutodetectFirmwareItemStateChanged
+    private void AutodetectFirmwareItemStateChanged() {//GEN-FIRST:event_AutodetectFirmwareItemStateChanged
         prefs.putBoolean(Constants.AUTODETECT, AutodetectFirmware.isSelected());
     }//GEN-LAST:event_AutodetectFirmwareItemStateChanged
     /*  Prefs end */
@@ -7845,17 +7846,17 @@ public class ESPlorer extends javax.swing.JFrame {
         TextEditor1.get(i).setTabSize(4);
         TextEditor1.get(i).addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                TextEditorCaretUpdate(evt);
+                TextEditorCaretUpdate();
             }
         });
         TextEditor1.get(i).addActiveLineRangeListener(new org.fife.ui.rsyntaxtextarea.ActiveLineRangeListener() {
             public void activeLineRangeChanged(org.fife.ui.rsyntaxtextarea.ActiveLineRangeEvent evt) {
-                TextEditorActiveLineRangeChanged(evt);
+                TextEditorActiveLineRangeChanged();
             }
         });
         TextEditor1.get(i).addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                TextEditorCaretPositionChanged(evt);
+                TextEditorCaretPositionChanged();
             }
 
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
@@ -7863,7 +7864,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         TextEditor1.get(i).addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                TextEditorKeyTyped(evt);
+                TextEditorKeyTyped();
             }
         });
         TextEditor1.get(i).addFocusListener(new java.awt.event.FocusAdapter() {
