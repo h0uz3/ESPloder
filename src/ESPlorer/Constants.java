@@ -2,6 +2,8 @@ package ESPlorer;
 
 import jssc.SerialPort;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  * Created by h0uz3 on 04.06.15.
  */
@@ -60,4 +62,8 @@ public class Constants {
     public static final String CONDENSED = "condensed";
     public static final String AUTODETECT = "autodetect_firmware";
     public static final int PORT_MASK = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
+    public static final FileNameExtensionFilter FILTER_LUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
+    public static final FileNameExtensionFilter FILTER_PYTHON = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
+
+
 }

@@ -4,14 +4,14 @@ import jssc.*;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.Document;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,8 +29,6 @@ import java.util.prefs.Preferences;
 public class ESPlorer extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(ESPlorer.class.getName());
-    public static final FileNameExtensionFilter FILTER_LUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
-    private static final FileNameExtensionFilter FILTER_PYTHON = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
     /* Snippets */
     private static final String[] Snippets = new String[16];
     private static boolean pOpen = false;
@@ -157,7 +155,7 @@ public class ESPlorer extends JFrame {
     private JButton FileDo;
     private JButton FileFormat;
     private JButton FileListReload;
-    JLayeredPane FileManagerPane;
+    private JLayeredPane FileManagerPane;
     private JScrollPane FileManagerScrollPane;
     private JLabel FilePathLabel;
     private JTextField FileRename;
@@ -231,7 +229,7 @@ public class ESPlorer extends JFrame {
     private JRadioButton OptionMicroPython;
     private JRadioButton OptionNodeMCU;
     private JTextField PASS;
-    private JComboBox<String> Port;
+    private JComboBox Port;
     private JLabel PortCTS;
     private JToggleButton PortDTR;
     private JLabel PortOpenLabel;
@@ -245,8 +243,6 @@ public class ESPlorer extends JFrame {
     private JTextField SSID;
     private JScrollPane ScrollLog;
     private JButton SendCommand;
-    private JComboBox ServerMode;
-    private JTextField ServerPort;
     private JButton SnippetCancelEdit;
     private JButton SnippetEdit0;
     private JButton SnippetEdit1;
@@ -266,20 +262,18 @@ public class ESPlorer extends JFrame {
     private JTextField SnippetName;
     private JButton SnippetRun;
     private JButton SnippetSave;
-    private org.fife.ui.rtextarea.RTextScrollPane SnippetScrollPane;
-    private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea SnippetText;
+    private RTextScrollPane SnippetScrollPane;
+    private RSyntaxTextArea SnippetText;
     private JLayeredPane SnippetTopPane;
     private JLabel SnippetsBusy;
     private JComboBox Speed;
-    private JLayeredPane TCP_common;
-    private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea Terminal;
+    private RSyntaxTextArea Terminal;
     private JTextField TerminalMaxSize;
     private JTabbedPane TextTab;
     private JComboBox TimerNumber;
     private JCheckBox TurboMode;
     private JCheckBox UseCustomPortName;
     private JCheckBox UseExternalEditor;
-    private JLayeredPane WiFi_common;
     private ButtonGroup buttonGroupLF;
     private JButton cmdNodeRestart;
     private JComboBox conn_id;
@@ -292,8 +286,8 @@ public class ESPlorer extends JFrame {
     private JTextField udp_mode;
     /* Files tab start */
     private ArrayList<JLayeredPane> FileLayeredPane1;
-    private ArrayList<org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> TextEditor1;
-    private ArrayList<org.fife.ui.rtextarea.RTextScrollPane> TextScroll1;
+    private ArrayList<RSyntaxTextArea> TextEditor1;
+    private ArrayList<RTextScrollPane> TextScroll1;
     private ArrayList<GroupLayout> FileLayeredPaneLayout1;
     private ArrayList<org.fife.ui.autocomplete.CompletionProvider> provider;
     private ArrayList<org.fife.ui.autocomplete.AutoCompletion> ac;
@@ -437,8 +431,8 @@ public class ESPlorer extends JFrame {
         ButtonSendLine = new JButton();
         FilesTabbedPane = new JTabbedPane();
         JLayeredPane fileLayeredPane = new JLayeredPane();
-        org.fife.ui.rtextarea.RTextScrollPane textScroll = new org.fife.ui.rtextarea.RTextScrollPane();
-        org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textEditor = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
+        RTextScrollPane textScroll = new RTextScrollPane();
+        RSyntaxTextArea textEditor = new RSyntaxTextArea();
         LeftExtraButtons = new JLayeredPane();
         JButton fileDo1 = new JButton();
         JButton fileCompile = new JButton();
@@ -487,8 +481,8 @@ public class ESPlorer extends JFrame {
         SnippetsBusy = new JLabel();
         SnippetCancelEdit = new JButton();
         Condensed = new JCheckBox();
-        SnippetScrollPane = new org.fife.ui.rtextarea.RTextScrollPane();
-        SnippetText = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
+        SnippetScrollPane = new RTextScrollPane();
+        SnippetText = new RSyntaxTextArea();
         JLayeredPane nodeMCUSettings = new JLayeredPane();
         JLayeredPane optionsFirmware = new JLayeredPane();
         OptionNodeMCU = new JRadioButton();
@@ -565,15 +559,15 @@ public class ESPlorer extends JFrame {
         JButton cmdSetCIPMODE0 = new JButton();
         JButton cmdSetCIPMODE1 = new JButton();
         JButton cmdSetCIPSERVER = new JButton();
-        ServerMode = new JComboBox();
+        JComboBox serverMode = new JComboBox();
         JLabel jLabel5 = new JLabel();
-        ServerPort = new JTextField();
+        JTextField serverPort = new JTextField();
         JButton cmdGetCIPSTO = new JButton();
         JButton cmdSetCIPSTO = new JButton();
         JTextField serverTimeout = new JTextField();
         JLabel jLabel6 = new JLabel();
-        TCP_common = new JLayeredPane();
-        WiFi_common = new JLayeredPane();
+        JLayeredPane TCP_common = new JLayeredPane();
+        JLayeredPane wiFi_common = new JLayeredPane();
         JButton cmdGetHelpCWMODE = new JButton();
         JButton cmdSetCWMODE1 = new JButton();
         JButton cmdSetCWMODE2 = new JButton();
@@ -598,13 +592,13 @@ public class ESPlorer extends JFrame {
         LF = new JCheckBox();
         SendCommand = new JButton();
         CR = new JCheckBox();
-        Command = new JComboBox();
+        Command = new JComboBox<String>();
         JLayeredPane rightBigPane = new JLayeredPane();
         RightFilesSplitPane = new JSplitPane();
         JLayeredPane terminalLogPane = new JLayeredPane();
         RightSplitPane = new JSplitPane();
-        org.fife.ui.rtextarea.RTextScrollPane terminalPane = new org.fife.ui.rtextarea.RTextScrollPane();
-        Terminal = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
+        RTextScrollPane terminalPane = new RTextScrollPane();
+        Terminal = new RSyntaxTextArea();
         ScrollLog = new JScrollPane();
         Log = new JTextArea();
         FileManagerScrollPane = new JScrollPane();
@@ -3089,11 +3083,11 @@ public class ESPlorer extends JFrame {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
-                                                .addComponent(ServerMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(serverMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel5)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ServerPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(serverPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(cmdSetCIPSERVER, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
         );
         TCPServerBottomPaneLayout.setVerticalGroup(
@@ -3102,8 +3096,8 @@ public class ESPlorer extends JFrame {
                                 .addContainerGap()
                                 .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel5)
-                                        .addComponent(ServerPort, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(ServerMode, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(serverPort, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(serverMode, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdGetCIPMODE, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
@@ -3125,9 +3119,9 @@ public class ESPlorer extends JFrame {
         TCPServerBottomPane.setLayer(cmdSetCIPMODE0, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdSetCIPMODE1, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdSetCIPSERVER, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(ServerMode, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(serverMode, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(jLabel5, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(ServerPort, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(serverPort, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdGetCIPSTO, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(cmdSetCIPSTO, JLayeredPane.DEFAULT_LAYER);
         TCPServerBottomPane.setLayer(serverTimeout, JLayeredPane.DEFAULT_LAYER);
@@ -3160,14 +3154,14 @@ public class ESPlorer extends JFrame {
         TCP_common.setOpaque(true);
         TCP_common.setLayout(new java.awt.FlowLayout());
 
-        WiFi_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
-        WiFi_common.setAlignmentX(0.0F);
-        WiFi_common.setAlignmentY(0.0F);
-        WiFi_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        WiFi_common.setName(""); // NOI18N
-        WiFi_common.setOpaque(true);
-        WiFi_common.setPreferredSize(new java.awt.Dimension(445, 110));
-        WiFi_common.setLayout(new java.awt.FlowLayout());
+        wiFi_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
+        wiFi_common.setAlignmentX(0.0F);
+        wiFi_common.setAlignmentY(0.0F);
+        wiFi_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        wiFi_common.setName(""); // NOI18N
+        wiFi_common.setOpaque(true);
+        wiFi_common.setPreferredSize(new java.awt.Dimension(445, 110));
+        wiFi_common.setLayout(new java.awt.FlowLayout());
 
         cmdGetHelpCWMODE.setText("CWMODE=? - Get available modes");
         cmdGetHelpCWMODE.setToolTipText("Get value scope of WiFi mode (CommandWifiMODE)");
@@ -3183,7 +3177,7 @@ public class ESPlorer extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             }
         });
-        WiFi_common.add(cmdGetHelpCWMODE);
+        wiFi_common.add(cmdGetHelpCWMODE);
 
         cmdSetCWMODE1.setText("CWMODE=1 Station");
         cmdSetCWMODE1.setToolTipText("Set ESP8266 WiFi mode 1 - Station");
@@ -3223,14 +3217,14 @@ public class ESPlorer extends JFrame {
         DHCP.setMaximumSize(new java.awt.Dimension(114, 23));
         DHCP.setMinimumSize(new java.awt.Dimension(114, 23));
         DHCP.setPreferredSize(new java.awt.Dimension(114, 23));
-        WiFi_common.add(DHCP);
+        wiFi_common.add(DHCP);
 
         DHCPmode.setModel(new DefaultComboBoxModel(new String[]{"0 - Set softAP", "1 - Set Station", "2 - Set both AP&Sta"}));
         DHCPmode.setSelectedIndex(1);
         DHCPmode.setMaximumSize(new java.awt.Dimension(90, 23));
         DHCPmode.setMinimumSize(new java.awt.Dimension(90, 23));
         DHCPmode.setPreferredSize(new java.awt.Dimension(90, 23));
-        WiFi_common.add(DHCPmode);
+        wiFi_common.add(DHCPmode);
 
         comingSoon1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comingSoon1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -6420,7 +6414,7 @@ public class ESPlorer extends JFrame {
         if (OptionNodeMCU.isSelected()) {
             prefs.put(Constants.FIRMWARE, "NodeMCU");
             PrefsFlush();
-            chooser.setFileFilter(FILTER_LUA);
+            chooser.setFileFilter(Constants.FILTER_LUA);
         }
     }//GEN-LAST:event_OptionNodeMCUItemStateChanged
 
@@ -6428,7 +6422,7 @@ public class ESPlorer extends JFrame {
         if (OptionMicroPython.isSelected()) {
             prefs.put(Constants.FIRMWARE, "MicroPython");
             PrefsFlush();
-            chooser.setFileFilter(FILTER_PYTHON);
+            chooser.setFileFilter(Constants.FILTER_PYTHON);
         }
     }//GEN-LAST:event_OptionMicroPythonItemStateChanged
 
@@ -7458,8 +7452,8 @@ public class ESPlorer extends JFrame {
         SnippetText.setTabsEmulated(true);
 
         FileLayeredPane1 = new ArrayList<JLayeredPane>();
-        TextScroll1 = new ArrayList<org.fife.ui.rtextarea.RTextScrollPane>();
-        TextEditor1 = new ArrayList<org.fife.ui.rsyntaxtextarea.RSyntaxTextArea>();
+        TextScroll1 = new ArrayList<RTextScrollPane>();
+        TextEditor1 = new ArrayList<RSyntaxTextArea>();
         FileLayeredPaneLayout1 = new ArrayList<GroupLayout>();
         provider = new ArrayList<org.fife.ui.autocomplete.CompletionProvider>();
         ac = new ArrayList<org.fife.ui.autocomplete.AutoCompletion>();
@@ -7522,10 +7516,10 @@ public class ESPlorer extends JFrame {
         }
         if (prefs.get(Constants.FIRMWARE, "NodeMCU").equals("MicroPython") && OptionMicroPython.isEnabled()) {
             OptionMicroPython.setSelected(true);
-            chooser.setFileFilter(FILTER_PYTHON);
+            chooser.setFileFilter(Constants.FILTER_PYTHON);
         } else {
             OptionNodeMCU.setSelected(true);
-            chooser.setFileFilter(FILTER_LUA);
+            chooser.setFileFilter(Constants.FILTER_LUA);
         }
         FileAutoSaveDisk.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_DISK, true));
         FileAutoSaveESP.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_ESP, true));
@@ -7768,8 +7762,8 @@ public class ESPlorer extends JFrame {
         int i = FilesTabbedPane.getTabCount();
 
         FileLayeredPane1.add(new JLayeredPane());
-        TextScroll1.add(new org.fife.ui.rtextarea.RTextScrollPane());
-        TextEditor1.add(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea());
+        TextScroll1.add(new RTextScrollPane());
+        TextEditor1.add(new RSyntaxTextArea());
         iFile.add(new File(""));
         FileChanged.add(false);
         provider.add(createCompletionProvider());
