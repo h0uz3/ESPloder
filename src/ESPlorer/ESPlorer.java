@@ -4094,7 +4094,7 @@ public class ESPlorer extends JFrame {
 
         horizontSplit.setRightComponent(rightBasePane);
 
-        mainMenuBar.setAlignmentX(0.0F);
+        mainMenuBar.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         mainMenuBar.setName("MainMenu"); // NOI18N
         mainMenuBar.setPreferredSize(new java.awt.Dimension(300, 22));
 
