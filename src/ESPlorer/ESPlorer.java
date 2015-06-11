@@ -3,13 +3,16 @@ package ESPlorer;
 import jssc.*;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.autocomplete.BasicCompletion;
+import org.fife.ui.autocomplete.CompletionProvider;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.jdesktop.beansbinding.BindingGroup;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.Document;
 import java.awt.*;
@@ -17,10 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,12 +30,12 @@ import java.util.prefs.Preferences;
 public class ESPlorer extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(ESPlorer.class.getName());
-    /* Snippets */
-    private static final String[] Snippets = new String[16];
+    /* SNIPPETS */
+    private static final String[] SNIPPETS = new String[16];
     private static boolean pOpen = false;
     private static boolean portJustOpen = false;
-    private static ArrayList<String> lookAndFeel;
-    private static ArrayList<String> LAFclass;
+    private static java.util.List<String> lookAndFeel;
+    private static List<String> lookAndFeelClass;
     private static Preferences prefs;
     private static int j = 0;
     private static String[] s;
@@ -42,20 +43,20 @@ public class ESPlorer extends JFrame {
     private static String rx_data = "";
     private static byte[] rx_byte;
     private static byte[] tx_byte;
-    private static String DownloadCommand;
+    private static String downloadCommand;
     // downloader end
     private static boolean busyIcon = false;
     private static SerialPort serialPort;
-    private static int LogMax = 10 * 1024;
-    private static int TerminalMax = 100 * 1024;
+    private static int logMax = 10 * 1024;
+    private static int terminalMax = 100 * 1024;
     private static int iSnippets = 0;
     private static ImageIcon LED_GREY;
     private static ImageIcon LED_GREEN;
     private static ImageIcon LED_RED;
     private static ImageIcon LED_BLUE;
-    private static boolean LocalEcho = true;
-    private final int SendPacketSize = 250;
-    private final String NewFile = "New";
+    private static boolean localEcho = true;
+    private final int sendPacketSize = 250;
+    private final String newFile = "New";
     /* Files tab end */
     private int nSpeed = 9600;
     private ActionListener taskPerformer;
@@ -63,53 +64,35 @@ public class ESPlorer extends JFrame {
     private Timer timeout;
     private Timer openTimeout;
     private Color themeTextBackground;
-    private ArrayList<String> sendBuf;
+    private List<String> sendBuf;
     // downloader
     private int packets = 0;
     private String rcvFile = "";
-    private ArrayList<String> rcvPackets;
+    private List<String> rcvPackets;
     private ArrayList<byte[]> sendPackets;
-    private ArrayList<Boolean> sendPacketsCRC;
-    private ArrayList<String> PacketsData;
-    private ArrayList<Integer> PacketsSize;
-    private ArrayList<Integer> PacketsCRC;
-    private ArrayList<Integer> PacketsNum;
-    private byte[] PacketsByte;
-    private URI donate_uri;
-    private URI homepage_uri;
-    private URI api_cn_uri;
-    private URI api_en_uri;
-    private URI api_ru_uri;
-    private URI changelog_uri;
-    private URI nodemcu_download_latest_uri;
-    private URI nodemcu_download_dev_uri;
-    private URI flasher_uri;
-    private URI buy_nodeMCU;
-    private URI buy_esp8266;
-    private URI buy_esd12;
-    private URI buy_other;
-    private URI esp8266com_uri;
-    private URI esp8266ru_uri;
-    private URI esplorer_latest;
-    private URI esplorer_source;
-    //  String s = new String();
-    private String FileName = "script"; // without ext
-    private String DownloadedFileName = "";
-    private int FileCount = 0;
+    private List<Boolean> sendPacketsCRC;
+    private List<String> packetsData;
+    private ArrayList<Integer> packetsSize;
+    private ArrayList<Integer> packetsCRC;
+    private ArrayList<Integer> packetsNum;
+    private byte[] packetsByte;
+
+    private String fileName = "script"; // without ext
+    private String downloadedFileName = "";
+    private int fileCount = 0;
     private String workDir = "";
     private JFileChooser chooser;
     private FileInputStream fis = null;
     private FileOutputStream fos = null;
     private OutputStreamWriter osw = null;
     private BufferedWriter bw = null;
-
     private JDialog aboutDialog;
-    private JCheckBoxMenuItem AlwaysOnTop;
-    private JSlider AnswerDelay;
-    private JLabel AnswerDelayLabel;
-    private JCheckBox AutoScroll;
-    private JCheckBox AutodetectFirmware;
-    private JLabel Busy;
+    private JCheckBoxMenuItem alwaysOnTop;
+    private JSlider answerDelay;
+    private JLabel answerDelayLabel;
+    private JCheckBox autoScroll;
+    private JCheckBox autodetectFirmware;
+    private JLabel busy;
     private JButton copyButton;
     private JButton ButtonCut;
     private JButton ButtonFileClose;
@@ -144,7 +127,6 @@ public class ESPlorer extends JFrame {
     private JTextField CustomPortName;
     private JSlider Delay;
     private JLabel DelayLabel;
-    private JButton DonateSmall;
     private JCheckBox DumbMode;
     private JCheckBox EOL;
     private JComboBox EditorTheme;
@@ -209,7 +191,6 @@ public class ESPlorer extends JFrame {
     private JMenuItem MenuItemTerminalFontInc;
     private JMenuItem MenuItemTerminalFormat;
     private JMenuItem MenuItemTerminalReset;
-    private JCheckBoxMenuItem MenuItemViewDonate;
     private JMenuItem MenuItemViewEditorFontDec;
     private JMenuItem MenuItemViewEditorFontInc;
     private JCheckBoxMenuItem MenuItemViewFileManager;
@@ -284,19 +265,18 @@ public class ESPlorer extends JFrame {
     private JTextField remote_port;
     private JTextField udp_local_port;
     private JTextField udp_mode;
-    /* Files tab start */
-    private ArrayList<JLayeredPane> FileLayeredPane1;
-    private ArrayList<RSyntaxTextArea> TextEditor1;
-    private ArrayList<RTextScrollPane> TextScroll1;
-    private ArrayList<GroupLayout> FileLayeredPaneLayout1;
-    private ArrayList<org.fife.ui.autocomplete.CompletionProvider> provider;
-    private ArrayList<org.fife.ui.autocomplete.AutoCompletion> ac;
-    private ArrayList<File> iFile; // for files in tab
-    private ArrayList<File> mFile; // for multifile op
+    private List<JLayeredPane> FileLayeredPane1;
+    private List<RSyntaxTextArea> TextEditor1;
+    private List<RTextScrollPane> TextScroll1;
+    private List<GroupLayout> FileLayeredPaneLayout1;
+    private List<CompletionProvider> provider;
+    private List<AutoCompletion> ac;
+    private List<File> iFile; // for files in tab
+    private List<File> mFile; // for multifile op
     private ArrayList<Boolean> FileChanged;
     private ArrayList<JButton> FileAsButton;
-    private ArrayList<JPopupMenu> FilePopupMenu;
-    private ArrayList<JMenuItem> FilePopupMenuItem;
+    private List<JPopupMenu> FilePopupMenu;
+    private List<JMenuItem> FilePopupMenuItem;
     private int iTab = 0; // tab index
     private int mFileIndex = -1; // multifile index
     private long startTime = System.currentTimeMillis();
@@ -307,26 +287,21 @@ public class ESPlorer extends JFrame {
             LOGGER.addHandler(fh);
         } catch (SecurityException e) {
             LOGGER.log(Level.SEVERE, "Internal error 105: Can't create log file. Permission denied.", e);
-//            LOGGER.log(Level.SEVERE,e.getStackTrace().toString(), e);
-//            e.printStackTrace();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Internal error 106: Can't create log file. I/O error.", e);
-//            LOGGER.log(Level.SEVERE,e.getStackTrace().toString(), e);
-//            e.printStackTrace();
         }
         initComponents();
         FinalInit();
-
     }
 
     public static void main(String args[]) {
         lookAndFeel = new ArrayList<String>();
-        LAFclass = new ArrayList<String>();
+        lookAndFeelClass = new ArrayList<String>();
         String laf;
         prefs = Preferences.userRoot().node(Constants.nodeRoot);
         laf = prefs.get("LAF", "plaf.nimbus.NimbusLookAndFeel");
         lookAndFeel.add("Nimbus");
-        LAFclass.add("plaf.nimbus.NimbusLookAndFeel");
+        lookAndFeelClass.add("plaf.nimbus.NimbusLookAndFeel");
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (laf.equals(info.getClassName())) {
@@ -337,7 +312,7 @@ public class ESPlorer extends JFrame {
                 }
                 if (!"Nimbus".equals(info.getName())) {
                     lookAndFeel.add(info.getName());
-                    LAFclass.add(info.getClassName());
+                    lookAndFeelClass.add(info.getClassName());
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -364,7 +339,7 @@ public class ESPlorer extends JFrame {
     }
 
     private void initComponents() {
-        org.jdesktop.beansbinding.BindingGroup bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
+        BindingGroup bindingGroup = new BindingGroup();
         JPopupMenu contextMenuTerminal = new JPopupMenu();
         MenuItemTerminalClear = new JMenuItem();
         MenuItemTerminalCopy = new JMenuItem();
@@ -393,12 +368,11 @@ public class ESPlorer extends JFrame {
         JPopupMenu.Separator logSeparator = new JPopupMenu.Separator();
         JMenuItem menuItemLogFontInc = new JMenuItem();
         JMenuItem menuItemLogFontDec = new JMenuItem();
-        ButtonGroup MUXGroup = new ButtonGroup();
+        ButtonGroup muxGroup = new ButtonGroup();
         ButtonGroup firmware = new ButtonGroup();
         aboutDialog = new JDialog();
         JLabel appName = new JLabel();
         JLabel version1 = new JLabel();
-        JButton donate = new JButton();
         JLabel author = new JLabel();
         JButton homePage = new JButton();
         JPopupMenu contextMenuESPFileLUA = new JPopupMenu();
@@ -439,7 +413,7 @@ public class ESPlorer extends JFrame {
         JButton fileSaveCompileDoLC = new JButton();
         JButton fileCompileDoLC = new JButton();
         JButton fileCompile1 = new JButton();
-        Busy = new JLabel();
+        busy = new JLabel();
         FilePathLabel = new JLabel();
         ProgressBar = new JProgressBar();
         JLayeredPane leftMainButtons = new JLayeredPane();
@@ -497,8 +471,8 @@ public class ESPlorer extends JFrame {
         JLayeredPane optionsFileSendMode = new JLayeredPane();
         DelayLabel = new JLabel();
         Delay = new JSlider();
-        AnswerDelayLabel = new JLabel();
-        AnswerDelay = new JSlider();
+        answerDelayLabel = new JLabel();
+        answerDelay = new JSlider();
         DumbMode = new JCheckBox();
         LineDelayLabel = new JLabel();
         LineDelay = new JSlider();
@@ -514,7 +488,7 @@ public class ESPlorer extends JFrame {
         CustomPortName = new JTextField();
         UseCustomPortName = new JCheckBox();
         JLabel jLabel10 = new JLabel();
-        AutodetectFirmware = new JCheckBox();
+        autodetectFirmware = new JCheckBox();
         Box.Filler topWiFiStaFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JButton cmdGetCWJAP = new JButton();
         JButton cmdSetCWJAP = new JButton();
@@ -523,7 +497,7 @@ public class ESPlorer extends JFrame {
         JButton cmdSetCWQAP = new JButton();
         JButton cmdGetCIPSTAMAC = new JButton();
         JButton cmdSetCIPSTAMAC = new JButton();
-        JFormattedTextField MAC = new JFormattedTextField();
+        JFormattedTextField mac = new JFormattedTextField();
         JButton cmdGetCIPSTA = new JButton();
         JButton cmdSetCIPSTA = new JButton();
         JTextField stationIP = new JTextField();
@@ -531,14 +505,14 @@ public class ESPlorer extends JFrame {
         JButton cmdGetCWSAP = new JButton();
         JButton cmdGetCIPAPMAC = new JButton();
         JButton cmdGetCWLIF = new JButton();
-        JLayeredPane TCPclientBottomPane = new JLayeredPane();
+        JLayeredPane tcpClientBottomPane = new JLayeredPane();
         JPanel common = new JPanel();
         conn_id = new JComboBox();
         JRadioButton single = new JRadioButton();
         multi = new JRadioButton();
         JLabel jLabel4 = new JLabel();
         JButton cmdGetCIPSTART = new JButton();
-        JLayeredPane UDP = new JLayeredPane();
+        JLayeredPane upd = new JLayeredPane();
         udp_local_port = new JTextField();
         JLabel jLabel2 = new JLabel();
         udp_mode = new JTextField();
@@ -552,9 +526,9 @@ public class ESPlorer extends JFrame {
         JButton cmdCIPSEND = new JButton();
         JButton cmdCIPSENDinteractive = new JButton();
         JButton cmdSetCIPCLOSE = new JButton();
-        JPanel AT_Server = new JPanel();
-        Box.Filler TCPServerTopFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
-        JLayeredPane TCPServerBottomPane = new JLayeredPane();
+        JPanel atServer = new JPanel();
+        Box.Filler tcpServerTopFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
+        JLayeredPane tcpServerBottomPane = new JLayeredPane();
         JButton cmdGetCIPMODE = new JButton();
         JButton cmdSetCIPMODE0 = new JButton();
         JButton cmdSetCIPMODE1 = new JButton();
@@ -566,18 +540,18 @@ public class ESPlorer extends JFrame {
         JButton cmdSetCIPSTO = new JButton();
         JTextField serverTimeout = new JTextField();
         JLabel jLabel6 = new JLabel();
-        JLayeredPane TCP_common = new JLayeredPane();
-        JLayeredPane wiFi_common = new JLayeredPane();
+        JLayeredPane tcpCommon = new JLayeredPane();
+        JLayeredPane wifiCommon = new JLayeredPane();
         JButton cmdGetHelpCWMODE = new JButton();
         JButton cmdSetCWMODE1 = new JButton();
         JButton cmdSetCWMODE2 = new JButton();
         JButton cmdSetCWLAP = new JButton();
         JButton cmdSetCWMODE3 = new JButton();
-        JComboBox DHCP = new JComboBox();
-        JComboBox DHCPmode = new JComboBox();
+        JComboBox dhcpComboBox = new JComboBox();
+        JComboBox dhcpModeComboBox = new JComboBox();
         JLabel comingSoon1 = new JLabel();
         JLayeredPane rightBasePane = new JLayeredPane();
-        JLayeredPane LEDPanel = new JLayeredPane();
+        JLayeredPane ledPanel = new JLayeredPane();
         PortOpenLabel = new JLabel();
         PortCTS = new JLabel();
         PortDTR = new JToggleButton();
@@ -585,7 +559,7 @@ public class ESPlorer extends JFrame {
         Open = new JToggleButton();
         Speed = new JComboBox();
         ReScan = new JButton();
-        AutoScroll = new JCheckBox();
+        autoScroll = new JCheckBox();
         Port = new JComboBox();
         EOL = new JCheckBox();
         JLayeredPane rightBottomPane = new JLayeredPane();
@@ -634,7 +608,6 @@ public class ESPlorer extends JFrame {
         JButton nodeChipID = new JButton();
         JButton nodeFlashID = new JButton();
         NodeReset = new JButton();
-        DonateSmall = new JButton();
         JMenuBar mainMenuBar = new JMenuBar();
         JMenu menuFile = new JMenu();
         MenuItemFileNew = new JMenuItem();
@@ -669,7 +642,7 @@ public class ESPlorer extends JFrame {
         MenuItemESPReset = new JMenuItem();
         MenuItemESPFormat = new JMenuItem();
         MenuView = new JMenu();
-        AlwaysOnTop = new JCheckBoxMenuItem();
+        alwaysOnTop = new JCheckBoxMenuItem();
         MenuItemViewLog = new JCheckBoxMenuItem();
         JMenuItem menuItemViewClearLog = new JMenuItem();
         JMenuItem menuItemViewClearTerminal = new JMenuItem();
@@ -679,7 +652,6 @@ public class ESPlorer extends JFrame {
         MenuItemViewSnippets = new JCheckBoxMenuItem();
         MenuItemViewFileManager = new JCheckBoxMenuItem();
         MenuItemViewRightExtra = new JCheckBoxMenuItem();
-        MenuItemViewDonate = new JCheckBoxMenuItem();
         JPopupMenu.Separator jSeparator13 = new JPopupMenu.Separator();
         MenuItemViewTermFontInc = new JMenuItem();
         MenuItemViewTermFontDec = new JMenuItem();
@@ -693,27 +665,6 @@ public class ESPlorer extends JFrame {
         JMenuItem menuItemViewFontDefault = new JMenuItem();
         JPopupMenu.Separator jSeparator17 = new JPopupMenu.Separator();
         MenuItemViewLF1 = new JRadioButtonMenuItem();
-        JMenu menuLinks = new JMenu();
-        JMenuItem menuItemLinksAPIcn = new JMenuItem();
-        JMenuItem menuItemLinksAPIen = new JMenuItem();
-        JMenuItem menuItemLinksAPIru = new JMenuItem();
-        JMenuItem menuItemLinksChangelog = new JMenuItem();
-        JPopupMenu.Separator jSeparator14 = new JPopupMenu.Separator();
-        JMenuItem menuItemLinksDownloadLatestFirmware = new JMenuItem();
-        JMenuItem menuItemLinksDownloadLatestDev = new JMenuItem();
-        JMenuItem menuItemLinksDownloadLatestFlasher = new JMenuItem();
-        JPopupMenu.Separator jSeparator15 = new JPopupMenu.Separator();
-        JMenuItem menuItemLinksBuyDevBoard = new JMenuItem();
-        JMenuItem menuItemLinksBuyESP8266 = new JMenuItem();
-        JMenuItem menuItemLinksBuyESD12 = new JMenuItem();
-        JMenuItem menuItemLinksBuyOther = new JMenuItem();
-        JPopupMenu.Separator jSeparator16 = new JPopupMenu.Separator();
-        JMenuItem menuItemLinksESPlorerForumEn = new JMenuItem();
-        JMenuItem menuItemLinksESPlorerForumRu = new JMenuItem();
-        JMenuItem menuItemLinksESPlorerLatest = new JMenuItem();
-        JMenuItem menuItemLinksESPlorerSource = new JMenuItem();
-        JMenuItem menuItemLinksESPlorerHome = new JMenuItem();
-        JMenuItem menuItemLinksDonate = new JMenuItem();
         JMenu menuHelp = new JMenu();
         MenuItemHelpAbout = new JMenuItem();
 
@@ -959,47 +910,24 @@ public class ESPlorer extends JFrame {
         version1.setText(Constants.version);
         version1.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        donate.setIcon(new ImageIcon(getClass().getResource("/resources/donate.gif"))); // NOI18N
-        donate.setToolTipText("If you'd like to make a one-time donation to ESPlorer author, you can use PayPal to make it fast and easy.");
-        donate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DonateActionPerformed();
-            }
-        });
-
         author.setHorizontalAlignment(SwingConstants.CENTER);
         author.setText("by h0uz3");
         author.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        homePage.setIcon(new ImageIcon(getClass().getResource("/resources/wifi.png"))); // NOI18N
-        homePage.setText("Visit HomePage");
-        homePage.setToolTipText("");
-        homePage.setHorizontalTextPosition(SwingConstants.LEFT);
-        homePage.setMaximumSize(new java.awt.Dimension(200, 55));
-        homePage.setMinimumSize(new java.awt.Dimension(200, 55));
-        homePage.setPreferredSize(new java.awt.Dimension(200, 55));
-        homePage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HomePageActionPerformed();
-            }
-        });
-
-        GroupLayout AboutLayout = new GroupLayout(aboutDialog.getContentPane());
-        aboutDialog.getContentPane().setLayout(AboutLayout);
-        AboutLayout.setHorizontalGroup(
-                AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout aboutLayout = new GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutLayout);
+        aboutLayout.setHorizontalGroup(
+                aboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(author, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(appName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(version1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(AboutLayout.createSequentialGroup()
-                                .addComponent(donate, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(aboutLayout.createSequentialGroup()
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(homePage, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                                 .addContainerGap())
         );
-        AboutLayout.setVerticalGroup(
-                AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(AboutLayout.createSequentialGroup()
+        aboutLayout.setVerticalGroup(
+                aboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(aboutLayout.createSequentialGroup()
                                 .addContainerGap(77, Short.MAX_VALUE)
                                 .addComponent(appName, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -1007,8 +935,7 @@ public class ESPlorer extends JFrame {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(author)
                                 .addGap(56, 56, 56)
-                                .addGroup(AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(donate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(aboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(homePage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
@@ -1449,19 +1376,19 @@ public class ESPlorer extends JFrame {
         });
         textScroll.setViewportView(textEditor);
 
-        GroupLayout FileLayeredPaneLayout = new GroupLayout(fileLayeredPane);
-        fileLayeredPane.setLayout(FileLayeredPaneLayout);
-        FileLayeredPaneLayout.setHorizontalGroup(
-                FileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout fileLayeredPaneLayout = new GroupLayout(fileLayeredPane);
+        fileLayeredPane.setLayout(fileLayeredPaneLayout);
+        fileLayeredPaneLayout.setHorizontalGroup(
+                fileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(textScroll, GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
         );
-        FileLayeredPaneLayout.setVerticalGroup(
-                FileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        fileLayeredPaneLayout.setVerticalGroup(
+                fileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(textScroll, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
         );
         fileLayeredPane.setLayer(textScroll, JLayeredPane.DEFAULT_LAYER);
 
-        FilesTabbedPane.addTab("NewFile", fileLayeredPane);
+        FilesTabbedPane.addTab("newFile", fileLayeredPane);
 
         LeftExtraButtons.setEnabled(false);
         LeftExtraButtons.setOpaque(true);
@@ -1541,12 +1468,12 @@ public class ESPlorer extends JFrame {
         });
         LeftExtraButtons.add(fileCompile1);
 
-        Busy.setBackground(new java.awt.Color(0, 153, 0));
-        Busy.setForeground(new java.awt.Color(255, 255, 255));
-        Busy.setHorizontalAlignment(SwingConstants.CENTER);
-        Busy.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
-        Busy.setText("IDLE");
-        Busy.setOpaque(true);
+        busy.setBackground(new java.awt.Color(0, 153, 0));
+        busy.setForeground(new java.awt.Color(255, 255, 255));
+        busy.setHorizontalAlignment(SwingConstants.CENTER);
+        busy.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        busy.setText("IDLE");
+        busy.setOpaque(true);
 
         FilePathLabel.setText("jLabel1");
 
@@ -1620,35 +1547,35 @@ public class ESPlorer extends JFrame {
         });
         leftMainButtons.add(filesUpload);
 
-        GroupLayout SriptsTabLayout = new GroupLayout(sriptsTab);
-        sriptsTab.setLayout(SriptsTabLayout);
-        SriptsTabLayout.setHorizontalGroup(
-                SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout scriptsTabLayout = new GroupLayout(sriptsTab);
+        sriptsTab.setLayout(scriptsTabLayout);
+        scriptsTabLayout.setHorizontalGroup(
+                scriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(FilesTabbedPane)
                         .addComponent(FilesToolBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(SriptsTabLayout.createSequentialGroup()
-                                .addGroup(SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(scriptsTabLayout.createSequentialGroup()
+                                .addGroup(scriptsTabLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(ProgressBar, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(GroupLayout.Alignment.LEADING, SriptsTabLayout.createSequentialGroup()
+                                        .addGroup(GroupLayout.Alignment.LEADING, scriptsTabLayout.createSequentialGroup()
                                                 .addGap(6, 6, 6)
-                                                .addComponent(Busy, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(busy, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(FilePathLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(LeftExtraButtons, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 531, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(leftMainButtons, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 531, GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        SriptsTabLayout.setVerticalGroup(
-                SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(SriptsTabLayout.createSequentialGroup()
+        scriptsTabLayout.setVerticalGroup(
+                scriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(scriptsTabLayout.createSequentialGroup()
                                 .addComponent(FilesToolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(FilesTabbedPane)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ProgressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(Busy)
+                                .addGroup(scriptsTabLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(busy)
                                         .addComponent(FilePathLabel))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(LeftExtraButtons, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
@@ -1658,7 +1585,7 @@ public class ESPlorer extends JFrame {
         sriptsTab.setLayer(FilesToolBar, JLayeredPane.PALETTE_LAYER);
         sriptsTab.setLayer(FilesTabbedPane, JLayeredPane.DEFAULT_LAYER);
         sriptsTab.setLayer(LeftExtraButtons, JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(Busy, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(busy, JLayeredPane.DEFAULT_LAYER);
         sriptsTab.setLayer(FilePathLabel, JLayeredPane.DEFAULT_LAYER);
         sriptsTab.setLayer(ProgressBar, JLayeredPane.DEFAULT_LAYER);
         sriptsTab.setLayer(leftMainButtons, JLayeredPane.DEFAULT_LAYER);
@@ -1763,27 +1690,27 @@ public class ESPlorer extends JFrame {
                         .addGap(0, 177, Short.MAX_VALUE)
         );
 
-        GroupLayout NodeMCUCommandsLayout = new GroupLayout(nodeMCUCommands);
-        nodeMCUCommands.setLayout(NodeMCUCommandsLayout);
-        NodeMCUCommandsLayout.setHorizontalGroup(
-                NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
+        GroupLayout nodeMCUCommandsLayout = new GroupLayout(nodeMCUCommands);
+        nodeMCUCommands.setLayout(nodeMCUCommandsLayout);
+        nodeMCUCommandsLayout.setHorizontalGroup(
+                nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(jLayeredPane1)
-                                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
-                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
+                                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
+                                                .addGroup(nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
                                                                 .addComponent(cmdNodeRestart, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(cmdNodeChipID, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
+                                                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
                                                                 .addComponent(cmdTimerStop, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(TimerNumber, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
+                                                .addGroup(nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
                                                                 .addComponent(cmdNodeHeap, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(cmdNodeSleep, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
@@ -1791,17 +1718,17 @@ public class ESPlorer extends JFrame {
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
-        NodeMCUCommandsLayout.setVerticalGroup(
-                NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
+        nodeMCUCommandsLayout.setVerticalGroup(
+                nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUCommandsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cmdNodeChipID, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdNodeRestart, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdNodeHeap, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdNodeSleep, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(nodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cmdListFiles, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdTimerStop, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(TimerNumber, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
@@ -1950,10 +1877,10 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout LeftSnippetsPaneLayout = new GroupLayout(leftSnippetsPane);
-        leftSnippetsPane.setLayout(LeftSnippetsPaneLayout);
-        LeftSnippetsPaneLayout.setHorizontalGroup(
-                LeftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout leftSnippetsPaneLayout = new GroupLayout(leftSnippetsPane);
+        leftSnippetsPane.setLayout(leftSnippetsPaneLayout);
+        leftSnippetsPaneLayout.setHorizontalGroup(
+                leftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(SnippetEdit0, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SnippetEdit1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SnippetEdit2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1971,9 +1898,9 @@ public class ESPlorer extends JFrame {
                         .addComponent(SnippetEdit14, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SnippetEdit15, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        LeftSnippetsPaneLayout.setVerticalGroup(
-                LeftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(LeftSnippetsPaneLayout.createSequentialGroup()
+        leftSnippetsPaneLayout.setVerticalGroup(
+                leftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(leftSnippetsPaneLayout.createSequentialGroup()
                                 .addComponent(SnippetEdit0, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SnippetEdit1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
@@ -2078,34 +2005,34 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout SnippetTopPaneLayout = new GroupLayout(SnippetTopPane);
-        SnippetTopPane.setLayout(SnippetTopPaneLayout);
-        SnippetTopPaneLayout.setHorizontalGroup(
-                SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(SnippetTopPaneLayout.createSequentialGroup()
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(SnippetTopPaneLayout.createSequentialGroup()
+        GroupLayout snippetTopPaneLayout = new GroupLayout(SnippetTopPane);
+        SnippetTopPane.setLayout(snippetTopPaneLayout);
+        snippetTopPaneLayout.setHorizontalGroup(
+                snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(snippetTopPaneLayout.createSequentialGroup()
+                                .addGroup(snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(snippetTopPaneLayout.createSequentialGroup()
                                                 .addComponent(SnippetSave)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(SnippetCancelEdit))
                                         .addComponent(SnippetName))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(SnippetsBusy, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(SnippetTopPaneLayout.createSequentialGroup()
+                                        .addGroup(snippetTopPaneLayout.createSequentialGroup()
                                                 .addComponent(SnippetRun, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(Condensed)))
                                 .addContainerGap(69, Short.MAX_VALUE))
         );
-        SnippetTopPaneLayout.setVerticalGroup(
-                SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(SnippetTopPaneLayout.createSequentialGroup()
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        snippetTopPaneLayout.setVerticalGroup(
+                snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(snippetTopPaneLayout.createSequentialGroup()
+                                .addGroup(snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(SnippetName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(SnippetsBusy))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(snippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(SnippetSave)
                                         .addComponent(SnippetRun)
                                         .addComponent(SnippetCancelEdit)
@@ -2129,20 +2056,20 @@ public class ESPlorer extends JFrame {
         SnippetText.setEnabled(false);
         SnippetScrollPane.setViewportView(SnippetText);
 
-        GroupLayout NodeMCUSnippetsLayout = new GroupLayout(nodeMCUSnippets);
-        nodeMCUSnippets.setLayout(NodeMCUSnippetsLayout);
-        NodeMCUSnippetsLayout.setHorizontalGroup(
-                NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUSnippetsLayout.createSequentialGroup()
+        GroupLayout nodeMCUSnippetsLayout = new GroupLayout(nodeMCUSnippets);
+        nodeMCUSnippets.setLayout(nodeMCUSnippetsLayout);
+        nodeMCUSnippetsLayout.setHorizontalGroup(
+                nodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUSnippetsLayout.createSequentialGroup()
                                 .addComponent(leftSnippetsPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(nodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(SnippetTopPane)
                                         .addComponent(SnippetScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-        NodeMCUSnippetsLayout.setVerticalGroup(
-                NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUSnippetsLayout.createSequentialGroup()
+        nodeMCUSnippetsLayout.setVerticalGroup(
+                nodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUSnippetsLayout.createSequentialGroup()
                                 .addComponent(SnippetTopPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SnippetScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2152,7 +2079,7 @@ public class ESPlorer extends JFrame {
         nodeMCUSnippets.setLayer(SnippetTopPane, JLayeredPane.DEFAULT_LAYER);
         nodeMCUSnippets.setLayer(SnippetScrollPane, JLayeredPane.DEFAULT_LAYER);
 
-        TextTab.addTab("Snippets", nodeMCUSnippets);
+        TextTab.addTab("SNIPPETS", nodeMCUSnippets);
 
         nodeMCUSettings.setAutoscrolls(true);
         nodeMCUSettings.setOpaque(true);
@@ -2181,16 +2108,16 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout OptionsFirmwareLayout = new GroupLayout(optionsFirmware);
-        optionsFirmware.setLayout(OptionsFirmwareLayout);
-        OptionsFirmwareLayout.setHorizontalGroup(
-                OptionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout optionsFirmwareLayout = new GroupLayout(optionsFirmware);
+        optionsFirmware.setLayout(optionsFirmwareLayout);
+        optionsFirmwareLayout.setHorizontalGroup(
+                optionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(OptionNodeMCU, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(OptionMicroPython, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        OptionsFirmwareLayout.setVerticalGroup(
-                OptionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(OptionsFirmwareLayout.createSequentialGroup()
+        optionsFirmwareLayout.setVerticalGroup(
+                optionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(optionsFirmwareLayout.createSequentialGroup()
                                 .addComponent(OptionNodeMCU)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(OptionMicroPython)
@@ -2259,13 +2186,13 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout OptionsOtherLayout = new GroupLayout(optionsOther);
-        optionsOther.setLayout(OptionsOtherLayout);
-        OptionsOtherLayout.setHorizontalGroup(
-                OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout optionsOtherLayout = new GroupLayout(optionsOther);
+        optionsOther.setLayout(optionsOtherLayout);
+        optionsOtherLayout.setHorizontalGroup(
+                optionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(FileAutoSaveDisk, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(FileAutoSaveESP, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(OptionsOtherLayout.createSequentialGroup()
+                        .addGroup(optionsOtherLayout.createSequentialGroup()
                                 .addComponent(editorThemeLabel)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(EditorTheme, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2273,16 +2200,16 @@ public class ESPlorer extends JFrame {
                         .addComponent(UseExternalEditor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(FileAutoRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        OptionsOtherLayout.setVerticalGroup(
-                OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(OptionsOtherLayout.createSequentialGroup()
+        optionsOtherLayout.setVerticalGroup(
+                optionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(optionsOtherLayout.createSequentialGroup()
                                 .addComponent(FileAutoSaveDisk, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
                                 .addGap(1, 1, 1)
                                 .addComponent(FileAutoSaveESP, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(UseExternalEditor)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(optionsOtherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(editorThemeLabel)
                                         .addComponent(EditorTheme, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -2320,21 +2247,21 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        AnswerDelayLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        AnswerDelayLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        AnswerDelayLabel.setText("Answer timeout = 3 s");
-        AnswerDelayLabel.setToolTipText("How many time we waiting answer from ESP8266");
+        answerDelayLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        answerDelayLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        answerDelayLabel.setText("Answer timeout = 3 s");
+        answerDelayLabel.setToolTipText("How many time we waiting answer from ESP8266");
 
-        AnswerDelay.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        AnswerDelay.setMajorTickSpacing(5);
-        AnswerDelay.setMaximum(10);
-        AnswerDelay.setMinorTickSpacing(1);
-        AnswerDelay.setPaintLabels(true);
-        AnswerDelay.setPaintTicks(true);
-        AnswerDelay.setSnapToTicks(true);
-        AnswerDelay.setToolTipText("Maximum time for waiting firmware answer");
-        AnswerDelay.setValue(3);
-        AnswerDelay.addChangeListener(new javax.swing.event.ChangeListener() {
+        answerDelay.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        answerDelay.setMajorTickSpacing(5);
+        answerDelay.setMaximum(10);
+        answerDelay.setMinorTickSpacing(1);
+        answerDelay.setPaintLabels(true);
+        answerDelay.setPaintTicks(true);
+        answerDelay.setSnapToTicks(true);
+        answerDelay.setToolTipText("Maximum time for waiting firmware answer");
+        answerDelay.setValue(3);
+        answerDelay.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 AnswerDelayStateChanged();
             }
@@ -2390,40 +2317,40 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout OptionsFileSendModeLayout = new GroupLayout(optionsFileSendMode);
-        optionsFileSendMode.setLayout(OptionsFileSendModeLayout);
-        OptionsFileSendModeLayout.setHorizontalGroup(
-                OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
-                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
-                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+        GroupLayout optionsFileSendModeLayout = new GroupLayout(optionsFileSendMode);
+        optionsFileSendMode.setLayout(optionsFileSendModeLayout);
+        optionsFileSendModeLayout.setHorizontalGroup(
+                optionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(optionsFileSendModeLayout.createSequentialGroup()
+                                .addGroup(optionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(optionsFileSendModeLayout.createSequentialGroup()
+                                                .addGroup(optionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                         .addComponent(TurboMode, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(DelayLabel, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                                                 .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(GroupLayout.Alignment.TRAILING, OptionsFileSendModeLayout.createSequentialGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, optionsFileSendModeLayout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
-                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(optionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(DumbMode, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(Delay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(AnswerDelayLabel, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(AnswerDelay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(answerDelayLabel, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(answerDelay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(LineDelayLabel, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(LineDelay, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
-        OptionsFileSendModeLayout.setVerticalGroup(
-                OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
+        optionsFileSendModeLayout.setVerticalGroup(
+                optionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(optionsFileSendModeLayout.createSequentialGroup()
                                 .addComponent(TurboMode)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(DelayLabel)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(Delay, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(AnswerDelayLabel)
+                                .addComponent(answerDelayLabel)
                                 .addGap(1, 1, 1)
-                                .addComponent(AnswerDelay, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(answerDelay, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(DumbMode)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -2434,8 +2361,8 @@ public class ESPlorer extends JFrame {
         );
         optionsFileSendMode.setLayer(DelayLabel, JLayeredPane.DEFAULT_LAYER);
         optionsFileSendMode.setLayer(Delay, JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(AnswerDelayLabel, JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(AnswerDelay, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(answerDelayLabel, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(answerDelay, JLayeredPane.DEFAULT_LAYER);
         optionsFileSendMode.setLayer(DumbMode, JLayeredPane.DEFAULT_LAYER);
         optionsFileSendMode.setLayer(LineDelayLabel, JLayeredPane.DEFAULT_LAYER);
         optionsFileSendMode.setLayer(LineDelay, JLayeredPane.DEFAULT_LAYER);
@@ -2543,10 +2470,10 @@ public class ESPlorer extends JFrame {
         jLabel10.setText("(AutoScan will be disabled)");
         jLabel10.setPreferredSize(new java.awt.Dimension(17, 23));
 
-        AutodetectFirmware.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        AutodetectFirmware.setText("Autodetect firmware");
-        AutodetectFirmware.setToolTipText("Use custom serial port name (AutoScan will be disabled)");
-        AutodetectFirmware.addItemListener(new java.awt.event.ItemListener() {
+        autodetectFirmware.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        autodetectFirmware.setText("Autodetect firmware");
+        autodetectFirmware.setToolTipText("Use custom serial port name (AutoScan will be disabled)");
+        autodetectFirmware.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 AutodetectFirmwareItemStateChanged();
             }
@@ -2559,7 +2486,7 @@ public class ESPlorer extends JFrame {
                         .addComponent(UseCustomPortName, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                         .addComponent(jLabel10, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CustomPortName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(AutodetectFirmware, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(autodetectFirmware, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jLayeredPane3Layout.setVerticalGroup(
                 jLayeredPane3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -2570,37 +2497,37 @@ public class ESPlorer extends JFrame {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(CustomPortName, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(AutodetectFirmware))
+                                .addComponent(autodetectFirmware))
         );
         jLayeredPane3.setLayer(CustomPortName, JLayeredPane.DEFAULT_LAYER);
         jLayeredPane3.setLayer(UseCustomPortName, JLayeredPane.DEFAULT_LAYER);
         jLayeredPane3.setLayer(jLabel10, JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane3.setLayer(AutodetectFirmware, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(autodetectFirmware, JLayeredPane.DEFAULT_LAYER);
 
-        GroupLayout NodeMCUSettingsLayout = new GroupLayout(nodeMCUSettings);
-        nodeMCUSettings.setLayout(NodeMCUSettingsLayout);
-        NodeMCUSettingsLayout.setHorizontalGroup(
-                NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+        GroupLayout nodeMCUSettingsLayout = new GroupLayout(nodeMCUSettings);
+        nodeMCUSettings.setLayout(nodeMCUSettingsLayout);
+        nodeMCUSettingsLayout.setHorizontalGroup(
+                nodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUSettingsLayout.createSequentialGroup()
+                                .addGroup(nodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(optionsOther)
                                         .addComponent(optionsFirmware)
                                         .addComponent(optionsFileSendMode, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(nodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLayeredPane2)
                                         .addComponent(jLayeredPane3))
                                 .addContainerGap(135, Short.MAX_VALUE))
         );
-        NodeMCUSettingsLayout.setVerticalGroup(
-                NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
+        nodeMCUSettingsLayout.setVerticalGroup(
+                nodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(nodeMCUSettingsLayout.createSequentialGroup()
+                                .addGroup(nodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(nodeMCUSettingsLayout.createSequentialGroup()
                                                 .addComponent(optionsFirmware, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(optionsOther, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
+                                        .addGroup(nodeMCUSettingsLayout.createSequentialGroup()
                                                 .addComponent(jLayeredPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLayeredPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
@@ -2616,23 +2543,22 @@ public class ESPlorer extends JFrame {
 
         TextTab.addTab("Settings", new ImageIcon(getClass().getResource("/resources/settings2.png")), nodeMCUSettings, "Settings for file sending"); // NOI18N
 
-        GroupLayout NodeMCULayout = new GroupLayout(nodeMCU);
-        nodeMCU.setLayout(NodeMCULayout);
-        NodeMCULayout.setHorizontalGroup(
-                NodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout nodeMCULayout = new GroupLayout(nodeMCU);
+        nodeMCU.setLayout(nodeMCULayout);
+        nodeMCULayout.setHorizontalGroup(
+                nodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
         );
-        NodeMCULayout.setVerticalGroup(
-                NodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        nodeMCULayout.setVerticalGroup(
+                nodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
         );
 
-        TextTab.getAccessibleContext().setAccessibleName("NewFile");
+        TextTab.getAccessibleContext().setAccessibleName("newFile");
 
         LeftTab.addTab("NodeMCU+MicroPython", nodeMCU);
 
         topWiFiStaFiller.setOpaque(true);
-
 
         cmdGetCWJAP.setFont(cmdGetCWJAP.getFont().deriveFont((float) 12));
         cmdGetCWJAP.setIcon(new ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
@@ -2732,16 +2658,16 @@ public class ESPlorer extends JFrame {
         });
 
         try {
-            MAC.setFormatterFactory(new DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA:AA:AA:AA:AA:AA")));
+            mac.setFormatterFactory(new DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA:AA:AA:AA:AA:AA")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        MAC.setText("FF:FF:FF:FF:FF:FF");
-        MAC.setToolTipText("Station MAC address");
-        MAC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        MAC.setMaximumSize(new java.awt.Dimension(210, 23));
-        MAC.setMinimumSize(new java.awt.Dimension(210, 23));
-        MAC.setPreferredSize(new java.awt.Dimension(210, 23));
+        mac.setText("FF:FF:FF:FF:FF:FF");
+        mac.setToolTipText("Station MAC address");
+        mac.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        mac.setMaximumSize(new java.awt.Dimension(210, 23));
+        mac.setMinimumSize(new java.awt.Dimension(210, 23));
+        mac.setPreferredSize(new java.awt.Dimension(210, 23));
 
         cmdGetCIPSTA.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmdGetCIPSTA.setIcon(new ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
@@ -2837,7 +2763,7 @@ public class ESPlorer extends JFrame {
         conn_id.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
         conn_id.setToolTipText("Connection ID");
 
-        MUXGroup.add(single);
+        muxGroup.add(single);
         single.setText("CIPMUX=0 - Single");
         single.setToolTipText("Single connection");
         single.addItemListener(new java.awt.event.ItemListener() {
@@ -2845,7 +2771,7 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        MUXGroup.add(multi);
+        muxGroup.add(multi);
         multi.setSelected(true);
         multi.setText("CIPMUX=1 - Multiple");
         multi.setToolTipText("Multiple connection");
@@ -2894,8 +2820,8 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        UDP.setBorder(BorderFactory.createTitledBorder("UDP only"));
-        UDP.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        upd.setBorder(BorderFactory.createTitledBorder("UDP only"));
+        upd.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
             }
         });
@@ -2912,36 +2838,36 @@ public class ESPlorer extends JFrame {
         jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel3.setText("mode");
 
-        GroupLayout UDPLayout = new GroupLayout(UDP);
-        UDP.setLayout(UDPLayout);
-        UDPLayout.setHorizontalGroup(
-                UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(UDPLayout.createSequentialGroup()
-                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+        GroupLayout udpLayout = new GroupLayout(upd);
+        upd.setLayout(udpLayout);
+        udpLayout.setHorizontalGroup(
+                udpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(udpLayout.createSequentialGroup()
+                                .addGroup(udpLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(udp_local_port))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(udpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(udp_mode)
                                         .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(6, 6, 6))
         );
-        UDPLayout.setVerticalGroup(
-                UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(UDPLayout.createSequentialGroup()
-                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        udpLayout.setVerticalGroup(
+                udpLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(udpLayout.createSequentialGroup()
+                                .addGroup(udpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel3))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(udpLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(udp_local_port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(udp_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
-        UDP.setLayer(udp_local_port, JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(jLabel2, JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(udp_mode, JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(jLabel3, JLayeredPane.DEFAULT_LAYER);
+        upd.setLayer(udp_local_port, JLayeredPane.DEFAULT_LAYER);
+        upd.setLayer(jLabel2, JLayeredPane.DEFAULT_LAYER);
+        upd.setLayer(udp_mode, JLayeredPane.DEFAULT_LAYER);
+        upd.setLayer(jLabel3, JLayeredPane.DEFAULT_LAYER);
 
         remote_address.setText("192.168.1.1");
         remote_address.setToolTipText("Remote IP address");
@@ -2998,56 +2924,56 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout TCPclientBottomPaneLayout = new GroupLayout(TCPclientBottomPane);
-        TCPclientBottomPane.setLayout(TCPclientBottomPaneLayout);
-        TCPclientBottomPaneLayout.setHorizontalGroup(
-                TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+        GroupLayout tcpClientBottomPaneLayout = new GroupLayout(tcpClientBottomPane);
+        tcpClientBottomPane.setLayout(tcpClientBottomPaneLayout);
+        tcpClientBottomPaneLayout.setHorizontalGroup(
+                tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                                .addComponent(UDP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
+                                                .addComponent(upd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                                                 .addComponent(remote_address, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(remote_port, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(protocol, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
                                                         .addComponent(cmdSetCIPSTART, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                                 .addComponent(jScrollData, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                                         .addComponent(cmdCIPSENDinteractive, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(cmdCIPSEND, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(cmdSetCIPCLOSE, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                                         .addComponent(cmdGetCIPSTART, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE))))
                                 .addGap(33, 33, 33))
-                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                 .addComponent(common, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        TCPclientBottomPaneLayout.setVerticalGroup(
-                TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+        tcpClientBottomPaneLayout.setVerticalGroup(
+                tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                 .addComponent(common, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                                 .addGap(18, 18, 18)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(remote_address, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(remote_port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(protocol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(cmdSetCIPSTART))
-                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(UDP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(upd, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addGap(413, 413, 413)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
+                                .addGroup(tcpClientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(tcpClientBottomPaneLayout.createSequentialGroup()
                                                 .addComponent(cmdGetCIPSTART)
                                                 .addGap(7, 7, 7)
                                                 .addComponent(cmdCIPSEND)
@@ -3062,27 +2988,27 @@ public class ESPlorer extends JFrame {
         jLabel6.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel6.setText("Server timeout");
 
-        GroupLayout TCPServerBottomPaneLayout = new GroupLayout(TCPServerBottomPane);
-        TCPServerBottomPane.setLayout(TCPServerBottomPaneLayout);
-        TCPServerBottomPaneLayout.setHorizontalGroup(
-                TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
+        GroupLayout tcpServerBottomPaneLayout = new GroupLayout(tcpServerBottomPane);
+        tcpServerBottomPane.setLayout(tcpServerBottomPaneLayout);
+        tcpServerBottomPaneLayout.setHorizontalGroup(
+                tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(tcpServerBottomPaneLayout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(cmdSetCIPSTO, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
+                                        .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(tcpServerBottomPaneLayout.createSequentialGroup()
                                                         .addComponent(jLabel6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                         .addComponent(serverTimeout, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addComponent(cmdSetCIPMODE1, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(cmdGetCIPSTO, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(cmdGetCIPMODE, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdSetCIPMODE0, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
+                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(tcpServerBottomPaneLayout.createSequentialGroup()
                                                 .addComponent(serverMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel5)
@@ -3090,17 +3016,17 @@ public class ESPlorer extends JFrame {
                                                 .addComponent(serverPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(cmdSetCIPSERVER, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
         );
-        TCPServerBottomPaneLayout.setVerticalGroup(
-                TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
+        tcpServerBottomPaneLayout.setVerticalGroup(
+                tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(tcpServerBottomPaneLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel5)
                                         .addComponent(serverPort, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(serverMode, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdGetCIPMODE, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(cmdSetCIPSERVER, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmdSetCIPMODE0, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
@@ -3108,60 +3034,60 @@ public class ESPlorer extends JFrame {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cmdGetCIPSTO, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(tcpServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(serverTimeout, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel6))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cmdSetCIPSTO, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        TCPServerBottomPane.setLayer(cmdGetCIPMODE, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPMODE0, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPMODE1, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPSERVER, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(serverMode, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(jLabel5, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(serverPort, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdGetCIPSTO, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPSTO, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(serverTimeout, JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(jLabel6, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdGetCIPMODE, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdSetCIPMODE0, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdSetCIPMODE1, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdSetCIPSERVER, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(serverMode, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(jLabel5, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(serverPort, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdGetCIPSTO, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(cmdSetCIPSTO, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(serverTimeout, JLayeredPane.DEFAULT_LAYER);
+        tcpServerBottomPane.setLayer(jLabel6, JLayeredPane.DEFAULT_LAYER);
 
-        GroupLayout AT_ServerLayout = new GroupLayout(AT_Server);
-        AT_Server.setLayout(AT_ServerLayout);
-        AT_ServerLayout.setHorizontalGroup(
-                AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
-                                .addGroup(AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(TCPServerBottomPane, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE)
-                                        .addComponent(TCPServerTopFiller, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE))
+        GroupLayout atServerLayout = new GroupLayout(atServer);
+        atServer.setLayout(atServerLayout);
+        atServerLayout.setHorizontalGroup(
+                atServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, atServerLayout.createSequentialGroup()
+                                .addGroup(atServerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(tcpServerBottomPane, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE)
+                                        .addComponent(tcpServerTopFiller, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE))
                                 .addContainerGap())
         );
-        AT_ServerLayout.setVerticalGroup(
-                AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
-                                .addComponent(TCPServerTopFiller, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+        atServerLayout.setVerticalGroup(
+                atServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, atServerLayout.createSequentialGroup()
+                                .addComponent(tcpServerTopFiller, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TCPServerBottomPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(tcpServerBottomPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        TCP_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common TCP commands"));
-        TCP_common.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        TCP_common.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-        TCP_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        TCP_common.setMaximumSize(new java.awt.Dimension(445, 45));
-        TCP_common.setMinimumSize(new java.awt.Dimension(445, 45));
-        TCP_common.setOpaque(true);
-        TCP_common.setLayout(new java.awt.FlowLayout());
+        tcpCommon.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common TCP commands"));
+        tcpCommon.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        tcpCommon.setAlignmentY(JComponent.LEFT_ALIGNMENT);
+        tcpCommon.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tcpCommon.setMaximumSize(new java.awt.Dimension(445, 45));
+        tcpCommon.setMinimumSize(new java.awt.Dimension(445, 45));
+        tcpCommon.setOpaque(true);
+        tcpCommon.setLayout(new java.awt.FlowLayout());
 
-        wiFi_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
-        wiFi_common.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        wiFi_common.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-        wiFi_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        wiFi_common.setName(""); // NOI18N
-        wiFi_common.setOpaque(true);
-        wiFi_common.setPreferredSize(new java.awt.Dimension(445, 110));
-        wiFi_common.setLayout(new java.awt.FlowLayout());
+        wifiCommon.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
+        wifiCommon.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        wifiCommon.setAlignmentY(JComponent.LEFT_ALIGNMENT);
+        wifiCommon.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        wifiCommon.setName(""); // NOI18N
+        wifiCommon.setOpaque(true);
+        wifiCommon.setPreferredSize(new java.awt.Dimension(445, 110));
+        wifiCommon.setLayout(new java.awt.FlowLayout());
 
         cmdGetHelpCWMODE.setText("CWMODE=? - Get available modes");
         cmdGetHelpCWMODE.setToolTipText("Get value scope of WiFi mode (CommandWifiMODE)");
@@ -3177,7 +3103,7 @@ public class ESPlorer extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             }
         });
-        wiFi_common.add(cmdGetHelpCWMODE);
+        wifiCommon.add(cmdGetHelpCWMODE);
 
         cmdSetCWMODE1.setText("CWMODE=1 Station");
         cmdSetCWMODE1.setToolTipText("Set ESP8266 WiFi mode 1 - Station");
@@ -3213,31 +3139,31 @@ public class ESPlorer extends JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE3, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
 
-        DHCP.setModel(new DefaultComboBoxModel(new String[]{"0 - Enable DHCP", "1 - Disable DHCP"}));
-        DHCP.setMaximumSize(new java.awt.Dimension(114, 23));
-        DHCP.setMinimumSize(new java.awt.Dimension(114, 23));
-        DHCP.setPreferredSize(new java.awt.Dimension(114, 23));
-        wiFi_common.add(DHCP);
+        dhcpComboBox.setModel(new DefaultComboBoxModel(new String[]{"0 - Enable DHCP", "1 - Disable DHCP"}));
+        dhcpComboBox.setMaximumSize(new java.awt.Dimension(114, 23));
+        dhcpComboBox.setMinimumSize(new java.awt.Dimension(114, 23));
+        dhcpComboBox.setPreferredSize(new java.awt.Dimension(114, 23));
+        wifiCommon.add(dhcpComboBox);
 
-        DHCPmode.setModel(new DefaultComboBoxModel(new String[]{"0 - Set softAP", "1 - Set Station", "2 - Set both AP&Sta"}));
-        DHCPmode.setSelectedIndex(1);
-        DHCPmode.setMaximumSize(new java.awt.Dimension(90, 23));
-        DHCPmode.setMinimumSize(new java.awt.Dimension(90, 23));
-        DHCPmode.setPreferredSize(new java.awt.Dimension(90, 23));
-        wiFi_common.add(DHCPmode);
+        dhcpModeComboBox.setModel(new DefaultComboBoxModel(new String[]{"0 - Set softAP", "1 - Set Station", "2 - Set both AP&Sta"}));
+        dhcpModeComboBox.setSelectedIndex(1);
+        dhcpModeComboBox.setMaximumSize(new java.awt.Dimension(90, 23));
+        dhcpModeComboBox.setMinimumSize(new java.awt.Dimension(90, 23));
+        dhcpModeComboBox.setPreferredSize(new java.awt.Dimension(90, 23));
+        wifiCommon.add(dhcpModeComboBox);
 
         comingSoon1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comingSoon1.setHorizontalAlignment(SwingConstants.CENTER);
         comingSoon1.setText("Coming soon...");
 
-        GroupLayout LeftBasePaneLayout = new GroupLayout(LeftBasePane);
-        LeftBasePane.setLayout(LeftBasePaneLayout);
-        LeftBasePaneLayout.setHorizontalGroup(
-                LeftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout leftBasePaneLayout = new GroupLayout(LeftBasePane);
+        LeftBasePane.setLayout(leftBasePaneLayout);
+        leftBasePaneLayout.setHorizontalGroup(
+                leftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
         );
-        LeftBasePaneLayout.setVerticalGroup(
-                LeftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        leftBasePaneLayout.setVerticalGroup(
+                leftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
         );
         LeftBasePane.setLayer(LeftTab, JLayeredPane.DEFAULT_LAYER);
@@ -3246,8 +3172,8 @@ public class ESPlorer extends JFrame {
 
         horizontSplit.setLeftComponent(LeftBasePane);
 
-        LEDPanel.setMaximumSize(new java.awt.Dimension(392, 25));
-        LEDPanel.setMinimumSize(new java.awt.Dimension(392, 25));
+        ledPanel.setMaximumSize(new java.awt.Dimension(392, 25));
+        ledPanel.setMinimumSize(new java.awt.Dimension(392, 25));
 
         PortOpenLabel.setHorizontalAlignment(SwingConstants.CENTER);
         PortOpenLabel.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
@@ -3337,13 +3263,13 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        AutoScroll.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        AutoScroll.setSelected(true);
-        AutoScroll.setText("AutoScroll");
-        AutoScroll.setToolTipText("Terminal AutoScroll Enable/Disable");
-        AutoScroll.setMinimumSize(new java.awt.Dimension(70, 25));
-        AutoScroll.setPreferredSize(new java.awt.Dimension(60, 25));
-        AutoScroll.addActionListener(new java.awt.event.ActionListener() {
+        autoScroll.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        autoScroll.setSelected(true);
+        autoScroll.setText("autoScroll");
+        autoScroll.setToolTipText("Terminal autoScroll Enable/Disable");
+        autoScroll.setMinimumSize(new java.awt.Dimension(70, 25));
+        autoScroll.setPreferredSize(new java.awt.Dimension(60, 25));
+        autoScroll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AutoScrollActionPerformed();
             }
@@ -3376,72 +3302,72 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout LEDPanelLayout = new GroupLayout(LEDPanel);
-        LEDPanel.setLayout(LEDPanelLayout);
-        LEDPanelLayout.setHorizontalGroup(
-                LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(LEDPanelLayout.createSequentialGroup()
-                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(LEDPanelLayout.createSequentialGroup()
+        GroupLayout ledPanelLayout = new GroupLayout(ledPanel);
+        ledPanel.setLayout(ledPanelLayout);
+        ledPanelLayout.setHorizontalGroup(
+                ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(ledPanelLayout.createSequentialGroup()
+                                .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(ledPanelLayout.createSequentialGroup()
                                                 .addComponent(PortDTR)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(PortRTS))
-                                        .addGroup(LEDPanelLayout.createSequentialGroup()
+                                        .addGroup(ledPanelLayout.createSequentialGroup()
                                                 .addComponent(PortOpenLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(PortCTS, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(Open, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(LEDPanelLayout.createSequentialGroup()
+                                .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(ledPanelLayout.createSequentialGroup()
                                                 .addComponent(ReScan, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addComponent(AutoScroll, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(autoScroll, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(EOL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(Speed, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(Port, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        LEDPanelLayout.setVerticalGroup(
-                LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(LEDPanelLayout.createSequentialGroup()
+        ledPanelLayout.setVerticalGroup(
+                ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(ledPanelLayout.createSequentialGroup()
                                 .addComponent(Port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addGroup(GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
-                                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addGroup(GroupLayout.Alignment.LEADING, ledPanelLayout.createSequentialGroup()
+                                                .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(ReScan, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(LEDPanelLayout.createSequentialGroup()
-                                                                .addComponent(AutoScroll, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                                        .addGroup(ledPanelLayout.createSequentialGroup()
+                                                                .addComponent(autoScroll, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(EOL, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(Speed, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(Open, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
-                                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(GroupLayout.Alignment.LEADING, ledPanelLayout.createSequentialGroup()
+                                                        .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                 .addComponent(PortOpenLabel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(PortCTS, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
                                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(ledPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                 .addComponent(PortDTR)
                                                                 .addComponent(PortRTS)))))
                                 .addGap(0, 0, 0))
         );
-        LEDPanel.setLayer(PortOpenLabel, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortCTS, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortDTR, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortRTS, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Open, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Speed, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(ReScan, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(AutoScroll, JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Port, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(PortOpenLabel, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(PortCTS, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(PortDTR, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(PortRTS, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(Open, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(Speed, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(ReScan, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(autoScroll, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(Port, JLayeredPane.DEFAULT_LAYER);
 
         Port.getAccessibleContext().setAccessibleName("");
-        LEDPanel.setLayer(EOL, JLayeredPane.DEFAULT_LAYER);
+        ledPanel.setLayer(EOL, JLayeredPane.DEFAULT_LAYER);
 
         rightBottomPane.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         rightBottomPane.setAlignmentY(JComponent.LEFT_ALIGNMENT);
@@ -3464,6 +3390,7 @@ public class ESPlorer extends JFrame {
         SendCommand.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SendCommand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SendCommand();
             }
         });
 
@@ -3506,24 +3433,24 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout RightBottomPaneLayout = new GroupLayout(rightBottomPane);
-        rightBottomPane.setLayout(RightBottomPaneLayout);
-        RightBottomPaneLayout.setHorizontalGroup(
-                RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(RightBottomPaneLayout.createSequentialGroup()
+        GroupLayout rightBottomPaneLayout = new GroupLayout(rightBottomPane);
+        rightBottomPane.setLayout(rightBottomPaneLayout);
+        rightBottomPaneLayout.setHorizontalGroup(
+                rightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(rightBottomPaneLayout.createSequentialGroup()
                                 .addComponent(Command, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(SendCommand, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(rightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(CR)
                                         .addComponent(LF))
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        RightBottomPaneLayout.setVerticalGroup(
-                RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+        rightBottomPaneLayout.setVerticalGroup(
+                rightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addComponent(SendCommand, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(GroupLayout.Alignment.LEADING, RightBottomPaneLayout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.LEADING, rightBottomPaneLayout.createSequentialGroup()
                                 .addComponent(CR)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(LF)
@@ -3632,18 +3559,18 @@ public class ESPlorer extends JFrame {
 
         RightSplitPane.setBottomComponent(ScrollLog);
 
-        GroupLayout TerminalLogPaneLayout = new GroupLayout(terminalLogPane);
-        terminalLogPane.setLayout(TerminalLogPaneLayout);
-        TerminalLogPaneLayout.setHorizontalGroup(
-                TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout terminalLogPaneLayout = new GroupLayout(terminalLogPane);
+        terminalLogPane.setLayout(terminalLogPaneLayout);
+        terminalLogPaneLayout.setHorizontalGroup(
+                terminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 299, Short.MAX_VALUE)
-                        .addGroup(TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(terminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(RightSplitPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
         );
-        TerminalLogPaneLayout.setVerticalGroup(
-                TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        terminalLogPaneLayout.setVerticalGroup(
+                terminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 425, Short.MAX_VALUE)
-                        .addGroup(TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(terminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(RightSplitPane, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
         );
         terminalLogPane.setLayer(RightSplitPane, JLayeredPane.DEFAULT_LAYER);
@@ -3749,19 +3676,19 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        GroupLayout FileRenamePanelLayout = new GroupLayout(FileRenamePanel);
-        FileRenamePanel.setLayout(FileRenamePanelLayout);
-        FileRenamePanelLayout.setHorizontalGroup(
-                FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(FileRenamePanelLayout.createSequentialGroup()
-                                .addGroup(FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+        GroupLayout fileRenamePanelLayout = new GroupLayout(FileRenamePanel);
+        FileRenamePanel.setLayout(fileRenamePanelLayout);
+        fileRenamePanelLayout.setHorizontalGroup(
+                fileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(fileRenamePanelLayout.createSequentialGroup()
+                                .addGroup(fileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(FileRename, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(FileRenameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        FileRenamePanelLayout.setVerticalGroup(
-                FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(FileRenamePanelLayout.createSequentialGroup()
+        fileRenamePanelLayout.setVerticalGroup(
+                fileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(fileRenamePanelLayout.createSequentialGroup()
                                 .addComponent(FileRenameLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(FileRename, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -3938,16 +3865,16 @@ public class ESPlorer extends JFrame {
         });
         RightSnippetsPane.add(ButtonSnippet15);
 
-        GroupLayout RightBigPaneLayout = new GroupLayout(rightBigPane);
-        rightBigPane.setLayout(RightBigPaneLayout);
-        RightBigPaneLayout.setHorizontalGroup(
-                RightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout rightBigPaneLayout = new GroupLayout(rightBigPane);
+        rightBigPane.setLayout(rightBigPaneLayout);
+        rightBigPaneLayout.setHorizontalGroup(
+                rightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(RightFilesSplitPane)
                         .addComponent(RightSnippetsPane, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
-        RightBigPaneLayout.setVerticalGroup(
-                RightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(RightBigPaneLayout.createSequentialGroup()
+        rightBigPaneLayout.setVerticalGroup(
+                rightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(rightBigPaneLayout.createSequentialGroup()
                                 .addComponent(RightFilesSplitPane)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(RightSnippetsPane, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
@@ -4036,61 +3963,47 @@ public class ESPlorer extends JFrame {
         });
         RightExtraButtons.add(NodeReset);
 
-        DonateSmall.setIcon(new ImageIcon(getClass().getResource("/resources/donate-small.gif"))); // NOI18N
-        DonateSmall.setHorizontalTextPosition(SwingConstants.CENTER);
-        DonateSmall.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        DonateSmall.setMaximumSize(new java.awt.Dimension(100, 35));
-        DonateSmall.setMinimumSize(new java.awt.Dimension(100, 35));
-        DonateSmall.setPreferredSize(new java.awt.Dimension(100, 35));
-        DonateSmall.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DonateSmallActionPerformed();
-            }
-        });
-
-        GroupLayout RightBasePaneLayout = new GroupLayout(rightBasePane);
-        rightBasePane.setLayout(RightBasePaneLayout);
-        RightBasePaneLayout.setHorizontalGroup(
-                RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout rightBasePaneLayout = new GroupLayout(rightBasePane);
+        rightBasePane.setLayout(rightBasePaneLayout);
+        rightBasePaneLayout.setHorizontalGroup(
+                rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(rightBasePaneLayout.createSequentialGroup()
+                                .addGroup(rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(rightBigPane)
-                                        .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                                .addComponent(LEDPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(rightBasePaneLayout.createSequentialGroup()
+                                                .addComponent(ledPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(logo))
-                                        .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(RightBasePaneLayout.createSequentialGroup()
+                                        .addGroup(rightBasePaneLayout.createSequentialGroup()
+                                                .addGroup(rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(rightBasePaneLayout.createSequentialGroup()
                                                                 .addComponent(rightBottomPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(DonateSmall, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                                                )
                                                         .addComponent(RightExtraButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
-        RightBasePaneLayout.setVerticalGroup(
-                RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(RightBasePaneLayout.createSequentialGroup()
+        rightBasePaneLayout.setVerticalGroup(
+                rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(rightBasePaneLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(LEDPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(ledPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(logo))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(rightBigPane)
                                 .addGap(5, 5, 5)
                                 .addComponent(RightExtraButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(rightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(rightBottomPane)
-                                        .addComponent(DonateSmall, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        ))
         );
-        rightBasePane.setLayer(LEDPanel, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(ledPanel, JLayeredPane.DEFAULT_LAYER);
         rightBasePane.setLayer(rightBottomPane, JLayeredPane.DEFAULT_LAYER);
         rightBasePane.setLayer(rightBigPane, JLayeredPane.DEFAULT_LAYER);
         rightBasePane.setLayer(logo, JLayeredPane.DEFAULT_LAYER);
         rightBasePane.setLayer(RightExtraButtons, JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(DonateSmall, JLayeredPane.DEFAULT_LAYER);
 
         horizontSplit.setRightComponent(rightBasePane);
 
@@ -4233,6 +4146,7 @@ public class ESPlorer extends JFrame {
         menuItemFileExit.setText("Exit");
         menuItemFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formWindowClosing();
             }
         });
         menuFile.add(menuItemFileExit);
@@ -4361,15 +4275,15 @@ public class ESPlorer extends JFrame {
             }
         });
 
-        AlwaysOnTop.setText("Always On Top");
-        AlwaysOnTop.setToolTipText("");
-        AlwaysOnTop.setIcon(new ImageIcon(getClass().getResource("/resources/AlwaysOnTop.png"))); // NOI18N
-        AlwaysOnTop.addItemListener(new java.awt.event.ItemListener() {
+        alwaysOnTop.setText("Always On Top");
+        alwaysOnTop.setToolTipText("");
+        alwaysOnTop.setIcon(new ImageIcon(getClass().getResource("/resources/AlwaysOnTop.png"))); // NOI18N
+        alwaysOnTop.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 AlwaysOnTopItemStateChanged();
             }
         });
-        MenuView.add(AlwaysOnTop);
+        MenuView.add(alwaysOnTop);
 
         MenuItemViewLog.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         MenuItemViewLog.setSelected(true);
@@ -4442,8 +4356,8 @@ public class ESPlorer extends JFrame {
         MenuView.add(MenuItemViewLeftExtra);
 
         MenuItemViewSnippets.setSelected(true);
-        MenuItemViewSnippets.setText("Show Snippets panel at right");
-        MenuItemViewSnippets.setToolTipText("Enable/disable Snippets panel");
+        MenuItemViewSnippets.setText("Show SNIPPETS panel at right");
+        MenuItemViewSnippets.setToolTipText("Enable/disable SNIPPETS panel");
         MenuItemViewSnippets.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 MenuItemViewSnippetsItemStateChanged();
@@ -4486,19 +4400,6 @@ public class ESPlorer extends JFrame {
         });
         MenuView.add(MenuItemViewRightExtra);
 
-        MenuItemViewDonate.setSelected(true);
-        MenuItemViewDonate.setText("<html>I'm already make donation, <br />please hide dontation button at bottom right!");
-        MenuItemViewDonate.setToolTipText("Enable/disable Extra buttons panel at bottom right");
-        MenuItemViewDonate.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                MenuItemViewDonateItemStateChanged();
-            }
-        });
-        MenuItemViewDonate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            }
-        });
-        MenuView.add(MenuItemViewDonate);
         MenuView.add(jSeparator13);
 
         MenuItemViewTermFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
@@ -4586,167 +4487,6 @@ public class ESPlorer extends JFrame {
 
         mainMenuBar.add(MenuView);
 
-        menuLinks.setText("Links");
-        menuLinks.setToolTipText("");
-
-        menuItemLinksAPIcn.setText("NodeMCU API cn");
-        menuItemLinksAPIcn.setToolTipText("Open doc NodeMCU API Chinese in browser");
-        menuItemLinksAPIcn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIcnActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksAPIcn);
-
-        menuItemLinksAPIen.setText("NodeMCU API en");
-        menuItemLinksAPIen.setToolTipText("Open doc NodeMCU API English in browser");
-        menuItemLinksAPIen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIenActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksAPIen);
-
-        menuItemLinksAPIru.setText("NodeMCU API ru");
-        menuItemLinksAPIru.setToolTipText("Open doc NodeMCU API Russian in browser");
-        menuItemLinksAPIru.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksAPIruActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksAPIru);
-
-        menuItemLinksChangelog.setText("NodeMCU changelog");
-        menuItemLinksChangelog.setToolTipText("Open NodeMCU changelog in browser");
-        menuItemLinksChangelog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksChangelogActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksChangelog);
-        menuLinks.add(jSeparator14);
-
-        menuItemLinksDownloadLatestFirmware.setText("NodeMCU download latest firmware");
-        menuItemLinksDownloadLatestFirmware.setToolTipText("Download NodeMCU latest firmware (stable version)");
-        menuItemLinksDownloadLatestFirmware.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestFirmwareActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksDownloadLatestFirmware);
-
-        menuItemLinksDownloadLatestDev.setText("NodeMCU download latest dev firmware");
-        menuItemLinksDownloadLatestDev.setToolTipText("Download NodeMCU latest firmware (dev version)");
-        menuItemLinksDownloadLatestDev.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestDevActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksDownloadLatestDev);
-
-        menuItemLinksDownloadLatestFlasher.setText("NodeMCU download latest FLASHER");
-        menuItemLinksDownloadLatestFlasher.setToolTipText("Download latest version of NodeMCU Flasher x32 or x64");
-        menuItemLinksDownloadLatestFlasher.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDownloadLatestFlasherActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksDownloadLatestFlasher);
-        menuLinks.add(jSeparator15);
-
-        menuItemLinksBuyDevBoard.setText("Buy NodeMCU dev board");
-        menuItemLinksBuyDevBoard.setToolTipText("Buy NodeMCU development boards on Aliexpress");
-        menuItemLinksBuyDevBoard.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyDevBoardActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksBuyDevBoard);
-
-        menuItemLinksBuyESP8266.setText("Buy ESP8266 ESP-01 - ESP12 modules");
-        menuItemLinksBuyESP8266.setToolTipText("Buy ESP8266 ESP-01 ESP-02 ... ESP-12 modules on Aliexpress");
-        menuItemLinksBuyESP8266.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyESP8266ActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksBuyESP8266);
-
-        menuItemLinksBuyESD12.setText("Buy ESP8266 ESD-12 4M module");
-        menuItemLinksBuyESD12.setToolTipText("Buy ESP8266 ESD-12 4M flash board");
-        menuItemLinksBuyESD12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyESD12ActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksBuyESD12);
-
-        menuItemLinksBuyOther.setText("Buy other usefull parts");
-        menuItemLinksBuyOther.setToolTipText("Buy any electronics and other on Aliexpress");
-        menuItemLinksBuyOther.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksBuyOtherActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksBuyOther);
-        menuLinks.add(jSeparator16);
-
-        menuItemLinksESPlorerForumEn.setText("ESPlorer discuss, bug report en");
-        menuItemLinksESPlorerForumEn.setToolTipText("Link to ESP8266.COM forum, ESPlorer topic, English");
-        menuItemLinksESPlorerForumEn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerForumEnActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksESPlorerForumEn);
-
-        menuItemLinksESPlorerForumRu.setText("ESPlorer discuss, bug report ru");
-        menuItemLinksESPlorerForumRu.setToolTipText("Link to ESP8266.RU forum, ESPlorer topic, Russian");
-        menuItemLinksESPlorerForumRu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerForumRuActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksESPlorerForumRu);
-
-        menuItemLinksESPlorerLatest.setText("ESPlorer download latest stable");
-        menuItemLinksESPlorerLatest.setToolTipText("Link to ESP8266.RU, download ESPlorer latest");
-        menuItemLinksESPlorerLatest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerLatestActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksESPlorerLatest);
-
-        menuItemLinksESPlorerSource.setText("ESPlorer download source code from github");
-        menuItemLinksESPlorerSource.setToolTipText("Link to GITHUB for download ESPlorer source code");
-        menuItemLinksESPlorerSource.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerSourceActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksESPlorerSource);
-
-        menuItemLinksESPlorerHome.setText("ESPlorer home page on esp8266.ru");
-        menuItemLinksESPlorerHome.setToolTipText("Link to ESP8266.RU, ESPlorer HomePage");
-        menuItemLinksESPlorerHome.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksESPlorerHomeActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksESPlorerHome);
-
-        menuItemLinksDonate.setText("Make donation for ESPlorer developer");
-        menuItemLinksDonate.setToolTipText("You can make donation for ESPlorer developer");
-        menuItemLinksDonate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemLinksDonateActionPerformed();
-            }
-        });
-        menuLinks.add(menuItemLinksDonate);
-
-        mainMenuBar.add(menuLinks);
-
         menuHelp.setText("?");
 
         MenuItemHelpAbout.setText("aboutDialog");
@@ -4797,7 +4537,7 @@ public class ESPlorer extends JFrame {
             } else {
                 return;
             }
-            if (SetSerialPortParams()) {
+            if (isSetSerialPortParams()) {
                 log("Reconnect: Success.");
                 CheckComm();
             }
@@ -4825,7 +4565,7 @@ public class ESPlorer extends JFrame {
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
             }
-            pOpen = portOpen();
+            pOpen = isPortOpen();
             Open.setSelected(pOpen);
         } else {
             portClose();
@@ -5088,7 +4828,7 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_MenuItemViewLogActionPerformed
 
     private void MenuItemFileSaveActionPerformed() {//GEN-FIRST:event_MenuItemFileSaveActionPerformed
-        SaveFile();
+        isSaveFile();
         if (FileAutoSaveESP.isSelected()) {
             SaveFileESP();
         }
@@ -5096,7 +4836,7 @@ public class ESPlorer extends JFrame {
 
     private boolean isFileNew() {
         try {
-            if (FilesTabbedPane.getTitleAt(iTab).equals(NewFile)) {
+            if (FilesTabbedPane.getTitleAt(iTab).equals(newFile)) {
                 return true;
             }
         } catch (Exception e) {
@@ -5105,12 +4845,12 @@ public class ESPlorer extends JFrame {
         return false;
     }
 
-    private boolean SaveFile() {
+    private boolean isSaveFile() {
         boolean success = false;
         if (isFileNew()) { // we saving new file
             log("Saving new file...");
-            FileCount++;
-            iFile.set(iTab, new File("script" + Integer.toString(FileCount) + ".lua"));
+            fileCount++;
+            iFile.set(iTab, new File("script" + Integer.toString(fileCount) + ".lua"));
             chooser.rescanCurrentDirectory();
             chooser.setSelectedFile(iFile.get(iTab));
             int returnVal = chooser.showSaveDialog(null);
@@ -5126,10 +4866,10 @@ public class ESPlorer extends JFrame {
                 int shouldWrite = Dialog("File " + iFile.get(iTab).getName() + " already exist. Overwrite?", JOptionPane.YES_NO_OPTION);
                 if (shouldWrite != JOptionPane.YES_OPTION) {
                     UpdateEditorButtons();
-                    log("Saving canceled by user, because file " + FileName + " already exist");
+                    log("Saving canceled by user, because file " + fileName + " already exist");
                     return false;
                 } else {
-                    log("File " + FileName + " will be overwriten by user choice");
+                    log("File " + fileName + " will be overwriten by user choice");
                 }
             }
         } else { // we saving file, when open
@@ -5144,9 +4884,9 @@ public class ESPlorer extends JFrame {
             bw.flush();
             osw.flush();
             fos.flush();
-            FileName = iFile.get(iTab).getName();
-            log("Save file " + FileName + ": Success.");
-            FilesTabbedPane.setTitleAt(iTab, FileName);
+            fileName = iFile.get(iTab).getName();
+            log("Save file " + fileName + ": Success.");
+            FilesTabbedPane.setTitleAt(iTab, fileName);
             UpdateEditorButtons();
             success = true;
         } catch (IOException ex) {
@@ -5231,9 +4971,9 @@ public class ESPlorer extends JFrame {
             if (isOpen >= 0) {
                 FilesTabbedPane.setSelectedIndex(iTab);
                 UpdateEditorButtons();
-                FileName = chooser.getSelectedFile().getName();
-                log("File " + FileName + " already open, select tab to file " + FileName);
-                JOptionPane.showMessageDialog(null, "File " + FileName + " already open. You can use 'Reload' only.");
+                fileName = chooser.getSelectedFile().getName();
+                log("File " + fileName + " already open, select tab to file " + fileName);
+                JOptionPane.showMessageDialog(null, "File " + fileName + " already open. You can use 'Reload' only.");
                 return;
             }
             if (!isFileNew() || isChanged()) {
@@ -5242,10 +4982,10 @@ public class ESPlorer extends JFrame {
             log("Try to open file " + chooser.getSelectedFile().getName());
             try {
                 iFile.set(iTab, chooser.getSelectedFile());
-                FileName = iFile.get(iTab).getName();
+                fileName = iFile.get(iTab).getName();
                 log("File name: " + iFile.get(iTab).getPath());
                 if (iFile.get(iTab).length() > 1024 * 1024) { // 1M
-                    JOptionPane.showMessageDialog(null, "File " + FileName + " too large.");
+                    JOptionPane.showMessageDialog(null, "File " + fileName + " too large.");
                     log("File too large. Size: " + Long.toString(iFile.get(iTab).length() / 1024 / 1024) + " Mb, file: " + iFile.get(iTab).getPath());
                     UpdateEditorButtons();
                     return;
@@ -5257,23 +4997,23 @@ public class ESPlorer extends JFrame {
                 log("Open: FAIL.");
 //                log(ex.getStackTrace().toString());
             }
-            if (LoadFile()) {
-                log("Open \"" + FileName + "\": Success.");
+            if (isLoadFile()) {
+                log("Open \"" + fileName + "\": Success.");
             }
         }
         UpdateEditorButtons();
     }
 
-    private boolean LoadFile() {
+    private boolean isLoadFile() {
         if (isFileNew()) {
             UpdateEditorButtons();
-            log("Internal error 101: FileTab is NewFile.");
+            log("Internal error 101: FileTab is newFile.");
             return false;
         }
-        FileName = "";
+        fileName = "";
         try {
-            FileName = iFile.get(iTab).getName();
-            log("Try to load file " + FileName);
+            fileName = iFile.get(iTab).getName();
+            log("Try to load file " + fileName);
         } catch (Exception e) {
             log("Internal error 102: no current file descriptor.");
             return false;
@@ -5293,7 +5033,7 @@ public class ESPlorer extends JFrame {
         } catch (Exception ex) {
             log(ex.toString());
 //                log(ex.getStackTrace().toString());
-            log("Loading " + FileName + ": FAIL.");
+            log("Loading " + fileName + ": FAIL.");
             UpdateEditorButtons();
             JOptionPane.showMessageDialog(null, "Error, file not load!");
             return false;
@@ -5315,17 +5055,17 @@ public class ESPlorer extends JFrame {
         if (UseExternalEditor.isSelected()) {
             TextEditor1.get(iTab).setEditable(false);
         }
-        log("Loading " + FileName + ": Success.");
+        log("Loading " + fileName + ": Success.");
         return true;
     }
 
     private void DelayStateChanged() {//GEN-FIRST:event_DelayStateChanged
         DelayLabel.setText("Delay after answer = " + Integer.toString(Delay.getValue()) + " ms");
         prefs.putInt(Constants.DELAY, Delay.getValue());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_DelayStateChanged
 
-    private boolean PrefsFlush() {
+    private boolean isPrefsFlush() {
         boolean success = false;
         try {
             prefs.flush();
@@ -5535,7 +5275,7 @@ public class ESPlorer extends JFrame {
                 return;
             }
             if (FileAutoSaveDisk.isSelected()) {
-                if (!SaveFile()) { // first save file
+                if (!isSaveFile()) { // first save file
                     return;
                 }
             }
@@ -5554,7 +5294,7 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_MenuItemViewClearLogActionPerformed
 
     private void AlwaysOnTopItemStateChanged() {//GEN-FIRST:event_AlwaysOnTopItemStateChanged
-        this.setAlwaysOnTop(AlwaysOnTop.isSelected());
+        this.setAlwaysOnTop(alwaysOnTop.isSelected());
     }//GEN-LAST:event_AlwaysOnTopItemStateChanged
 
     private void cmdNodeRestartActionPerformed() {//GEN-FIRST:event_cmdNodeRestartActionPerformed
@@ -5569,7 +5309,7 @@ public class ESPlorer extends JFrame {
         btnSend("node.restart()");
         if (pOpen) { // reconnect
             int speed = prefs.getInt(Constants.SERIAL_BAUD, 3);
-            final int old_speed = Speed.getSelectedIndex();
+            final int oldSpeed = Speed.getSelectedIndex();
             //if (speed == old_speed) { // reconnect not needed
             //return;
             //}
@@ -5581,7 +5321,7 @@ public class ESPlorer extends JFrame {
             }
             log("Try to reconnect with saved baud " + Integer.toString(nSpeed) + "...");
             try {
-                if (SetSerialPortParams()) {
+                if (isSetSerialPortParams()) {
                     log("Reconnect: Success. Now we waiting for ESP reboot...");
                     // Now, we can ready to reconnect on old_speed
                     ActionListener taskSleep = new ActionListener() {
@@ -5589,7 +5329,7 @@ public class ESPlorer extends JFrame {
                             if (nSpeed == 9600) {
                                 CheckComm();
                             } else {
-                                Speed.setSelectedIndex(old_speed);
+                                Speed.setSelectedIndex(oldSpeed);
                             }
                         }
                     };
@@ -5667,7 +5407,7 @@ public class ESPlorer extends JFrame {
     private void EditorThemeActionPerformed() {//GEN-FIRST:event_EditorThemeActionPerformed
         int n = EditorTheme.getSelectedIndex();
         prefs.putInt(Constants.COLOR_THEME, n);
-        PrefsFlush();
+        isPrefsFlush();
         SetTheme(n, true); // for all
     }//GEN-LAST:event_EditorThemeActionPerformed
 
@@ -5695,9 +5435,9 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_FileSendESPActionPerformed
 
     private void AnswerDelayStateChanged() {//GEN-FIRST:event_AnswerDelayStateChanged
-        AnswerDelayLabel.setText("Answer timout = " + Integer.toString(AnswerDelay.getValue()) + " s");
-        prefs.putInt(Constants.TIMEOUT, AnswerDelay.getValue());
-        PrefsFlush();
+        answerDelayLabel.setText("Answer timout = " + Integer.toString(answerDelay.getValue()) + " s");
+        prefs.putInt(Constants.TIMEOUT, answerDelay.getValue());
+        isPrefsFlush();
     }//GEN-LAST:event_AnswerDelayStateChanged
 
     private void cmdListFilesActionPerformed() {//GEN-FIRST:event_cmdListFilesActionPerformed
@@ -5744,7 +5484,7 @@ public class ESPlorer extends JFrame {
         taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 if (j < sendBuf.size()) {
-                    LocalEcho = false;
+                    localEcho = false;
                     send(addCR(sendBuf.get(j)), false);
                 }
             }
@@ -5777,21 +5517,21 @@ public class ESPlorer extends JFrame {
             return;
         }
         // param  init.luaSize:123
-        DownloadedFileName = param.split("Size:")[0];
+        downloadedFileName = param.split("Size:")[0];
         int size = Integer.parseInt(param.split("Size:")[1]);
         packets = size / 1024;
         if (size % 1024 > 0) packets++;
         sendBuf = new ArrayList<String>();
         rcvPackets = new ArrayList<String>();
-        PacketsData = new ArrayList<String>();
-        PacketsSize = new ArrayList<Integer>();
-        PacketsNum = new ArrayList<Integer>();
+        packetsData = new ArrayList<String>();
+        packetsSize = new ArrayList<Integer>();
+        packetsNum = new ArrayList<Integer>();
         rcvFile = "";
-        PacketsByte = new byte[0];
+        packetsByte = new byte[0];
         rx_byte = new byte[0];
-        PacketsCRC = new ArrayList<Integer>();
+        packetsCRC = new ArrayList<Integer>();
         String cmd = "_dl=function() " +
-                "  file.open(\"" + DownloadedFileName + "\", \"r\")\n" +
+                "  file.open(\"" + downloadedFileName + "\", \"r\")\n" +
                 "  local buf " +
                 "  local i=0 " +
                 "  local checksum\n" +
@@ -5846,7 +5586,7 @@ public class ESPlorer extends JFrame {
         timer = new Timer(delay, taskPerformer);
         timer.setRepeats(false);
         log("Downloader: Start");
-        TerminalAdd("\r\nDownload file \"" + DownloadedFileName + "\"...");
+        TerminalAdd("\r\nDownload file \"" + downloadedFileName + "\"...");
         timer.setInitialDelay(delay);
         WatchDog();
         timer.start();
@@ -5867,9 +5607,9 @@ public class ESPlorer extends JFrame {
         StopSend();
         if (success) {
             TerminalAdd("Success.\r\n");
-            if (DownloadCommand.startsWith("EDIT")) {
+            if (downloadCommand.startsWith("EDIT")) {
                 FileNew(rcvFile);
-            } else if (DownloadCommand.startsWith("DOWNLOAD")) {
+            } else if (downloadCommand.startsWith("DOWNLOAD")) {
                 SaveDownloadedFile();
             }
         } else {
@@ -5988,7 +5728,7 @@ public class ESPlorer extends JFrame {
                 "end\n" +
                 "_dump()\n" +
                 "_dump=nil\n";
-        LocalEcho = false;
+        localEcho = false;
         SendToESP(cmdPrep(cmd));
     }
 
@@ -6023,7 +5763,7 @@ public class ESPlorer extends JFrame {
 
     private void TerminalAdd(String s) {
         Document doc = Terminal.getDocument();
-        if (doc.getLength() > TerminalMax) {
+        if (doc.getLength() > terminalMax) {
             try {
                 doc.remove(0, 1024);
             } catch (Exception e) {
@@ -6035,7 +5775,7 @@ public class ESPlorer extends JFrame {
         } catch (Exception e) {
             log(e.toString());
         }
-        if (AutoScroll.isSelected()) {
+        if (autoScroll.isSelected()) {
             try {
                 Terminal.setCaretPosition(doc.getLength());
             } catch (Exception e) {
@@ -6062,7 +5802,7 @@ public class ESPlorer extends JFrame {
                 return;
             }
             if (l > 0) SendToESP(TextEditor1.get(iTab).getSelectedText());
-        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Snippets
+        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and SNIPPETS
             try {
                 l = SnippetText.getSelectedText().length();
             } catch (Exception e) {
@@ -6120,10 +5860,6 @@ public class ESPlorer extends JFrame {
         MenuItemESPReset.doClick();
     }//GEN-LAST:event_MenuItemTerminalResetActionPerformed
 
-    private void DonateActionPerformed() {//GEN-FIRST:event_DonateActionPerformed
-        goLink(donate_uri);
-    }//GEN-LAST:event_DonateActionPerformed
-
     private void MenuItemHelpAboutActionPerformed() {//GEN-FIRST:event_MenuItemHelpAboutActionPerformed
         aboutDialog.setLocationRelativeTo(null);
         aboutDialog.setVisible(true);
@@ -6132,10 +5868,6 @@ public class ESPlorer extends JFrame {
     private void AboutFocusLost() {//GEN-FIRST:event_AboutFocusLost
         aboutDialog.dispose();
     }//GEN-LAST:event_AboutFocusLost
-
-    private void HomePageActionPerformed() {//GEN-FIRST:event_HomePageActionPerformed
-        goLink(homepage_uri);
-    }//GEN-LAST:event_HomePageActionPerformed
 
     private void LeftTabStateChanged() {//GEN-FIRST:event_LeftTabStateChanged
         if (LeftTab.getSelectedIndex() == 0) {  // NodeMCU & Python
@@ -6148,13 +5880,13 @@ public class ESPlorer extends JFrame {
     private void LoadSnippets() {
         if (OptionNodeMCU.isSelected()) {
             SnippetText.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
-            log("Snippets (LUA): loading...");
+            log("SNIPPETS (LUA): loading...");
             for (int i = 0; i <= 15; i++) {
                 String n = Integer.toString(i).trim();
                 if (prefs.get("Snippet" + n + "name", null) == null) {
                     prefs.put("Snippet" + n + "name", "Snippet" + n);
                     prefs.put("Snippet" + n, "");
-                    PrefsFlush();
+                    isPrefsFlush();
                 }
                 if (i == 0) {
                     ButtonSnippet0.setText(prefs.get("Snippet" + n + "name", "Snippet" + n));
@@ -6189,15 +5921,15 @@ public class ESPlorer extends JFrame {
                 } else {
                     ButtonSnippet15.setText(prefs.get("Snippet" + n + "name", "Snippet" + n));
                 }
-                Snippets[i] = prefs.get("Snippet" + n, "");
+                SNIPPETS[i] = prefs.get("Snippet" + n, "");
             }
             SetSnippetEditButtonsTooltip();
-            log("Snippets (LUA) load: Success.");
+            log("SNIPPETS (LUA) load: Success.");
         } else {
             SnippetText.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PYTHON);
-            // python snippets
-            log("Snippets (Python): loading...");
-            log("Snippets (Python) load: Success.");
+            // python SNIPPETS
+            log("SNIPPETS (Python): loading...");
+            log("SNIPPETS (Python) load: Success.");
         }
     }
 
@@ -6209,7 +5941,7 @@ public class ESPlorer extends JFrame {
         if (SnippetText.canUndo() || SnippetText.canRedo()) {
             this.setAlwaysOnTop(false);
             int returnVal = JOptionPane.showConfirmDialog(null, "Discard any changes and load Snippet" + Integer.toString(n), "Attention", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            this.setAlwaysOnTop(AlwaysOnTop.isSelected());
+            this.setAlwaysOnTop(alwaysOnTop.isSelected());
             if (returnVal != JOptionPane.YES_OPTION) {
                 return;
             }
@@ -6222,7 +5954,7 @@ public class ESPlorer extends JFrame {
         SnippetText.setEnabled(true);
         SnippetScrollPane.setEnabled(true);
         SnippetText.setEditable(true);
-        SnippetText.setText(Snippets[iSnippets]);
+        SnippetText.setText(SNIPPETS[iSnippets]);
         SnippetText.setBackground(themeTextBackground);
         SnippetText.discardAllEdits();
         SnippetName.setText(prefs.get("Snippet" + n + "name", "Snippet" + n));
@@ -6272,10 +6004,10 @@ public class ESPlorer extends JFrame {
             iSnippets = 15;
         }
         SetSnippetEditButtonsTooltip();
-        Snippets[iSnippets] = SnippetText.getText();
+        SNIPPETS[iSnippets] = SnippetText.getText();
         prefs.put("Snippet" + Integer.toString(iSnippets) + "name", SnippetName.getText());
-        prefs.put("Snippet" + Integer.toString(iSnippets), Snippets[iSnippets]);
-        if (PrefsFlush()) {
+        prefs.put("Snippet" + Integer.toString(iSnippets), SNIPPETS[iSnippets]);
+        if (isPrefsFlush()) {
             log("Snippet" + Integer.toString(iSnippets) + " saved: Success.");
         }
         SnippetText.discardAllEdits();
@@ -6413,7 +6145,7 @@ public class ESPlorer extends JFrame {
     private void OptionNodeMCUItemStateChanged() {//GEN-FIRST:event_OptionNodeMCUItemStateChanged
         if (OptionNodeMCU.isSelected()) {
             prefs.put(Constants.FIRMWARE, "NodeMCU");
-            PrefsFlush();
+            isPrefsFlush();
             chooser.setFileFilter(Constants.FILTER_LUA);
         }
     }//GEN-LAST:event_OptionNodeMCUItemStateChanged
@@ -6421,38 +6153,38 @@ public class ESPlorer extends JFrame {
     private void OptionMicroPythonItemStateChanged() {//GEN-FIRST:event_OptionMicroPythonItemStateChanged
         if (OptionMicroPython.isSelected()) {
             prefs.put(Constants.FIRMWARE, "MicroPython");
-            PrefsFlush();
+            isPrefsFlush();
             chooser.setFileFilter(Constants.FILTER_PYTHON);
         }
     }//GEN-LAST:event_OptionMicroPythonItemStateChanged
 
     private void FileAutoSaveDiskItemStateChanged() {//GEN-FIRST:event_FileAutoSaveDiskItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_SAVE_DISK, FileAutoSaveDisk.isSelected());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_FileAutoSaveDiskItemStateChanged
 
     private void FileAutoSaveESPItemStateChanged() {//GEN-FIRST:event_FileAutoSaveESPItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_SAVE_ESP, FileAutoSaveESP.isSelected());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_FileAutoSaveESPItemStateChanged
 
     private void FileAutoRunItemStateChanged() {//GEN-FIRST:event_FileAutoRunItemStateChanged
         prefs.putBoolean(Constants.FILE_AUTO_RUN, FileAutoRun.isSelected());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_FileAutoRunItemStateChanged
 
     private void LineDelayStateChanged() {//GEN-FIRST:event_LineDelayStateChanged
         LineDelayLabel.setText("Line delay for \"Dumb Mode\" = " + Integer.toString(LineDelay.getValue()) + " ms");
         prefs.putInt(Constants.LINE_DELAY, LineDelay.getValue());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_LineDelayStateChanged
 
     private void DumbModeItemStateChanged() {//GEN-FIRST:event_DumbModeItemStateChanged
         if (DumbMode.isSelected()) {
             DelayLabel.setEnabled(false);
             Delay.setEnabled(false);
-            AnswerDelayLabel.setEnabled(false);
-            AnswerDelay.setEnabled(false);
+            answerDelayLabel.setEnabled(false);
+            answerDelay.setEnabled(false);
             LineDelayLabel.setEnabled(true);
             LineDelay.setEnabled(true);
             TurboMode.setSelected(false);
@@ -6460,14 +6192,14 @@ public class ESPlorer extends JFrame {
         } else {
             DelayLabel.setEnabled(true);
             Delay.setEnabled(true);
-            AnswerDelayLabel.setEnabled(true);
-            AnswerDelay.setEnabled(true);
+            answerDelayLabel.setEnabled(true);
+            answerDelay.setEnabled(true);
             LineDelayLabel.setEnabled(false);
             LineDelay.setEnabled(false);
             TurboMode.setEnabled(true);
         }
         prefs.putBoolean(Constants.DUMB_MODE, DumbMode.isSelected());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_DumbModeItemStateChanged
 
     private void ButtonSendLineActionPerformed() {//GEN-FIRST:event_ButtonSendLineActionPerformed
@@ -6480,7 +6212,7 @@ public class ESPlorer extends JFrame {
             nLine = TextEditor1.get(iTab).getCaretLineNumber();
             String cmd = TextEditor1.get(iTab).getText().split("\r?\n")[nLine];
             btnSend(cmd);
-        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 2)) { // NodeMCU and Snippets
+        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 2)) { // NodeMCU and SNIPPETS
             nLine = SnippetText.getCaretLineNumber();
             String cmd = SnippetText.getText().split("\r?\n")[nLine];
             btnSend(cmd);
@@ -6519,7 +6251,7 @@ public class ESPlorer extends JFrame {
             Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_MIN));
         }
         prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontIncActionPerformed
 
     private void MenuItemViewTermFontDecActionPerformed() {//GEN-FIRST:event_MenuItemViewTermFontDecActionPerformed
@@ -6530,7 +6262,7 @@ public class ESPlorer extends JFrame {
             Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_MAX));
         }
         prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Terminal.getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_MenuItemViewTermFontDecActionPerformed
 
     private void MenuItemViewEditorFontIncActionPerformed() {//GEN-FIRST:event_MenuItemViewEditorFontIncActionPerformed
@@ -6541,7 +6273,7 @@ public class ESPlorer extends JFrame {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(Constants.EDITOR_FONT_SIZE_MIN));
         }
         prefs.putFloat(Constants.EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
         SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontIncActionPerformed
 
@@ -6553,7 +6285,7 @@ public class ESPlorer extends JFrame {
             TextEditor1.get(iTab).setFont(TextEditor1.get(iTab).getFont().deriveFont(Constants.EDITOR_FONT_SIZE_MAX));
         }
         prefs.putFloat(Constants.EDITOR_FONT_SIZE, TextEditor1.get(iTab).getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
         SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
     }//GEN-LAST:event_MenuItemViewEditorFontDecActionPerformed
 
@@ -6561,7 +6293,7 @@ public class ESPlorer extends JFrame {
         prefs.putFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT);
         prefs.putFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT);
         prefs.putFloat(Constants.LOG_FONT_SIZE, Constants.LOG_FONT_SIZE_DEFAULT);
-        PrefsFlush();
+        isPrefsFlush();
         SetTheme(prefs.getInt(Constants.COLOR_THEME, 0), true); // for all
         Terminal.setFont(Terminal.getFont().deriveFont(Constants.TERMINAL_FONT_SIZE_DEFAULT));
         Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_DEFAULT));
@@ -6583,7 +6315,7 @@ public class ESPlorer extends JFrame {
             Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_MIN));
         }
         prefs.putFloat(Constants.LOG_FONT_SIZE, Log.getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontIncActionPerformed
 
     private void MenuItemViewLogFontDecActionPerformed() {//GEN-FIRST:event_MenuItemViewLogFontDecActionPerformed
@@ -6594,7 +6326,7 @@ public class ESPlorer extends JFrame {
             Log.setFont(Log.getFont().deriveFont(Constants.LOG_FONT_SIZE_MAX));
         }
         prefs.putFloat(Constants.LOG_FONT_SIZE, Log.getFont().getSize());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_MenuItemViewLogFontDecActionPerformed
 
     private void MenuItemLogFontIncActionPerformed() {//GEN-FIRST:event_MenuItemLogFontIncActionPerformed
@@ -6612,39 +6344,39 @@ public class ESPlorer extends JFrame {
 
     private void LogMaxSizeFocusLost() {//GEN-FIRST:event_LogMaxSizeFocusLost
         try {
-            LogMax = Integer.parseInt(LogMaxSize.getText()) * 1024;
+            logMax = Integer.parseInt(LogMaxSize.getText()) * 1024;
         } catch (Exception e) {
-            LogMax = 1024 * 10;
+            logMax = 1024 * 10;
         }
-        if (LogMax < 2048) {
-            LogMax = 2048;
-        } else if (LogMax > 32 * 1024) {
-            LogMax = 32 * 1024;
+        if (logMax < 2048) {
+            logMax = 2048;
+        } else if (logMax > 32 * 1024) {
+            logMax = 32 * 1024;
         }
-        prefs.putInt(Constants.LOG_MAX_SIZE, LogMax);
-        log("Log max size set to " + Integer.toString(LogMax / 1024) + " KB");
+        prefs.putInt(Constants.LOG_MAX_SIZE, logMax);
+        log("Log max size set to " + Integer.toString(logMax / 1024) + " KB");
     }//GEN-LAST:event_LogMaxSizeFocusLost
 
     private void TerminalMaxSizeFocusLost() {//GEN-FIRST:event_TerminalMaxSizeFocusLost
         try {
-            TerminalMax = Integer.parseInt(TerminalMaxSize.getText()) * 1024;
+            terminalMax = Integer.parseInt(TerminalMaxSize.getText()) * 1024;
         } catch (Exception e) {
-            TerminalMax = 1024 * 100;
+            terminalMax = 1024 * 100;
         }
-        if (TerminalMax < 2048) {
-            TerminalMax = 2048;
-        } else if (TerminalMax > 1024 * 1024) {
-            TerminalMax = 1024 * 1024;
+        if (terminalMax < 2048) {
+            terminalMax = 2048;
+        } else if (terminalMax > 1024 * 1024) {
+            terminalMax = 1024 * 1024;
         }
-        prefs.putInt(Constants.TERMINAL_MAX_SIZE, TerminalMax);
-        log("Terminal max size set to " + Integer.toString(TerminalMax / 1024) + " KB");
+        prefs.putInt(Constants.TERMINAL_MAX_SIZE, terminalMax);
+        log("Terminal max size set to " + Integer.toString(terminalMax / 1024) + " KB");
     }//GEN-LAST:event_TerminalMaxSizeFocusLost
 
     private void SnippetCancelEditActionPerformed() {//GEN-FIRST:event_SnippetCancelEditActionPerformed
         if (SnippetText.canUndo() || SnippetText.canRedo()) {
             this.setAlwaysOnTop(false);
             int returnVal = JOptionPane.showConfirmDialog(null, "Discard any changes and CANCEL edit this snippet without saving?", "Attention", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            this.setAlwaysOnTop(AlwaysOnTop.isSelected());
+            this.setAlwaysOnTop(alwaysOnTop.isSelected());
             if (returnVal != JOptionPane.YES_OPTION) {
                 return;
             }
@@ -6670,7 +6402,7 @@ public class ESPlorer extends JFrame {
             DumbMode.setEnabled(true);
         }
         prefs.putBoolean(Constants.TURBO_MODE, TurboMode.isSelected());
-        PrefsFlush();
+        isPrefsFlush();
     }//GEN-LAST:event_TurboModeActionPerformed
 
     private void MenuItemESPResetActionPerformed() {//GEN-FIRST:event_MenuItemESPResetActionPerformed
@@ -6692,26 +6424,6 @@ public class ESPlorer extends JFrame {
         MenuItemESPFormat.doClick();
     }//GEN-LAST:event_MenuItemTerminalFormatActionPerformed
 
-    private void MenuItemLinksAPIenActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIenActionPerformed
-        goLink(api_en_uri);
-    }//GEN-LAST:event_MenuItemLinksAPIenActionPerformed
-
-    private void MenuItemLinksAPIruActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIruActionPerformed
-        goLink(api_ru_uri);
-    }//GEN-LAST:event_MenuItemLinksAPIruActionPerformed
-
-    private void MenuItemLinksChangelogActionPerformed() {//GEN-FIRST:event_MenuItemLinksChangelogActionPerformed
-        goLink(changelog_uri);
-    }//GEN-LAST:event_MenuItemLinksChangelogActionPerformed
-
-    private void MenuItemLinksDownloadLatestFirmwareActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestFirmwareActionPerformed
-        goLink(nodemcu_download_latest_uri);
-    }//GEN-LAST:event_MenuItemLinksDownloadLatestFirmwareActionPerformed
-
-    private void MenuItemLinksAPIcnActionPerformed() {//GEN-FIRST:event_MenuItemLinksAPIcnActionPerformed
-        goLink(api_cn_uri);
-    }//GEN-LAST:event_MenuItemLinksAPIcnActionPerformed
-
     private void CustomPortNameFocusLost() {//GEN-FIRST:event_CustomPortNameFocusLost
         prefs.put(Constants.CUSTOM_PORT_NAME, CustomPortName.getText());
     }//GEN-LAST:event_CustomPortNameFocusLost
@@ -6724,7 +6436,7 @@ public class ESPlorer extends JFrame {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
-        LocalEcho = false;
+        localEcho = false;
         FileListReload.doClick();
     }//GEN-LAST:event_FileCompileActionPerformed
 
@@ -6829,7 +6541,7 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_RightSplitPanePropertyChange
 
     private void AutoScrollActionPerformed() {//GEN-FIRST:event_AutoScrollActionPerformed
-        prefs.putBoolean(Constants.AUTO_SCROLL, AutoScroll.isSelected());
+        prefs.putBoolean(Constants.AUTO_SCROLL, autoScroll.isSelected());
     }//GEN-LAST:event_AutoScrollActionPerformed
 
     private void PortDTRActionPerformed() {//GEN-FIRST:event_PortDTRActionPerformed
@@ -6915,63 +6627,6 @@ public class ESPlorer extends JFrame {
         FileListReload.doClick();
     }//GEN-LAST:event_FileRenameActionPerformed
 
-    private void MenuItemViewDonateItemStateChanged() {//GEN-FIRST:event_MenuItemViewDonateItemStateChanged
-        DonateSmall.setVisible(!MenuItemViewDonate.isSelected());
-        prefs.putBoolean(Constants.SHOW_DONATE, MenuItemViewDonate.isSelected());
-    }//GEN-LAST:event_MenuItemViewDonateItemStateChanged
-
-    private void DonateSmallActionPerformed() {//GEN-FIRST:event_DonateSmallActionPerformed
-        goLink(donate_uri);
-    }//GEN-LAST:event_DonateSmallActionPerformed
-
-    private void MenuItemLinksDownloadLatestFlasherActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestFlasherActionPerformed
-        goLink(flasher_uri);
-    }//GEN-LAST:event_MenuItemLinksDownloadLatestFlasherActionPerformed
-
-    private void MenuItemLinksBuyDevBoardActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyDevBoardActionPerformed
-        goLink(buy_nodeMCU);
-    }//GEN-LAST:event_MenuItemLinksBuyDevBoardActionPerformed
-
-    private void MenuItemLinksBuyESP8266ActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyESP8266ActionPerformed
-        goLink(buy_esp8266);
-    }//GEN-LAST:event_MenuItemLinksBuyESP8266ActionPerformed
-
-    private void MenuItemLinksBuyESD12ActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyESD12ActionPerformed
-        goLink(buy_esd12);
-    }//GEN-LAST:event_MenuItemLinksBuyESD12ActionPerformed
-
-    private void MenuItemLinksESPlorerForumEnActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerForumEnActionPerformed
-        goLink(esp8266com_uri);
-    }//GEN-LAST:event_MenuItemLinksESPlorerForumEnActionPerformed
-
-    private void MenuItemLinksESPlorerForumRuActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerForumRuActionPerformed
-        goLink(esp8266ru_uri);
-    }//GEN-LAST:event_MenuItemLinksESPlorerForumRuActionPerformed
-
-    private void MenuItemLinksESPlorerLatestActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerLatestActionPerformed
-        goLink(esplorer_latest);
-    }//GEN-LAST:event_MenuItemLinksESPlorerLatestActionPerformed
-
-    private void MenuItemLinksESPlorerSourceActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerSourceActionPerformed
-        goLink(esplorer_source);
-    }//GEN-LAST:event_MenuItemLinksESPlorerSourceActionPerformed
-
-    private void MenuItemLinksESPlorerHomeActionPerformed() {//GEN-FIRST:event_MenuItemLinksESPlorerHomeActionPerformed
-        goLink(homepage_uri);
-    }//GEN-LAST:event_MenuItemLinksESPlorerHomeActionPerformed
-
-    private void MenuItemLinksDonateActionPerformed() {//GEN-FIRST:event_MenuItemLinksDonateActionPerformed
-        goLink(donate_uri);
-    }//GEN-LAST:event_MenuItemLinksDonateActionPerformed
-
-    private void MenuItemLinksBuyOtherActionPerformed() {//GEN-FIRST:event_MenuItemLinksBuyOtherActionPerformed
-        goLink(buy_other);
-    }//GEN-LAST:event_MenuItemLinksBuyOtherActionPerformed
-
-    private void MenuItemLinksDownloadLatestDevActionPerformed() {//GEN-FIRST:event_MenuItemLinksDownloadLatestDevActionPerformed
-        goLink(nodemcu_download_dev_uri);
-    }//GEN-LAST:event_MenuItemLinksDownloadLatestDevActionPerformed
-
     private void formWindowClosing() {//GEN-FIRST:event_formWindowClosing
         AppClose();
     }//GEN-LAST:event_formWindowClosing
@@ -7004,12 +6659,12 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_CondensedItemStateChanged
 
     private void AutodetectFirmwareItemStateChanged() {//GEN-FIRST:event_AutodetectFirmwareItemStateChanged
-        prefs.putBoolean(Constants.AUTODETECT, AutodetectFirmware.isSelected());
+        prefs.putBoolean(Constants.AUTODETECT, autodetectFirmware.isSelected());
     }//GEN-LAST:event_AutodetectFirmwareItemStateChanged
     /*  Prefs end */
 
     private void MenuItemViewLF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemViewLF1ActionPerformed
-        String lclass = LAFclass.get(Integer.parseInt(evt.getActionCommand()));
+        String lclass = lookAndFeelClass.get(Integer.parseInt(evt.getActionCommand()));
         prefs.put("LAF", lclass);
         log("Set New LookAndFeel to:" + lclass);
         int isExit = Dialog("New LookAndFeel skin will be appled after program restart. Exit now?", JOptionPane.YES_NO_OPTION);
@@ -7020,26 +6675,18 @@ public class ESPlorer extends JFrame {
 
     private void FileSystemInfo() {
         String cmd = "r,u,t=file.fsinfo() print(\"Total : \"..t..\" bytes\\r\\nUsed  : \"..u..\" bytes\\r\\nRemain: \"..r..\" bytes\\r\\n\") r=nil u=nil t=nil";
-        LocalEcho = false;
+        localEcho = false;
         send(addCRLF(cmd), true);
-    }
-
-    private void goLink(URI link) {
-        try {
-            Desktop.getDesktop().browse(link);
-        } catch (IOException ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void DoSnippet(int n) {
         //iSnippets = n;
         //SnippetName.setText(prefs.get("Snippet"+Integer.toString(n)+"name", "Snippet"+Integer.toString(n)));
-        //SnippetText.setText(Snippets[n]);
+        //SnippetText.setText(SNIPPETS[n]);
         if (Condensed.isSelected()) {
-            SendToESP(cmdPrep(Snippets[n]));
+            SendToESP(cmdPrep(SNIPPETS[n]));
         } else {
-            SendToESP(Snippets[n]);
+            SendToESP(SNIPPETS[n]);
         }
     }
 
@@ -7119,7 +6766,7 @@ public class ESPlorer extends JFrame {
         String log = Log.getText();
         Document doc = Log.getDocument();
         LOGGER.info(l);
-        if (log.length() > LogMax) {
+        if (log.length() > logMax) {
             try {
                 doc.remove(0, 1024);
             } catch (Exception e) {
@@ -7144,7 +6791,7 @@ public class ESPlorer extends JFrame {
         return portName;
     }
 
-    private boolean SetSerialPortParams() {
+    private boolean isSetSerialPortParams() {
         boolean success = false;
         String portName = GetSerialPortName();
         try {
@@ -7164,7 +6811,7 @@ public class ESPlorer extends JFrame {
         return success;
     }
 
-    private boolean portOpen() {
+    private boolean isPortOpen() {
         boolean success;
         String portName = GetSerialPortName();
         nSpeed = Integer.parseInt((String) Speed.getSelectedItem());
@@ -7185,7 +6832,7 @@ public class ESPlorer extends JFrame {
                 log("ERROR open serial port " + portName);
             }
             if (success) {
-                SetSerialPortParams();
+                isSetSerialPortParams();
                 /*
                 success = serialPort.setParams(nSpeed,
                                          SerialPort.DATABITS_8,
@@ -7229,7 +6876,7 @@ public class ESPlorer extends JFrame {
     }
 
     private void CheckComm() {
-        if (!AutodetectFirmware.isSelected()) {
+        if (!autodetectFirmware.isSelected()) {
             portJustOpen = false;
             return;
         }
@@ -7306,7 +6953,7 @@ public class ESPlorer extends JFrame {
 
         setLocationRelativeTo(null); // window centered
 
-        if (LAFclass.get(0).equals(prefs.get("LAF", ""))) {  // First for Nimbus
+        if (lookAndFeelClass.get(0).equals(prefs.get("LAF", ""))) {  // First for Nimbus
             MenuItemViewLF1.setSelected(true);
         }
         int x = 1;
@@ -7315,7 +6962,7 @@ public class ESPlorer extends JFrame {
             MenuItemViewLF2 = new JRadioButtonMenuItem();
             buttonGroupLF.add(MenuItemViewLF2);
             MenuItemViewLF2.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 MenuItemViewLF2.setSelected(true);
             }
             MenuItemViewLF2.setActionCommand(Integer.toString(x));
@@ -7331,7 +6978,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF3 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF3);
             menuItemViewLF3.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF3.setSelected(true);
             }
             menuItemViewLF3.setActionCommand(Integer.toString(x));
@@ -7347,7 +6994,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF4 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF4);
             menuItemViewLF4.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF4.setSelected(true);
             }
             menuItemViewLF4.setActionCommand(Integer.toString(x));
@@ -7363,7 +7010,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF5 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF5);
             menuItemViewLF5.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF5.setSelected(true);
             }
             menuItemViewLF5.setActionCommand(Integer.toString(x));
@@ -7379,7 +7026,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF6 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF6);
             menuItemViewLF6.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF6.setSelected(true);
             }
             menuItemViewLF6.setActionCommand(Integer.toString(x));
@@ -7395,7 +7042,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF7 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF7);
             menuItemViewLF7.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF7.setSelected(true);
             }
             menuItemViewLF7.setActionCommand(Integer.toString(x));
@@ -7411,7 +7058,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF8 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF8);
             menuItemViewLF8.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF8.setSelected(true);
             }
             menuItemViewLF8.setActionCommand(Integer.toString(x));
@@ -7427,7 +7074,7 @@ public class ESPlorer extends JFrame {
             JRadioButtonMenuItem menuItemViewLF9 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF9);
             menuItemViewLF9.setText(lookAndFeel.get(x));
-            if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
+            if (lookAndFeelClass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF9.setSelected(true);
             }
             menuItemViewLF9.setActionCommand(Integer.toString(x));
@@ -7472,31 +7119,6 @@ public class ESPlorer extends JFrame {
 
         AddTab(""); // iTab = 0
 
-        try {
-            donate_uri = new URI("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=4refr0nt%40gmail%2ecom&lc=US&item_name=ESPlorer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
-            homepage_uri = new URI("http://esp8266.ru/esplorer/");
-            api_cn_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_cn");
-            api_en_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en");
-            api_ru_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_ru");
-            changelog_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/wiki");
-            nodemcu_download_latest_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/blob/master/pre_build/latest/nodemcu_latest.bin?raw=true");
-            nodemcu_download_dev_uri = new URI("https://github.com/nodemcu/nodemcu-firmware/releases");
-            flasher_uri = new URI("https://github.com/nodemcu/nodemcu-flasher");
-            // adv links start
-            // Please, do not modify
-            buy_nodeMCU = new URI("http://ad.admitad.com/goto/1e8d114494955f13761d16525dc3e8/?subid=ESPlorer&ulp=http%3A%2F%2Fwww.aliexpress.com%2Faf%2Fnodemcu.html%3FSearchText%3Dnodemcu%26CatId%3D0%26shipCountry%3Dus%26initiative_id%3DSB_20150314041905%26isAffiliate%3Dy%26SortType%3Dprice_asc%26filterCat%3D400103%2C4099%26groupsort%3D1");
-            buy_esp8266 = new URI("http://ad.admitad.com/goto/1e8d114494955f13761d16525dc3e8/?subid=ESPlorer&ulp=http%3A%2F%2Fwww.aliexpress.com%2Faf%2Fesp8266.html%3FSearchText%3Desp8266%26CatId%3D0%26shipCountry%3Dus%26initiative_id%3DSB_20150314041938%26isAffiliate%3Dy%26SortType%3Dprice_asc%26filterCat%3D400103%2C515%2C400107%26groupsort%3D1");
-            buy_esd12 = new URI("http://ad.admitad.com/goto/1e8d114494955f13761d16525dc3e8/?subid=ESPlorer&ulp=http%3A%2F%2Fwww.aliexpress.com%2Faf%2Fesp8266-esd%2525252d12.html%3FSearchText%3Desp8266%252Besd-12%26CatId%3D0%26shipCountry%3Dall%26initiative_id%3DSB_20150314041646%26isAffiliate%3Dy%26isAtmOnline%3Dn%26SortType%3Dprice_asc");
-            buy_other = new URI("http://ad.admitad.com/goto/1e8d114494955f13761d16525dc3e8/?subid=ESPlorer&ulp=http%3A%2F%2Fwww.aliexpress.com%2Faf%2Fcategory%2F5.html%3FshipCountry%3Dus%26isAffiliate%3Dy%26SortType%3Dtotal_tranpro_desc");
-            // adv links end
-            esp8266com_uri = new URI("http://www.esp8266.com/viewtopic.php?f=22&t=882");
-            esp8266ru_uri = new URI("http://esp8266.ru/forum/threads/esplorer.34/");
-            esplorer_latest = new URI("http://esp8266.ru/esplorer/#download");
-            esplorer_source = new URI("https://github.com/4refr0nt/ESPlorer");
-
-        } catch (Exception e) {
-            log(e.toString());
-        }
         FileAsButton1.setVisible(false);
         FileRenamePanel.setVisible(false);
     }
@@ -7512,7 +7134,7 @@ public class ESPlorer extends JFrame {
         if (prefs.get(Constants.FIRMWARE, null) == null) {
             log("Load saved settings: NOT FOUND. Used default settings.");
             prefs.put(Constants.FIRMWARE, "NodeMCU");
-            PrefsFlush();
+            isPrefsFlush();
         }
         if (prefs.get(Constants.FIRMWARE, "NodeMCU").equals("MicroPython") && OptionMicroPython.isEnabled()) {
             OptionMicroPython.setSelected(true);
@@ -7526,7 +7148,7 @@ public class ESPlorer extends JFrame {
         FileAutoRun.setSelected(prefs.getBoolean(Constants.FILE_AUTO_RUN, true));
         EditorTheme.setSelectedIndex(prefs.getInt(Constants.COLOR_THEME, 0));
         Delay.setValue(prefs.getInt(Constants.DELAY, 0));
-        AnswerDelay.setValue(prefs.getInt(Constants.TIMEOUT, 3));
+        answerDelay.setValue(prefs.getInt(Constants.TIMEOUT, 3));
         DumbMode.setSelected(prefs.getBoolean(Constants.DUMB_MODE, false));
         TurboMode.setSelected(prefs.getBoolean(Constants.TURBO_MODE, false));
         LineDelay.setValue(prefs.getInt(Constants.LINE_DELAY, 200));
@@ -7534,19 +7156,17 @@ public class ESPlorer extends JFrame {
         Terminal.setFont(Terminal.getFont().deriveFont(prefs.getFloat(Constants.TERMINAL_FONT_SIZE, Constants.TERMINAL_FONT_SIZE_DEFAULT)));
         SnippetText.setFont(SnippetText.getFont().deriveFont(prefs.getFloat(Constants.EDITOR_FONT_SIZE, Constants.EDITOR_FONT_SIZE_DEFAULT)));
         Log.setFont(Log.getFont().deriveFont(prefs.getFloat(Constants.LOG_FONT_SIZE, Constants.LOG_FONT_SIZE_DEFAULT)));
-        LogMax = prefs.getInt(Constants.LOG_MAX_SIZE, LogMax);
-        LogMaxSize.setText(Integer.toString(LogMax / 1024));
-        TerminalMax = prefs.getInt(Constants.TERMINAL_MAX_SIZE, TerminalMax);
-        TerminalMaxSize.setText(Integer.toString(TerminalMax / 1024));
-        AutoScroll.setSelected(prefs.getBoolean(Constants.AUTO_SCROLL, true));
+        logMax = prefs.getInt(Constants.LOG_MAX_SIZE, logMax);
+        LogMaxSize.setText(Integer.toString(logMax / 1024));
+        terminalMax = prefs.getInt(Constants.TERMINAL_MAX_SIZE, terminalMax);
+        TerminalMaxSize.setText(Integer.toString(terminalMax / 1024));
+        autoScroll.setSelected(prefs.getBoolean(Constants.AUTO_SCROLL, true));
         MenuItemViewLog.setSelected(prefs.getBoolean(Constants.SHOW_LOG, false));
         MenuItemViewToolbar.setSelected(prefs.getBoolean(Constants.SHOW_TOOLBAR, true));
         MenuItemViewLeftExtra.setSelected(prefs.getBoolean(Constants.SHOW_EXTRA_LEFT, true));
         MenuItemViewRightExtra.setSelected(prefs.getBoolean(Constants.SHOW_EXTRA_RIGHT, true));
         MenuItemViewSnippets.setSelected(prefs.getBoolean(Constants.SHOW_SNIP_RIGHT, true));
         MenuItemViewFileManager.setSelected(prefs.getBoolean(Constants.SHOW_FM_RIGHT, true));
-        MenuItemViewDonate.setSelected(prefs.getBoolean(Constants.SHOW_DONATE, false));
-        DonateSmall.setVisible(!MenuItemViewDonate.isSelected());
         UseCustomPortName.setSelected(prefs.getBoolean(Constants.USE_CUSTOM_PORT, false));
         CustomPortName.setText(prefs.get(Constants.CUSTOM_PORT_NAME, "/dev/AnySerialDevice"));
         PortDTR.setSelected(prefs.getBoolean(Constants.PORT_DTR, false));
@@ -7554,7 +7174,7 @@ public class ESPlorer extends JFrame {
         UseExternalEditor.setSelected(prefs.getBoolean(Constants.USE_EXT_EDITOR, false));
         EOL.setSelected(prefs.getBoolean(Constants.SHOW_EOL, false));
         Condensed.setSelected(prefs.getBoolean(Constants.CONDENSED, false));
-        AutodetectFirmware.setSelected(prefs.getBoolean(Constants.AUTODETECT, true));
+        autodetectFirmware.setSelected(prefs.getBoolean(Constants.AUTODETECT, true));
         log("Load saved settings: DONE.");
     }
 
@@ -7634,7 +7254,7 @@ public class ESPlorer extends JFrame {
         FilePopupMenuItem.get(y).setActionCommand(FileName + "Size:" + Integer.toString(size));
         FilePopupMenuItem.get(y).addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DownloadCommand = "EDIT";
+                downloadCommand = "EDIT";
                 FileDownload(evt.getActionCommand());
             }
         });
@@ -7649,7 +7269,7 @@ public class ESPlorer extends JFrame {
         FilePopupMenuItem.get(y).setActionCommand(FileName + "Size:" + Integer.toString(size));
         FilePopupMenuItem.get(y).addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DownloadCommand = "DOWNLOAD";
+                downloadCommand = "DOWNLOAD";
                 FileDownload(evt.getActionCommand());
             }
         });
@@ -7834,7 +7454,7 @@ public class ESPlorer extends JFrame {
         );
         FileLayeredPane1.get(i).setLayer(TextScroll1.get(i), JLayeredPane.DEFAULT_LAYER);
 
-        FilesTabbedPane.addTab(NewFile, FileLayeredPane1.get(i));
+        FilesTabbedPane.addTab(newFile, FileLayeredPane1.get(i));
 
         FilesTabbedPane.setSelectedIndex(i);
         iTab = i;
@@ -7890,7 +7510,7 @@ public class ESPlorer extends JFrame {
             iTab = 0;
             TextEditor1.get(iTab).setText("");
             TextEditor1.get(iTab).discardAllEdits();
-            FilesTabbedPane.setTitleAt(iTab, NewFile);
+            FilesTabbedPane.setTitleAt(iTab, newFile);
             iFile.set(iTab, new File(""));
             FileLabelUpdate();
             FileChanged.set(iTab, false);
@@ -7930,7 +7550,7 @@ public class ESPlorer extends JFrame {
         this.setAlwaysOnTop(false);
         Toolkit.getDefaultToolkit().beep();
         int returnVal = JOptionPane.showConfirmDialog(null, msg, "Attention", btn, JOptionPane.WARNING_MESSAGE);
-        this.setAlwaysOnTop(AlwaysOnTop.isSelected());
+        this.setAlwaysOnTop(alwaysOnTop.isSelected());
         return returnVal;
     }
 
@@ -8056,7 +7676,7 @@ public class ESPlorer extends JFrame {
             log("File changed. Ask before closing.");
             int returnVal = Dialog("Save file \"" + FilesTabbedPane.getTitleAt(iTab) + "\" before closing?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (returnVal == JOptionPane.YES_OPTION) {
-                if (!SaveFile()) {
+                if (!isSaveFile()) {
                     log("File close: FAIL (file not saved, closing aborted)");
                     return JOptionPane.CANCEL_OPTION;
                 }
@@ -8086,7 +7706,7 @@ public class ESPlorer extends JFrame {
                 log("File reload: Reload anyway by user choice.");
             }
         }
-        if (LoadFile()) {
+        if (isLoadFile()) {
             log("File reload: Success.");
         }
     }
@@ -8129,7 +7749,7 @@ public class ESPlorer extends JFrame {
         log("SendToESP: Starting...");
     }
 
-    private void SendToESP(ArrayList<String> buf) {
+    private void SendToESP(Collection<String> buf) {
         if (!pOpen || portJustOpen) {
             log("SendESP: Serial port not open. Cancel.");
             return;
@@ -8152,7 +7772,7 @@ public class ESPlorer extends JFrame {
                 log("Waiting answer from ESP - Timeout reached. Command aborted.");
             }
         };
-        int delay = AnswerDelay.getValue() * 1000;
+        int delay = answerDelay.getValue() * 1000;
         if (delay == 0) delay = 300;
         timeout = new Timer(delay, watchDog);
         timeout.setRepeats(false);
@@ -8321,10 +7941,10 @@ public class ESPlorer extends JFrame {
             return;
         }
         if (busyIcon) {
-            Busy.setIcon(LED_BLUE);
+            busy.setIcon(LED_BLUE);
             SnippetsBusy.setIcon(LED_BLUE);
         } else {
-            Busy.setIcon(LED_RED);
+            busy.setIcon(LED_RED);
             SnippetsBusy.setIcon(LED_RED);
         }
         busyIcon = !busyIcon;
@@ -8342,14 +7962,14 @@ public class ESPlorer extends JFrame {
             }
         }
         if (simple) {
-            Busy.setIcon(LED_GREY);
+            busy.setIcon(LED_GREY);
             SnippetsBusy.setIcon(LED_GREY);
         }
     }
 
     private void Busy() {
-        Busy.setText("BUSY");
-        Busy.setBackground(new java.awt.Color(153, 0, 0)); // RED
+        busy.setText("BUSY");
+        busy.setBackground(new java.awt.Color(153, 0, 0)); // RED
         SnippetsBusy.setText("BUSY");
         SnippetsBusy.setBackground(new java.awt.Color(153, 0, 0)); // RED
         ProgressBar.setValue(0);
@@ -8393,9 +8013,9 @@ public class ESPlorer extends JFrame {
     }
 
     private void Idle() {
-        Busy.setText("IDLE");
-        Busy.setBackground(new java.awt.Color(0, 153, 0)); // GREEN
-        Busy.setIcon(LED_GREY);
+        busy.setText("IDLE");
+        busy.setBackground(new java.awt.Color(0, 153, 0)); // GREEN
+        busy.setIcon(LED_GREY);
         SnippetsBusy.setText("IDLE");
         SnippetsBusy.setBackground(new java.awt.Color(0, 153, 0)); // GREEN
         SnippetsBusy.setIcon(LED_GREY);
@@ -8467,14 +8087,14 @@ public class ESPlorer extends JFrame {
 
     private void SaveDownloadedFile() {
         log("Saving downloaded file...");
-//            FileCount ++;
-//            iFile.set(iTab, new File("script" + Integer.toString(FileCount) + ".lua") );
+//            fileCount ++;
+//            iFile.set(iTab, new File("script" + Integer.toString(fileCount) + ".lua") );
         chooser.rescanCurrentDirectory();
-        File f = new File(DownloadedFileName);
+        File f = new File(downloadedFileName);
         javax.swing.filechooser.FileFilter flt = chooser.getFileFilter();
         chooser.resetChoosableFileFilters();
         chooser.setSelectedFile(f);
-        chooser.setDialogTitle("Save downloaded from ESP file \"" + DownloadedFileName + "\" As...");
+        chooser.setDialogTitle("Save downloaded from ESP file \"" + downloadedFileName + "\" As...");
         int returnVal = chooser.showSaveDialog(null);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             log("Saving abort by user.");
@@ -8482,30 +8102,30 @@ public class ESPlorer extends JFrame {
         }
         f = chooser.getSelectedFile();
         chooser.setFileFilter(flt);
-        DownloadedFileName = f.getName();
+        downloadedFileName = f.getName();
         SavePath();
         if (f.exists()) {
-            log("File " + DownloadedFileName + " already exist, waiting user choice");
-            int shouldWrite = Dialog("File " + DownloadedFileName + " already exist. Overwrite?", JOptionPane.YES_NO_OPTION);
+            log("File " + downloadedFileName + " already exist, waiting user choice");
+            int shouldWrite = Dialog("File " + downloadedFileName + " already exist. Overwrite?", JOptionPane.YES_NO_OPTION);
             if (shouldWrite != JOptionPane.YES_OPTION) {
-                log("Saving canceled by user, because file " + DownloadedFileName + " already exist");
+                log("Saving canceled by user, because file " + downloadedFileName + " already exist");
                 return;
             } else {
-                log("File " + DownloadedFileName + " will be overwriten by user choice");
+                log("File " + downloadedFileName + " will be overwriten by user choice");
             }
         } else { // we saving file, when open
-            log("We saving new file " + DownloadedFileName);
+            log("We saving new file " + downloadedFileName);
         }
         try {
-            log("Try to saving file " + DownloadedFileName + " ...");
+            log("Try to saving file " + downloadedFileName + " ...");
             fos = new FileOutputStream(f);
-            fos.write(PacketsByte);
+            fos.write(packetsByte);
             fos.flush();
-            log("Save file " + DownloadedFileName + ": Success, size:" + Long.toString(f.length()));
+            log("Save file " + downloadedFileName + ": Success, size:" + Long.toString(f.length()));
         } catch (Exception e) {
-            log("Save file " + DownloadedFileName + ": FAIL.");
+            log("Save file " + downloadedFileName + ": FAIL.");
             log(e.toString());
-            JOptionPane.showMessageDialog(null, "Error, file " + DownloadedFileName + " not saved!");
+            JOptionPane.showMessageDialog(null, "Error, file " + downloadedFileName + " not saved!");
         }
         try {
             if (fos != null) fos.close();
@@ -8552,17 +8172,17 @@ public class ESPlorer extends JFrame {
     private void UploadFilesStart() {
         String uploadFileName = mFile.get(mFileIndex).getName();
         sendBuf = new ArrayList<String>();
-        PacketsData = new ArrayList<String>();
-        PacketsCRC = new ArrayList<Integer>();
-        PacketsSize = new ArrayList<Integer>();
-        PacketsNum = new ArrayList<Integer>();
+        packetsData = new ArrayList<String>();
+        packetsCRC = new ArrayList<Integer>();
+        packetsSize = new ArrayList<Integer>();
+        packetsNum = new ArrayList<Integer>();
         sendPacketsCRC = new ArrayList<Boolean>();
         rcvBuf = "";
-        PacketsByte = new byte[0];
+        packetsByte = new byte[0];
         rx_byte = new byte[0];
         tx_byte = new byte[0];
 
-        if (!LoadBinaryFile(mFile.get(mFileIndex))) {
+        if (!isLoadBinaryFile(mFile.get(mFileIndex))) {
             log("Uploader: loaded fail!");
             return;
         }
@@ -8600,7 +8220,7 @@ public class ESPlorer extends JFrame {
         if (packets == 1) { // small file
             startPackets = lastPacketSize;
         } else {
-            startPackets = SendPacketSize;
+            startPackets = sendPacketSize;
         }
         sendBuf.add("_up(" + Integer.toString(packets) + "," + Integer.toString(startPackets) + "," + Integer.toString(lastPacketSize) + ")");
         log("Uploader: Starting...");
@@ -8646,7 +8266,7 @@ public class ESPlorer extends JFrame {
         timer.start();
     }
 
-    private boolean LoadBinaryFile(File f) {
+    private boolean isLoadBinaryFile(File f) {
         boolean success = false;
         try {
             log("BinaryFileLoader: Try to load file " + f.getName() + " ...");
@@ -8672,19 +8292,19 @@ public class ESPlorer extends JFrame {
 
     private int SplitDataToPackets() {
         sendPackets = new ArrayList<byte[]>();
-        packets = tx_byte.length / SendPacketSize;
+        packets = tx_byte.length / sendPacketSize;
         log("1. packets = " + Integer.toString(packets));
-        if ((tx_byte.length % SendPacketSize) > 0) packets++;
+        if ((tx_byte.length % sendPacketSize) > 0) packets++;
         log("2. packets = " + Integer.toString(packets));
-        if (tx_byte.length < SendPacketSize) packets = 1;
+        if (tx_byte.length < sendPacketSize) packets = 1;
         int remain = tx_byte.length;
         int lastPacketSize = -1;
         byte[] b;
         int pos = 0;
         for (int i = 0; i < packets; i++) {
             log("3. packet = " + Integer.toString(i));
-            if (remain > SendPacketSize)
-                b = new byte[SendPacketSize]; // default value is 200
+            if (remain > sendPacketSize)
+                b = new byte[sendPacketSize]; // default value is 200
             else {
                 b = new byte[remain];
                 lastPacketSize = remain;
@@ -8705,10 +8325,10 @@ public class ESPlorer extends JFrame {
             return;
         }
         if (busyIcon) {
-            Busy.setIcon(LED_BLUE);
+            busy.setIcon(LED_BLUE);
             SnippetsBusy.setIcon(LED_BLUE);
         } else {
-            Busy.setIcon(LED_RED);
+            busy.setIcon(LED_RED);
             SnippetsBusy.setIcon(LED_RED);
         }
         busyIcon = !busyIcon;
@@ -8738,7 +8358,7 @@ public class ESPlorer extends JFrame {
                 "end\n" +
                 "_view()\n" +
                 "_view=nil\n";
-        LocalEcho = false;
+        localEcho = false;
         SendToESP(cmdPrep(cmd));
     }
 
@@ -8892,20 +8512,20 @@ public class ESPlorer extends JFrame {
                     // split packet & check crc
                     int i = rcvPackets.size() - 1;
                     String[] part = rcvPackets.get(i).split("~~~DATA-CRC~~~");
-                    PacketsCRC.add(Integer.parseInt(part[1]));
+                    packetsCRC.add(Integer.parseInt(part[1]));
                     String left = part[0];
                     part = left.split("~~~DATA-N~~~");
-                    PacketsNum.add(Integer.parseInt(part[1]));
+                    packetsNum.add(Integer.parseInt(part[1]));
                     left = part[0];
                     part = left.split("~~~DATA-LENGTH~~~");
-                    PacketsSize.add(Integer.parseInt(part[1]));
+                    packetsSize.add(Integer.parseInt(part[1]));
                     left = part[0];
                     part = left.split("~~~DATA-START~~~");
-                    PacketsData.add(part[1]);
+                    packetsData.add(part[1]);
                     int startData = FindPacketID(i + 1);
                     byte[] x;
-                    if ((startData > 0) && (rx_byte.length >= (startData + PacketsSize.get(i)))) {
-                        x = copyPartArray(rx_byte, startData, PacketsSize.get(i));
+                    if ((startData > 0) && (rx_byte.length >= (startData + packetsSize.get(i)))) {
+                        x = copyPartArray(rx_byte, startData, packetsSize.get(i));
                         //log("Downloader: data from packet #" + Integer.toString(i+1) + " found in raw data");
                     } else {
                         x = new byte[0];
@@ -8914,16 +8534,16 @@ public class ESPlorer extends JFrame {
                         //    "\r\nstartData " + Integer.toString(startData) );
                     }
                     //rx_byte = new byte[0];
-                    if (PacketsCRC.get(i) == CRC(x)) {
+                    if (packetsCRC.get(i) == CRC(x)) {
                         try {
                             timeout.restart();
                         } catch (Exception e) {
                             log(e.toString());
                         }
-                        rcvFile = rcvFile + PacketsData.get(i);
-                        PacketsByte = concatArray(PacketsByte, x);
-                        log("Downloader: Receive packet: " + Integer.toString(PacketsNum.get(i)) + "/" + Integer.toString(packets) +
-                                ", size:" + Integer.toString(PacketsSize.get(i)) +
+                        rcvFile = rcvFile + packetsData.get(i);
+                        packetsByte = concatArray(packetsByte, x);
+                        log("Downloader: Receive packet: " + Integer.toString(packetsNum.get(i)) + "/" + Integer.toString(packets) +
+                                ", size:" + Integer.toString(packetsSize.get(i)) +
                                 ", CRC check: Success");
                     } else {
                         try {
@@ -8931,22 +8551,22 @@ public class ESPlorer extends JFrame {
                         } catch (Exception e) {
                             log(e.toString());
                         }
-                        log("Downloader: Receive packets: " + Integer.toString(PacketsNum.get(i)) + "/" + Integer.toString(packets) +
-                                ", size expected:" + Integer.toString(PacketsSize.get(i)) +
-                                ", size received:" + Integer.toString(PacketsByte.length) +
-                                "\r\n, CRC expected :" + Integer.toString(PacketsCRC.get(i)) +
+                        log("Downloader: Receive packets: " + Integer.toString(packetsNum.get(i)) + "/" + Integer.toString(packets) +
+                                ", size expected:" + Integer.toString(packetsSize.get(i)) +
+                                ", size received:" + Integer.toString(packetsByte.length) +
+                                "\r\n, CRC expected :" + Integer.toString(packetsCRC.get(i)) +
                                 "  CRC received :" + Integer.toString(CRC(x)));
                         log("Downloader: FAIL.");
-                        PacketsCRC.clear();
-                        PacketsNum.clear();
-                        PacketsSize.clear();
-                        PacketsData.clear();
+                        packetsCRC.clear();
+                        packetsNum.clear();
+                        packetsSize.clear();
+                        packetsData.clear();
                         rcvPackets.clear();
                         rcvFile = "";
-                        PacketsByte = new byte[0];
+                        packetsByte = new byte[0];
                         FileDownloadFinisher(false);
                     }
-                } else if ((rx_data.lastIndexOf("~~~DATA-TOTAL-END~~~") >= 0) && (PacketsNum.size() == packets)) {
+                } else if ((rx_data.lastIndexOf("~~~DATA-TOTAL-END~~~") >= 0) && (packetsNum.size() == packets)) {
                     try {
                         timeout.stop();
                     } catch (Exception e) {
@@ -8993,11 +8613,11 @@ public class ESPlorer extends JFrame {
                             TerminalAdd("\r\nCan't autodetect firmware, because proper answer not received.\r\n");
                         }
                     } else {
-                        if (LocalEcho) {
+                        if (localEcho) {
                             TerminalAdd(data);
                         } else {
                             if (data.contains("\r")) {
-                                LocalEcho = true;
+                                localEcho = true;
                                 TerminalAdd(data.substring(data.indexOf("\r")));
                             }
                         }
@@ -9176,7 +8796,7 @@ public class ESPlorer extends JFrame {
                     }
                 }
                 if (j >= (sendBuf.size() + sendPackets.size())) {
-                    LocalEcho = false;
+                    localEcho = false;
                     send(addCR("_up=nil"), false);
                     try {
                         timer.stop();
@@ -9220,5 +8840,59 @@ public class ESPlorer extends JFrame {
                 log("FileManager: Unknown serial port error received.");
             }
         }
+    }
+
+    public void SendCommand() {
+        if (SendCommand.isEnabled() == false || pOpen == false || portJustOpen) {
+            log("Port not open, operation FAILED.");
+            return;
+        }
+        String cmd;
+        try {
+            cmd = Command.getSelectedItem().toString();
+        } catch (Exception e) {
+            cmd = "";
+        }
+
+        //Autoclean History --ADDED by Mike, DL2ZAP --
+        //if (Autoclean.isSelected()) {   // ToDo: create Checkbox "Autoclean & uncomment this line
+        if (true) { // ToDo: After creating Checkbox delete this line
+            int eintraege = Command.getItemCount();
+            //System.out.println("Start cleaning");
+            for (int lv1=0;lv1<eintraege;lv1++)
+            {
+                //System.out.print("Eintrag:" + lv1 +" : "+Command.getItemAt(lv1));
+                if (Command.getItemAt(lv1)==cmd)
+                {
+                    // System.out.println(" Doppelt, entfernt!");
+                    Command.removeItemAt(lv1);
+                    lv1--;  // re-read this Entry because List has moved up the Follower
+                } else {
+                    // System.out.println(" OK.");
+                }
+            }
+        }
+
+        // System.out.println("Adding Command:" + cmd );
+        int eintraege = Command.getItemCount();
+
+        Command.setSelectedIndex(Command.getItemCount()-1); // Place Index on last Entry
+        Command.addItem(cmd); // Add to History after last Position
+        Command.setSelectedIndex(Command.getItemCount()-1); // Place Index on new last Entry
+        // End of Autoclean-Procedure
+
+        //Command.addItem(cmd); // Add to History
+        if (CR.isSelected()) {
+            cmd += (char)13;
+        }
+        if (LF.isSelected()) {
+            cmd += (char)10;
+        }
+        send(cmd, true);
+        // History trim
+        if ( Command.getItemCount() > 20 ) {
+            Command.removeItemAt(0);
+        }
+        //Command.setSelectedIndex(Command.getItemCount()-1);
     }
 }
