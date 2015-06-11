@@ -151,7 +151,6 @@ public class ESPlorer extends JFrame {
     private JCheckBox LF;
     private JLayeredPane LeftBasePane;
     private JLayeredPane LeftExtraButtons;
-    private JTabbedPane LeftTab;
     private JSlider LineDelay;
     private JLabel LineDelayLabel;
     private JTextArea Log;
@@ -382,7 +381,6 @@ public class ESPlorer extends JFrame {
         buttonGroupLF = new ButtonGroup();
         JSplitPane horizontSplit = new JSplitPane();
         LeftBasePane = new JLayeredPane();
-        LeftTab = new JTabbedPane();
         JPanel nodeMCU = new JPanel();
         TextTab = new JTabbedPane();
         JLayeredPane sriptsTab = new JLayeredPane();
@@ -1018,19 +1016,6 @@ public class ESPlorer extends JFrame {
         horizontSplit.setPreferredSize(new java.awt.Dimension(768, 567));
 
         LeftBasePane.setMinimumSize(new java.awt.Dimension(100, 100));
-
-        LeftTab.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        LeftTab.setToolTipText("");
-        LeftTab.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        LeftTab.setAlignmentY(JComponent.LEFT_ALIGNMENT);
-        LeftTab.setAutoscrolls(true);
-        LeftTab.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        LeftTab.setMinimumSize(new java.awt.Dimension(100, 100));
-        LeftTab.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                LeftTabStateChanged();
-            }
-        });
 
         nodeMCU.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         nodeMCU.setMinimumSize(new java.awt.Dimension(100, 100));
@@ -2556,8 +2541,6 @@ public class ESPlorer extends JFrame {
 
         TextTab.getAccessibleContext().setAccessibleName("newFile");
 
-        LeftTab.addTab("Wer das liest ist doof!", TextTab);
-
         topWiFiStaFiller.setOpaque(true);
 
         cmdGetCWJAP.setFont(cmdGetCWJAP.getFont().deriveFont((float) 12));
@@ -3167,8 +3150,6 @@ public class ESPlorer extends JFrame {
                         .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
         );
         LeftBasePane.setLayer(TextTab, JLayeredPane.DEFAULT_LAYER);
-
-        LeftTab.getAccessibleContext().setAccessibleName("LeftTab");
 
         horizontSplit.setLeftComponent(LeftBasePane);
 
@@ -5794,7 +5775,7 @@ public class ESPlorer extends JFrame {
 
     private void MenuItemEditSendSelectedActionPerformed() {//GEN-FIRST:event_MenuItemEditSendSelectedActionPerformed
         int l;
-        if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Scripts
+        if (TextTab.getSelectedIndex() == 0) { // NodeMCU and Scripts
             try {
                 l = TextEditor1.get(iTab).getSelectedText().length();
             } catch (Exception e) {
@@ -5802,7 +5783,7 @@ public class ESPlorer extends JFrame {
                 return;
             }
             if (l > 0) SendToESP(TextEditor1.get(iTab).getSelectedText());
-        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and SNIPPETS
+        } else if (TextTab.getSelectedIndex() == 0) { // NodeMCU and SNIPPETS
             try {
                 l = SnippetText.getSelectedText().length();
             } catch (Exception e) {
@@ -5868,14 +5849,6 @@ public class ESPlorer extends JFrame {
     private void AboutFocusLost() {//GEN-FIRST:event_AboutFocusLost
         aboutDialog.dispose();
     }//GEN-LAST:event_AboutFocusLost
-
-    private void LeftTabStateChanged() {//GEN-FIRST:event_LeftTabStateChanged
-        if (LeftTab.getSelectedIndex() == 0) {  // NodeMCU & Python
-            CommandsSetNodeMCU();
-        } else if (LeftTab.getSelectedIndex() == 1) {  // AT
-            CommandsSetAT();
-        }
-    }//GEN-LAST:event_LeftTabStateChanged
 
     private void LoadSnippets() {
         if (OptionNodeMCU.isSelected()) {
@@ -6208,11 +6181,11 @@ public class ESPlorer extends JFrame {
 
     private void MenuItemEditSendLineActionPerformed() {//GEN-FIRST:event_MenuItemEditSendLineActionPerformed
         int nLine;
-        if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 0)) { // NodeMCU and Scripts
+        if (TextTab.getSelectedIndex() == 0) { // NodeMCU and Scripts
             nLine = TextEditor1.get(iTab).getCaretLineNumber();
             String cmd = TextEditor1.get(iTab).getText().split("\r?\n")[nLine];
             btnSend(cmd);
-        } else if ((LeftTab.getSelectedIndex() == 0) && (TextTab.getSelectedIndex() == 2)) { // NodeMCU and SNIPPETS
+        } else if (TextTab.getSelectedIndex() == 2) { // NodeMCU and SNIPPETS
             nLine = SnippetText.getCaretLineNumber();
             String cmd = SnippetText.getText().split("\r?\n")[nLine];
             btnSend(cmd);
@@ -6406,18 +6379,14 @@ public class ESPlorer extends JFrame {
     }//GEN-LAST:event_TurboModeActionPerformed
 
     private void MenuItemESPResetActionPerformed() {//GEN-FIRST:event_MenuItemESPResetActionPerformed
-        if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             cmdNodeRestart.doClick();
-        }
     }//GEN-LAST:event_MenuItemESPResetActionPerformed
 
     private void MenuItemESPFormatActionPerformed() {//GEN-FIRST:event_MenuItemESPFormatActionPerformed
-        if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             int isFormat = Dialog("Format ESP flash data area and remove ALL files. Are you sure?", JOptionPane.YES_NO_OPTION);
             if (isFormat == JOptionPane.YES_OPTION) {
                 btnSend("file.format()");
             }
-        }
     }//GEN-LAST:event_MenuItemESPFormatActionPerformed
 
     private void MenuItemTerminalFormatActionPerformed() {//GEN-FIRST:event_MenuItemTerminalFormatActionPerformed
@@ -8601,14 +8570,8 @@ public class ESPlorer extends JFrame {
                         if (data.contains("\r\n>")) {
                             TerminalAdd("\r\nNodeMCU firmware detected.\r\n");
                             btnSend("=node.heap()");
-                            LeftTab.setSelectedIndex(0);
                         } else if (data.contains("\r\nERR")) {
                             TerminalAdd("\r\nAT-based firmware detected.\r\n");
-                            btnSend("AT+GMR");
-                            LeftTab.setSelectedIndex(1);
-                            RightExtraButtons.setVisible(false);
-                            RightSnippetsPane.setVisible(false);
-                            FileManagerPane.setVisible(false);
                         } else {
                             TerminalAdd("\r\nCan't autodetect firmware, because proper answer not received.\r\n");
                         }
