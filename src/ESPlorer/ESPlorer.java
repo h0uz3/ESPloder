@@ -2556,7 +2556,7 @@ public class ESPlorer extends JFrame {
 
         TextTab.getAccessibleContext().setAccessibleName("newFile");
 
-        LeftTab.addTab("NodeMCU+MicroPython", nodeMCU);
+        LeftTab.addTab("Wer das liest ist doof!", TextTab);
 
         topWiFiStaFiller.setOpaque(true);
 
@@ -3160,13 +3160,13 @@ public class ESPlorer extends JFrame {
         LeftBasePane.setLayout(leftBasePaneLayout);
         leftBasePaneLayout.setHorizontalGroup(
                 leftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
+                        .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
         );
         leftBasePaneLayout.setVerticalGroup(
                 leftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
+                        .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
         );
-        LeftBasePane.setLayer(LeftTab, JLayeredPane.DEFAULT_LAYER);
+        LeftBasePane.setLayer(TextTab, JLayeredPane.DEFAULT_LAYER);
 
         LeftTab.getAccessibleContext().setAccessibleName("LeftTab");
 
