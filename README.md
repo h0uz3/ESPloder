@@ -1,4 +1,4 @@
-ESPlorer
+ESPloder
 ========
 
 ###Changes by h0uz3
@@ -35,4 +35,4 @@ Ant
 - Check out using git.
 - Enter project root.
 - Type "ant" and hit Enter.
-- The executable jar file will be in the "dist" directory. You can start it from console using java -jar ESPlorer.jar.
+- The executable jar file will be in the "dist" directory. You can start it from console using java -jar ESPloder.jar.

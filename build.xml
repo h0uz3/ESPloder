@@ -1,4 +1,4 @@
-<project name="ESPlorer" default="dist" basedir=".">
+<project name="ESPloder" default="dist" basedir=".">
     <description>
         simple example build file
     </description>
@@ -38,7 +38,7 @@
             description="generate the distribution">
         <!-- Create the distribution directory -->
         <mkdir dir="${dist}/"/>
-        <jar jarfile="${dist}/ESPlorer.jar" basedir="${build}" manifest="${build}/manifest.mf">
+        <jar jarfile="${dist}/ESPloder.jar" basedir="${build}" manifest="${build}/manifest.mf">
             <zipgroupfileset dir="${lib}" includes="**/*.jar"/>
         </jar>
     </target>

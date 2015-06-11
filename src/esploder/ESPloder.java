@@ -1,4 +1,4 @@
-package ESPlorer;
+package esploder;
 
 import jssc.*;
 import org.fife.ui.autocomplete.AutoCompletion;
@@ -27,9 +27,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-public class ESPlorer extends JFrame {
+public class ESPloder extends JFrame {
 
-    private static final Logger LOGGER = Logger.getLogger(ESPlorer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ESPloder.class.getName());
     /* SNIPPETS */
     private static final String[] SNIPPETS = new String[16];
     private static boolean pOpen = false;
@@ -280,9 +280,9 @@ public class ESPlorer extends JFrame {
     private int mFileIndex = -1; // multifile index
     private long startTime = System.currentTimeMillis();
 
-    public ESPlorer() {
+    public ESPloder() {
         try {
-            FileHandler fh = new FileHandler("ESPlorer.Log");
+            FileHandler fh = new FileHandler("ESPloder.Log");
             LOGGER.addHandler(fh);
         } catch (SecurityException e) {
             LOGGER.log(Level.SEVERE, "Internal error 105: Can't create log file. Permission denied.", e);
@@ -305,9 +305,9 @@ public class ESPlorer extends JFrame {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (laf.equals(info.getClassName())) {
                     UIManager.setLookAndFeel(info.getClassName());
-                    Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, "DEFAULT: L&F " + info.getName() + " class:" + info.getClassName());
+                    Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, "DEFAULT: L&F " + info.getName() + " class:" + info.getClassName());
                 } else {
-                    Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, "Installed: L&F " + info.getName() + " class:" + info.getClassName());
+                    Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, "Installed: L&F " + info.getName() + " class:" + info.getClassName());
                 }
                 if (!"Nimbus".equals(info.getName())) {
                     lookAndFeel.add(info.getName());
@@ -315,13 +315,13 @@ public class ESPlorer extends JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, null, ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, null, ex);
         }
         //</editor-fold>
         try {
@@ -329,11 +329,11 @@ public class ESPlorer extends JFrame {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    new ESPlorer().setVisible(true);
+                    new ESPloder().setVisible(true);
                 }
             });
         } catch (Exception ex) {
-            Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(ESPloder.class.getName()).log(Level.INFO, null, ex);
         }
     }
 
@@ -901,7 +901,7 @@ public class ESPlorer extends JFrame {
 
         appName.setFont(new java.awt.Font("Tahoma", Font.BOLD, 24)); // NOI18N
         appName.setHorizontalAlignment(SwingConstants.CENTER);
-        appName.setText("ESPlorer");
+        appName.setText("ESPloder");
         appName.setHorizontalTextPosition(SwingConstants.CENTER);
 
         version1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -968,14 +968,14 @@ public class ESPlorer extends JFrame {
         contextMenuESPFileLUA.add(menuItemESPFileDelete);
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("ESPlorer");
+        setTitle("ESPloder");
         setAutoRequestFocus(false);
         setBounds(new java.awt.Rectangle(0, 0, 0, 0));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);
         setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(100, 100));
-        setName("ESPlorer"); // NOI18N
+        setName("ESPloder"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1024, 768));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -4649,7 +4649,7 @@ public class ESPlorer extends JFrame {
 
     private void formWindowOpened() {//GEN-FIRST:event_formWindowOpened
         PortFinder();
-        this.setTitle("ESPlorer");
+        this.setTitle("ESPloder");
         ProgressBar.setVisible(false);
         CommandsSetNodeMCU();
         isToolbarShow();

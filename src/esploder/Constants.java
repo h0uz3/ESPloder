@@ -1,4 +1,4 @@
-package ESPlorer;
+package esploder;
 
 import jssc.SerialPort;
 
@@ -17,7 +17,7 @@ public class Constants {
     public static final float LOG_FONT_SIZE_DEFAULT = 10f;
     public static final float LOG_FONT_SIZE_MAX = 40f;
     public static final float LOG_FONT_SIZE_MIN = 5f;
-    public static final String nodeRoot = "/com/esp8266.ru/ESPlorer/config";
+    public static final String nodeRoot = "/com/esp8266.ru/ESPloder/config";
     public static final String SERIAL_PORT = "serial_port";
     public static final String SERIAL_BAUD = "serial_baud";
     public static final String PATH = "path";
