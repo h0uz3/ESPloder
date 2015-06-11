@@ -1,5 +1,7 @@
 package ESPlorer;
 
+import jssc.SerialPort;
+
 /**
  * Created by h0uz3 on 04.06.15.
  */
@@ -33,8 +35,8 @@ public class Constants {
     public static final String LOG_MAX_SIZE = "log_max_size";
     public static final String TERMINAL_MAX_SIZE = "terminal_max_size";
     public static final String version = "v0.0.1_refacturing";
-    public static final String[] EXTENSION_LUA = new String[]{"lua", "lc"};
-    public static final String[] EXTENSION_PY = new String[]{"py"};
+    public static final String[] EXTENSION_LUA = {"lua", "lc"};
+    public static final String[] EXTENSION_PY = {"py"};
     public static final String AUTO_SCROLL = "auto_scroll";
     public static final String SHOW_LOG = "show_log";
     public static final String SHOW_TOOLBAR = "show_toolbar";
@@ -57,5 +59,5 @@ public class Constants {
     public static final String WIN_W = "win_w";
     public static final String CONDENSED = "condensed";
     public static final String AUTODETECT = "autodetect_firmware";
-
+    public static final int PORT_MASK = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
 }

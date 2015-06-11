@@ -8,9 +8,10 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.Document;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,17 +26,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-public class ESPlorer extends javax.swing.JFrame {
+public class ESPlorer extends JFrame {
 
-    private static final int portMask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS;
-    private static final Logger logger = Logger.getLogger(ESPlorer.class.getName());
-    private static final FileNameExtensionFilter filterLUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
-    private static final FileNameExtensionFilter filterPY = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
+    private static final Logger LOGGER = Logger.getLogger(ESPlorer.class.getName());
+    public static final FileNameExtensionFilter FILTER_LUA = new FileNameExtensionFilter("LUA files (*.lua, *.lc)", Constants.EXTENSION_LUA);
+    private static final FileNameExtensionFilter FILTER_PYTHON = new FileNameExtensionFilter("Python files (*.py)", Constants.EXTENSION_PY);
     /* Snippets */
     private static final String[] Snippets = new String[16];
     private static boolean pOpen = false;
     private static boolean portJustOpen = false;
-    private static ArrayList<String> LAF;
+    private static ArrayList<String> lookAndFeel;
     private static ArrayList<String> LAFclass;
     private static Preferences prefs;
     private static int j = 0;
@@ -51,10 +51,10 @@ public class ESPlorer extends javax.swing.JFrame {
     private static int LogMax = 10 * 1024;
     private static int TerminalMax = 100 * 1024;
     private static int iSnippets = 0;
-    private static javax.swing.ImageIcon LED_GREY;
-    private static javax.swing.ImageIcon LED_GREEN;
-    private static javax.swing.ImageIcon LED_RED;
-    private static javax.swing.ImageIcon LED_BLUE;
+    private static ImageIcon LED_GREY;
+    private static ImageIcon LED_GREEN;
+    private static ImageIcon LED_RED;
+    private static ImageIcon LED_BLUE;
     private static boolean LocalEcho = true;
     private final int SendPacketSize = 250;
     private final String NewFile = "New";
@@ -105,222 +105,219 @@ public class ESPlorer extends javax.swing.JFrame {
     private OutputStreamWriter osw = null;
     private BufferedWriter bw = null;
 
-    private javax.swing.JDialog aboutDialog;
-    private javax.swing.JCheckBoxMenuItem AlwaysOnTop;
-    private javax.swing.JSlider AnswerDelay;
-    private javax.swing.JLabel AnswerDelayLabel;
-    private javax.swing.JCheckBox AutoScroll;
-    private javax.swing.JCheckBox AutodetectFirmware;
-    private javax.swing.JLabel Busy;
-    private javax.swing.JButton copyButton;
-    private javax.swing.JButton ButtonCut;
-    private javax.swing.JButton ButtonFileClose;
-    private javax.swing.JButton ButtonFileNew;
-    private javax.swing.JButton ButtonFileReload;
-    private javax.swing.JButton ButtonFileSave;
-    private javax.swing.JButton ButtonPaste;
-    private javax.swing.JButton ButtonRedo;
-    private javax.swing.JButton ButtonSendLine;
-    private javax.swing.JButton ButtonSendSelected;
-    private javax.swing.JButton ButtonSnippet0;
-    private javax.swing.JButton ButtonSnippet1;
-    private javax.swing.JButton ButtonSnippet10;
-    private javax.swing.JButton ButtonSnippet11;
-    private javax.swing.JButton ButtonSnippet12;
-    private javax.swing.JButton ButtonSnippet13;
-    private javax.swing.JButton ButtonSnippet14;
-    private javax.swing.JButton ButtonSnippet15;
-    private javax.swing.JButton ButtonSnippet2;
-    private javax.swing.JButton ButtonSnippet3;
-    private javax.swing.JButton ButtonSnippet4;
-    private javax.swing.JButton ButtonSnippet5;
-    private javax.swing.JButton ButtonSnippet6;
-    private javax.swing.JButton ButtonSnippet7;
-    private javax.swing.JButton ButtonSnippet8;
-    private javax.swing.JButton ButtonSnippet9;
-    private javax.swing.JButton ButtonUndo;
-    private javax.swing.JCheckBox CR;
-    private javax.swing.JComboBox<String> Command;
-    private javax.swing.JCheckBox Condensed;
-    private javax.swing.JPopupMenu ContextMenuEditor;
-    private javax.swing.JTextField CustomPortName;
-    private javax.swing.JSlider Delay;
-    private javax.swing.JLabel DelayLabel;
-    private javax.swing.JButton DonateSmall;
-    private javax.swing.JCheckBox DumbMode;
-    private javax.swing.JCheckBox EOL;
-    private javax.swing.JComboBox EditorTheme;
-    private javax.swing.JButton FileAsButton1;
-    private javax.swing.JCheckBox FileAutoRun;
-    private javax.swing.JCheckBox FileAutoSaveDisk;
-    private javax.swing.JCheckBox FileAutoSaveESP;
-    private javax.swing.JButton FileDo;
-    private javax.swing.JButton FileFormat;
-    private javax.swing.JButton FileListReload;
-    private javax.swing.JLayeredPane FileManagerPane;
-    private javax.swing.JScrollPane FileManagerScrollPane;
-    private javax.swing.JLabel FilePathLabel;
-    private javax.swing.JTextField FileRename;
-    private javax.swing.JLabel FileRenameLabel;
-    private javax.swing.JLayeredPane FileRenamePanel;
-    private javax.swing.JToggleButton FileSaveESP;
-    private javax.swing.JToggleButton FileSendESP;
-    private javax.swing.JButton FileSystemInfo;
-    private javax.swing.JTabbedPane FilesTabbedPane;
-    private javax.swing.JToolBar FilesToolBar;
-    private javax.swing.JCheckBox LF;
-    private javax.swing.JLayeredPane LeftBasePane;
-    private javax.swing.JLayeredPane LeftExtraButtons;
-    private javax.swing.JTabbedPane LeftTab;
-    private javax.swing.JSlider LineDelay;
-    private javax.swing.JLabel LineDelayLabel;
-    private javax.swing.JTextArea Log;
-    private javax.swing.JTextField LogMaxSize;
-    private javax.swing.JMenuItem MenuItemESPFormat;
-    private javax.swing.JMenuItem MenuItemESPReset;
-    private javax.swing.JMenuItem MenuItemEditCopy;
-    private javax.swing.JMenuItem MenuItemEditCut;
-    private javax.swing.JMenuItem MenuItemEditPaste;
-    private javax.swing.JMenuItem MenuItemEditRedo;
-    private javax.swing.JMenuItem MenuItemEditSendLine;
-    private javax.swing.JMenuItem MenuItemEditSendSelected;
-    private javax.swing.JMenuItem MenuItemEditUndo;
-    private javax.swing.JMenuItem MenuItemEditorCopy;
-    private javax.swing.JMenuItem MenuItemEditorCut;
-    private javax.swing.JMenuItem MenuItemEditorPaste;
-    private javax.swing.JMenuItem MenuItemEditorRedo;
-    private javax.swing.JMenuItem MenuItemEditorSendLine;
-    private javax.swing.JMenuItem MenuItemEditorSendSelected;
-    private javax.swing.JMenuItem MenuItemEditorUndo;
-    private javax.swing.JMenuItem MenuItemFileClose;
-    private javax.swing.JMenuItem MenuItemFileDo;
-    private javax.swing.JMenuItem MenuItemFileNew;
-    private javax.swing.JMenuItem MenuItemFileOpen;
-    private javax.swing.JMenuItem MenuItemFileReload;
-    private javax.swing.JMenuItem MenuItemFileRemoveESP;
-    private javax.swing.JMenuItem MenuItemFileSave;
-    private javax.swing.JMenuItem MenuItemFileSaveAll;
-    private javax.swing.JMenuItem MenuItemFileSaveAs;
-    private javax.swing.JMenuItem MenuItemFileSaveESP;
-    private javax.swing.JMenuItem MenuItemFileSendESP;
-    private javax.swing.JMenuItem MenuItemHelpAbout;
-    private javax.swing.JMenuItem MenuItemLogClear;
-    private javax.swing.JMenuItem MenuItemTerminalClear;
-    private javax.swing.JMenuItem MenuItemTerminalCopy;
-    private javax.swing.JMenuItem MenuItemTerminalFontDec;
-    private javax.swing.JMenuItem MenuItemTerminalFontInc;
-    private javax.swing.JMenuItem MenuItemTerminalFormat;
-    private javax.swing.JMenuItem MenuItemTerminalReset;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewDonate;
-    private javax.swing.JMenuItem MenuItemViewEditorFontDec;
-    private javax.swing.JMenuItem MenuItemViewEditorFontInc;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewFileManager;
-    private javax.swing.JRadioButtonMenuItem MenuItemViewLF1;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewLeftExtra;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewLog;
-    private javax.swing.JMenuItem MenuItemViewLogFontDec;
-    private javax.swing.JMenuItem MenuItemViewLogFontInc;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewRightExtra;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewSnippets;
-    private javax.swing.JMenuItem MenuItemViewTermFontDec;
-    private javax.swing.JMenuItem MenuItemViewTermFontInc;
-    private javax.swing.JCheckBoxMenuItem MenuItemViewToolbar;
-    private javax.swing.JMenu MenuView;
-    private javax.swing.JButton NodeReset;
-    private javax.swing.JToggleButton Open;
-    private javax.swing.JRadioButton OptionMicroPython;
-    private javax.swing.JRadioButton OptionNodeMCU;
-    private javax.swing.JTextField PASS;
-    private javax.swing.JComboBox<String> Port;
-    private javax.swing.JLabel PortCTS;
-    private javax.swing.JToggleButton PortDTR;
-    private javax.swing.JLabel PortOpenLabel;
-    private javax.swing.JToggleButton PortRTS;
-    private javax.swing.JProgressBar ProgressBar;
-    private javax.swing.JButton ReScan;
-    private javax.swing.JLayeredPane RightExtraButtons;
-    private javax.swing.JSplitPane RightFilesSplitPane;
-    private javax.swing.JLayeredPane RightSnippetsPane;
-    private javax.swing.JSplitPane RightSplitPane;
-    private javax.swing.JTextField SSID;
-    private javax.swing.JScrollPane ScrollLog;
-    private javax.swing.JButton SendCommand;
-    private javax.swing.JComboBox ServerMode;
-    private javax.swing.JTextField ServerPort;
-    private javax.swing.JButton SnippetCancelEdit;
-    private javax.swing.JButton SnippetEdit0;
-    private javax.swing.JButton SnippetEdit1;
-    private javax.swing.JButton SnippetEdit10;
-    private javax.swing.JButton SnippetEdit11;
-    private javax.swing.JButton SnippetEdit13;
-    private javax.swing.JButton SnippetEdit14;
-    private javax.swing.JButton SnippetEdit15;
-    private javax.swing.JButton SnippetEdit2;
-    private javax.swing.JButton SnippetEdit3;
-    private javax.swing.JButton SnippetEdit4;
-    private javax.swing.JButton SnippetEdit5;
-    private javax.swing.JButton SnippetEdit6;
-    private javax.swing.JButton SnippetEdit7;
-    private javax.swing.JButton SnippetEdit8;
-    private javax.swing.JButton SnippetEdit9;
-    private javax.swing.JTextField SnippetName;
-    private javax.swing.JButton SnippetRun;
-    private javax.swing.JButton SnippetSave;
+    private JDialog aboutDialog;
+    private JCheckBoxMenuItem AlwaysOnTop;
+    private JSlider AnswerDelay;
+    private JLabel AnswerDelayLabel;
+    private JCheckBox AutoScroll;
+    private JCheckBox AutodetectFirmware;
+    private JLabel Busy;
+    private JButton copyButton;
+    private JButton ButtonCut;
+    private JButton ButtonFileClose;
+    private JButton ButtonFileNew;
+    private JButton ButtonFileReload;
+    private JButton ButtonFileSave;
+    private JButton ButtonPaste;
+    private JButton ButtonRedo;
+    private JButton ButtonSendLine;
+    private JButton ButtonSendSelected;
+    private JButton ButtonSnippet0;
+    private JButton ButtonSnippet1;
+    private JButton ButtonSnippet10;
+    private JButton ButtonSnippet11;
+    private JButton ButtonSnippet12;
+    private JButton ButtonSnippet13;
+    private JButton ButtonSnippet14;
+    private JButton ButtonSnippet15;
+    private JButton ButtonSnippet2;
+    private JButton ButtonSnippet3;
+    private JButton ButtonSnippet4;
+    private JButton ButtonSnippet5;
+    private JButton ButtonSnippet6;
+    private JButton ButtonSnippet7;
+    private JButton ButtonSnippet8;
+    private JButton ButtonSnippet9;
+    private JButton ButtonUndo;
+    private JCheckBox CR;
+    private JComboBox<String> Command;
+    private JCheckBox Condensed;
+    private JPopupMenu ContextMenuEditor;
+    private JTextField CustomPortName;
+    private JSlider Delay;
+    private JLabel DelayLabel;
+    private JButton DonateSmall;
+    private JCheckBox DumbMode;
+    private JCheckBox EOL;
+    private JComboBox EditorTheme;
+    private JButton FileAsButton1;
+    private JCheckBox FileAutoRun;
+    private JCheckBox FileAutoSaveDisk;
+    private JCheckBox FileAutoSaveESP;
+    private JButton FileDo;
+    private JButton FileFormat;
+    private JButton FileListReload;
+    JLayeredPane FileManagerPane;
+    private JScrollPane FileManagerScrollPane;
+    private JLabel FilePathLabel;
+    private JTextField FileRename;
+    private JLabel FileRenameLabel;
+    private JLayeredPane FileRenamePanel;
+    private JToggleButton FileSaveESP;
+    private JToggleButton FileSendESP;
+    private JButton FileSystemInfo;
+    private JTabbedPane FilesTabbedPane;
+    private JToolBar FilesToolBar;
+    private JCheckBox LF;
+    private JLayeredPane LeftBasePane;
+    private JLayeredPane LeftExtraButtons;
+    private JTabbedPane LeftTab;
+    private JSlider LineDelay;
+    private JLabel LineDelayLabel;
+    private JTextArea Log;
+    private JTextField LogMaxSize;
+    private JMenuItem MenuItemESPFormat;
+    private JMenuItem MenuItemESPReset;
+    private JMenuItem MenuItemEditCopy;
+    private JMenuItem MenuItemEditCut;
+    private JMenuItem MenuItemEditPaste;
+    private JMenuItem MenuItemEditRedo;
+    private JMenuItem MenuItemEditSendLine;
+    private JMenuItem MenuItemEditSendSelected;
+    private JMenuItem MenuItemEditUndo;
+    private JMenuItem MenuItemEditorCopy;
+    private JMenuItem MenuItemEditorCut;
+    private JMenuItem MenuItemEditorPaste;
+    private JMenuItem MenuItemEditorRedo;
+    private JMenuItem MenuItemEditorSendLine;
+    private JMenuItem MenuItemEditorSendSelected;
+    private JMenuItem MenuItemEditorUndo;
+    private JMenuItem MenuItemFileClose;
+    private JMenuItem MenuItemFileDo;
+    private JMenuItem MenuItemFileNew;
+    private JMenuItem MenuItemFileOpen;
+    private JMenuItem MenuItemFileReload;
+    private JMenuItem MenuItemFileRemoveESP;
+    private JMenuItem MenuItemFileSave;
+    private JMenuItem MenuItemFileSaveAll;
+    private JMenuItem MenuItemFileSaveAs;
+    private JMenuItem MenuItemFileSaveESP;
+    private JMenuItem MenuItemFileSendESP;
+    private JMenuItem MenuItemHelpAbout;
+    private JMenuItem MenuItemLogClear;
+    private JMenuItem MenuItemTerminalClear;
+    private JMenuItem MenuItemTerminalCopy;
+    private JMenuItem MenuItemTerminalFontDec;
+    private JMenuItem MenuItemTerminalFontInc;
+    private JMenuItem MenuItemTerminalFormat;
+    private JMenuItem MenuItemTerminalReset;
+    private JCheckBoxMenuItem MenuItemViewDonate;
+    private JMenuItem MenuItemViewEditorFontDec;
+    private JMenuItem MenuItemViewEditorFontInc;
+    private JCheckBoxMenuItem MenuItemViewFileManager;
+    private JRadioButtonMenuItem MenuItemViewLF1;
+    private JCheckBoxMenuItem MenuItemViewLeftExtra;
+    private JCheckBoxMenuItem MenuItemViewLog;
+    private JMenuItem MenuItemViewLogFontDec;
+    private JMenuItem MenuItemViewLogFontInc;
+    private JCheckBoxMenuItem MenuItemViewRightExtra;
+    private JCheckBoxMenuItem MenuItemViewSnippets;
+    private JMenuItem MenuItemViewTermFontDec;
+    private JMenuItem MenuItemViewTermFontInc;
+    private JCheckBoxMenuItem MenuItemViewToolbar;
+    private JMenu MenuView;
+    private JButton NodeReset;
+    private JToggleButton Open;
+    private JRadioButton OptionMicroPython;
+    private JRadioButton OptionNodeMCU;
+    private JTextField PASS;
+    private JComboBox<String> Port;
+    private JLabel PortCTS;
+    private JToggleButton PortDTR;
+    private JLabel PortOpenLabel;
+    private JToggleButton PortRTS;
+    private JProgressBar ProgressBar;
+    private JButton ReScan;
+    private JLayeredPane RightExtraButtons;
+    private JSplitPane RightFilesSplitPane;
+    private JLayeredPane RightSnippetsPane;
+    private JSplitPane RightSplitPane;
+    private JTextField SSID;
+    private JScrollPane ScrollLog;
+    private JButton SendCommand;
+    private JComboBox ServerMode;
+    private JTextField ServerPort;
+    private JButton SnippetCancelEdit;
+    private JButton SnippetEdit0;
+    private JButton SnippetEdit1;
+    private JButton SnippetEdit10;
+    private JButton SnippetEdit11;
+    private JButton SnippetEdit13;
+    private JButton SnippetEdit14;
+    private JButton SnippetEdit15;
+    private JButton SnippetEdit2;
+    private JButton SnippetEdit3;
+    private JButton SnippetEdit4;
+    private JButton SnippetEdit5;
+    private JButton SnippetEdit6;
+    private JButton SnippetEdit7;
+    private JButton SnippetEdit8;
+    private JButton SnippetEdit9;
+    private JTextField SnippetName;
+    private JButton SnippetRun;
+    private JButton SnippetSave;
     private org.fife.ui.rtextarea.RTextScrollPane SnippetScrollPane;
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea SnippetText;
-    private javax.swing.JLayeredPane SnippetTopPane;
-    private javax.swing.JLabel SnippetsBusy;
-    private javax.swing.JComboBox Speed;
-    private javax.swing.JLayeredPane TCP_common;
+    private JLayeredPane SnippetTopPane;
+    private JLabel SnippetsBusy;
+    private JComboBox Speed;
+    private JLayeredPane TCP_common;
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea Terminal;
-    private javax.swing.JTextField TerminalMaxSize;
-    private javax.swing.JTabbedPane TextTab;
-    private javax.swing.JComboBox TimerNumber;
-    private javax.swing.JCheckBox TurboMode;
-    private javax.swing.JCheckBox UseCustomPortName;
-    private javax.swing.JCheckBox UseExternalEditor;
-    private javax.swing.JLayeredPane WiFi_common;
-    private javax.swing.ButtonGroup buttonGroupLF;
-    private javax.swing.JButton cmdNodeRestart;
-    private javax.swing.JComboBox conn_id;
-    private javax.swing.JTextArea data;
-    private javax.swing.JRadioButton multi;
-    private javax.swing.JComboBox protocol;
-    private javax.swing.JTextField remote_address;
-    private javax.swing.JTextField remote_port;
-    private javax.swing.JTextField udp_local_port;
-    private javax.swing.JTextField udp_mode;
+    private JTextField TerminalMaxSize;
+    private JTabbedPane TextTab;
+    private JComboBox TimerNumber;
+    private JCheckBox TurboMode;
+    private JCheckBox UseCustomPortName;
+    private JCheckBox UseExternalEditor;
+    private JLayeredPane WiFi_common;
+    private ButtonGroup buttonGroupLF;
+    private JButton cmdNodeRestart;
+    private JComboBox conn_id;
+    private JTextArea data;
+    private JRadioButton multi;
+    private JComboBox protocol;
+    private JTextField remote_address;
+    private JTextField remote_port;
+    private JTextField udp_local_port;
+    private JTextField udp_mode;
     /* Files tab start */
-    private ArrayList<javax.swing.JLayeredPane> FileLayeredPane1;
+    private ArrayList<JLayeredPane> FileLayeredPane1;
     private ArrayList<org.fife.ui.rsyntaxtextarea.RSyntaxTextArea> TextEditor1;
     private ArrayList<org.fife.ui.rtextarea.RTextScrollPane> TextScroll1;
-    private ArrayList<javax.swing.GroupLayout> FileLayeredPaneLayout1;
+    private ArrayList<GroupLayout> FileLayeredPaneLayout1;
     private ArrayList<org.fife.ui.autocomplete.CompletionProvider> provider;
     private ArrayList<org.fife.ui.autocomplete.AutoCompletion> ac;
     private ArrayList<File> iFile; // for files in tab
     private ArrayList<File> mFile; // for multifile op
     private ArrayList<Boolean> FileChanged;
-    private ArrayList<javax.swing.JButton> FileAsButton;
-    private ArrayList<javax.swing.JPopupMenu> FilePopupMenu;
-    private ArrayList<javax.swing.JMenuItem> FilePopupMenuItem;
+    private ArrayList<JButton> FileAsButton;
+    private ArrayList<JPopupMenu> FilePopupMenu;
+    private ArrayList<JMenuItem> FilePopupMenuItem;
     private int iTab = 0; // tab index
     private int mFileIndex = -1; // multifile index
     private long startTime = System.currentTimeMillis();
 
-    /**
-     * Creates new form MainWindows
-     */
     public ESPlorer() {
         try {
             FileHandler fh = new FileHandler("ESPlorer.Log");
-            logger.addHandler(fh);
+            LOGGER.addHandler(fh);
         } catch (SecurityException e) {
-            logger.log(Level.SEVERE, "Internal error 105: Can't create log file. Permission denied.", e);
-//            logger.log(Level.SEVERE,e.getStackTrace().toString(), e);
+            LOGGER.log(Level.SEVERE, "Internal error 105: Can't create log file. Permission denied.", e);
+//            LOGGER.log(Level.SEVERE,e.getStackTrace().toString(), e);
 //            e.printStackTrace();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Internal error 106: Can't create log file. I/O error.", e);
-//            logger.log(Level.SEVERE,e.getStackTrace().toString(), e);
+            LOGGER.log(Level.SEVERE, "Internal error 106: Can't create log file. I/O error.", e);
+//            LOGGER.log(Level.SEVERE,e.getStackTrace().toString(), e);
 //            e.printStackTrace();
         }
         initComponents();
@@ -328,28 +325,24 @@ public class ESPlorer extends javax.swing.JFrame {
 
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-
-        LAF = new ArrayList<String>();
+        lookAndFeel = new ArrayList<String>();
         LAFclass = new ArrayList<String>();
         String laf;
         prefs = Preferences.userRoot().node(Constants.nodeRoot);
-        laf = prefs.get("LAF", "javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        LAF.add("Nimbus");
-        LAFclass.add("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        laf = prefs.get("LAF", "plaf.nimbus.NimbusLookAndFeel");
+        lookAndFeel.add("Nimbus");
+        LAFclass.add("plaf.nimbus.NimbusLookAndFeel");
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if (laf.equals(info.getClassName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, "DEFAULT: L&F " + info.getName() + " class:" + info.getClassName());
                 } else {
                     Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, "Installed: L&F " + info.getName() + " class:" + info.getClassName());
                 }
                 if (!"Nimbus".equals(info.getName())) {
-                    LAF.add(info.getName());
+                    lookAndFeel.add(info.getName());
                     LAFclass.add(info.getClassName());
                 }
             }
@@ -359,7 +352,7 @@ public class ESPlorer extends javax.swing.JFrame {
             Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(ESPlorer.class.getName()).log(Level.INFO, null, ex);
         }
         //</editor-fold>
@@ -376,46 +369,39 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
     private void initComponents() {
         org.jdesktop.beansbinding.BindingGroup bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
-
         JPopupMenu contextMenuTerminal = new JPopupMenu();
-        MenuItemTerminalClear = new javax.swing.JMenuItem();
-        MenuItemTerminalCopy = new javax.swing.JMenuItem();
+        MenuItemTerminalClear = new JMenuItem();
+        MenuItemTerminalCopy = new JMenuItem();
         JPopupMenu.Separator terminalSeparator1 = new JPopupMenu.Separator();
-        MenuItemTerminalFontInc = new javax.swing.JMenuItem();
-        MenuItemTerminalFontDec = new javax.swing.JMenuItem();
+        MenuItemTerminalFontInc = new JMenuItem();
+        MenuItemTerminalFontDec = new JMenuItem();
         JPopupMenu.Separator terminalSeparator2 = new JPopupMenu.Separator();
-        MenuItemTerminalReset = new javax.swing.JMenuItem();
-        MenuItemTerminalFormat = new javax.swing.JMenuItem();
-        ContextMenuEditor = new javax.swing.JPopupMenu();
-        MenuItemEditorUndo = new javax.swing.JMenuItem();
-        MenuItemEditorRedo = new javax.swing.JMenuItem();
+        MenuItemTerminalReset = new JMenuItem();
+        MenuItemTerminalFormat = new JMenuItem();
+        ContextMenuEditor = new JPopupMenu();
+        MenuItemEditorUndo = new JMenuItem();
+        MenuItemEditorRedo = new JMenuItem();
         JPopupMenu.Separator editorSeparator1 = new JPopupMenu.Separator();
-        MenuItemEditorSendSelected = new javax.swing.JMenuItem();
-        MenuItemEditorSendLine = new javax.swing.JMenuItem();
+        MenuItemEditorSendSelected = new JMenuItem();
+        MenuItemEditorSendLine = new JMenuItem();
         JPopupMenu.Separator editorSeparator = new JPopupMenu.Separator();
-        MenuItemEditorCut = new javax.swing.JMenuItem();
-        MenuItemEditorCopy = new javax.swing.JMenuItem();
-        MenuItemEditorPaste = new javax.swing.JMenuItem();
+        MenuItemEditorCut = new JMenuItem();
+        MenuItemEditorCopy = new JMenuItem();
+        MenuItemEditorPaste = new JMenuItem();
         JPopupMenu.Separator editorSeparator2 = new JPopupMenu.Separator();
         JMenuItem menuItemEditorFontInc = new JMenuItem();
         JMenuItem menuItemEditorFontDec = new JMenuItem();
         JPopupMenu contextMenuLog = new JPopupMenu();
-        MenuItemLogClear = new javax.swing.JMenuItem();
+        MenuItemLogClear = new JMenuItem();
         JMenuItem menuItemLogClose = new JMenuItem();
         JPopupMenu.Separator logSeparator = new JPopupMenu.Separator();
         JMenuItem menuItemLogFontInc = new JMenuItem();
         JMenuItem menuItemLogFontDec = new JMenuItem();
         ButtonGroup MUXGroup = new ButtonGroup();
         ButtonGroup firmware = new ButtonGroup();
-        aboutDialog = new javax.swing.JDialog();
+        aboutDialog = new JDialog();
         JLabel appName = new JLabel();
         JLabel version1 = new JLabel();
         JButton donate = new JButton();
@@ -425,121 +411,121 @@ public class ESPlorer extends javax.swing.JFrame {
         JMenuItem menuItemESPFileDo = new JMenuItem();
         JPopupMenu.Separator terminalSeparator3 = new JPopupMenu.Separator();
         JMenuItem menuItemESPFileDelete = new JMenuItem();
-        buttonGroupLF = new javax.swing.ButtonGroup();
+        buttonGroupLF = new ButtonGroup();
         JSplitPane horizontSplit = new JSplitPane();
-        LeftBasePane = new javax.swing.JLayeredPane();
-        LeftTab = new javax.swing.JTabbedPane();
+        LeftBasePane = new JLayeredPane();
+        LeftTab = new JTabbedPane();
         JPanel nodeMCU = new JPanel();
-        TextTab = new javax.swing.JTabbedPane();
+        TextTab = new JTabbedPane();
         JLayeredPane sriptsTab = new JLayeredPane();
-        FilesToolBar = new javax.swing.JToolBar();
-        ButtonFileNew = new javax.swing.JButton();
+        FilesToolBar = new JToolBar();
+        ButtonFileNew = new JButton();
         JButton buttonFileOpen = new JButton();
-        ButtonFileReload = new javax.swing.JButton();
-        ButtonFileSave = new javax.swing.JButton();
+        ButtonFileReload = new JButton();
+        ButtonFileSave = new JButton();
         JButton buttonFileSaveAll = new JButton();
-        ButtonFileClose = new javax.swing.JButton();
+        ButtonFileClose = new JButton();
         JToolBar.Separator jSeparator1 = new JToolBar.Separator();
-        ButtonUndo = new javax.swing.JButton();
-        ButtonRedo = new javax.swing.JButton();
+        ButtonUndo = new JButton();
+        ButtonRedo = new JButton();
         JToolBar.Separator jSeparator8 = new JToolBar.Separator();
-        ButtonCut = new javax.swing.JButton();
-        copyButton = new javax.swing.JButton();
-        ButtonPaste = new javax.swing.JButton();
+        ButtonCut = new JButton();
+        copyButton = new JButton();
+        ButtonPaste = new JButton();
         JToolBar.Separator jSeparator6 = new JToolBar.Separator();
-        ButtonSendSelected = new javax.swing.JButton();
-        ButtonSendLine = new javax.swing.JButton();
-        FilesTabbedPane = new javax.swing.JTabbedPane();
+        ButtonSendSelected = new JButton();
+        ButtonSendLine = new JButton();
+        FilesTabbedPane = new JTabbedPane();
         JLayeredPane fileLayeredPane = new JLayeredPane();
         org.fife.ui.rtextarea.RTextScrollPane textScroll = new org.fife.ui.rtextarea.RTextScrollPane();
         org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textEditor = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
-        LeftExtraButtons = new javax.swing.JLayeredPane();
+        LeftExtraButtons = new JLayeredPane();
         JButton fileDo1 = new JButton();
         JButton fileCompile = new JButton();
         JButton fileSaveCompileDoLC = new JButton();
         JButton fileCompileDoLC = new JButton();
         JButton fileCompile1 = new JButton();
-        Busy = new javax.swing.JLabel();
-        FilePathLabel = new javax.swing.JLabel();
-        ProgressBar = new javax.swing.JProgressBar();
+        Busy = new JLabel();
+        FilePathLabel = new JLabel();
+        ProgressBar = new JProgressBar();
         JLayeredPane leftMainButtons = new JLayeredPane();
-        FileSaveESP = new javax.swing.JToggleButton();
-        FileSendESP = new javax.swing.JToggleButton();
-        FileDo = new javax.swing.JButton();
+        FileSaveESP = new JToggleButton();
+        FileSendESP = new JToggleButton();
+        FileDo = new JButton();
         JButton filesUpload = new JButton();
         JLayeredPane nodeMCUCommands = new JLayeredPane();
-        cmdNodeRestart = new javax.swing.JButton();
+        cmdNodeRestart = new JButton();
         JButton cmdNodeChipID = new JButton();
         JButton cmdNodeHeap = new JButton();
         JButton cmdNodeSleep = new JButton();
         JButton cmdListFiles = new JButton();
         JButton cmdTimerStop = new JButton();
-        TimerNumber = new javax.swing.JComboBox();
+        TimerNumber = new JComboBox();
         JLayeredPane jLayeredPane1 = new JLayeredPane();
         JLayeredPane nodeMCUSnippets = new JLayeredPane();
         JLayeredPane leftSnippetsPane = new JLayeredPane();
-        SnippetEdit0 = new javax.swing.JButton();
-        SnippetEdit1 = new javax.swing.JButton();
-        SnippetEdit2 = new javax.swing.JButton();
-        SnippetEdit3 = new javax.swing.JButton();
-        SnippetEdit4 = new javax.swing.JButton();
-        SnippetEdit5 = new javax.swing.JButton();
-        SnippetEdit6 = new javax.swing.JButton();
-        SnippetEdit7 = new javax.swing.JButton();
-        SnippetEdit8 = new javax.swing.JButton();
-        SnippetEdit9 = new javax.swing.JButton();
-        SnippetEdit10 = new javax.swing.JButton();
-        SnippetEdit11 = new javax.swing.JButton();
+        SnippetEdit0 = new JButton();
+        SnippetEdit1 = new JButton();
+        SnippetEdit2 = new JButton();
+        SnippetEdit3 = new JButton();
+        SnippetEdit4 = new JButton();
+        SnippetEdit5 = new JButton();
+        SnippetEdit6 = new JButton();
+        SnippetEdit7 = new JButton();
+        SnippetEdit8 = new JButton();
+        SnippetEdit9 = new JButton();
+        SnippetEdit10 = new JButton();
+        SnippetEdit11 = new JButton();
         JButton snippetEdit12 = new JButton();
-        SnippetEdit13 = new javax.swing.JButton();
-        SnippetEdit14 = new javax.swing.JButton();
-        SnippetEdit15 = new javax.swing.JButton();
-        SnippetTopPane = new javax.swing.JLayeredPane();
-        SnippetName = new javax.swing.JTextField();
-        SnippetSave = new javax.swing.JButton();
-        SnippetRun = new javax.swing.JButton();
-        SnippetsBusy = new javax.swing.JLabel();
-        SnippetCancelEdit = new javax.swing.JButton();
-        Condensed = new javax.swing.JCheckBox();
+        SnippetEdit13 = new JButton();
+        SnippetEdit14 = new JButton();
+        SnippetEdit15 = new JButton();
+        SnippetTopPane = new JLayeredPane();
+        SnippetName = new JTextField();
+        SnippetSave = new JButton();
+        SnippetRun = new JButton();
+        SnippetsBusy = new JLabel();
+        SnippetCancelEdit = new JButton();
+        Condensed = new JCheckBox();
         SnippetScrollPane = new org.fife.ui.rtextarea.RTextScrollPane();
         SnippetText = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
         JLayeredPane nodeMCUSettings = new JLayeredPane();
         JLayeredPane optionsFirmware = new JLayeredPane();
-        OptionNodeMCU = new javax.swing.JRadioButton();
-        OptionMicroPython = new javax.swing.JRadioButton();
+        OptionNodeMCU = new JRadioButton();
+        OptionMicroPython = new JRadioButton();
         JLayeredPane optionsOther = new JLayeredPane();
-        FileAutoSaveDisk = new javax.swing.JCheckBox();
-        FileAutoSaveESP = new javax.swing.JCheckBox();
-        FileAutoRun = new javax.swing.JCheckBox();
+        FileAutoSaveDisk = new JCheckBox();
+        FileAutoSaveESP = new JCheckBox();
+        FileAutoRun = new JCheckBox();
         JLabel editorThemeLabel = new JLabel();
-        EditorTheme = new javax.swing.JComboBox();
-        UseExternalEditor = new javax.swing.JCheckBox();
+        EditorTheme = new JComboBox();
+        UseExternalEditor = new JCheckBox();
         JLayeredPane optionsFileSendMode = new JLayeredPane();
-        DelayLabel = new javax.swing.JLabel();
-        Delay = new javax.swing.JSlider();
-        AnswerDelayLabel = new javax.swing.JLabel();
-        AnswerDelay = new javax.swing.JSlider();
-        DumbMode = new javax.swing.JCheckBox();
-        LineDelayLabel = new javax.swing.JLabel();
-        LineDelay = new javax.swing.JSlider();
-        TurboMode = new javax.swing.JCheckBox();
+        DelayLabel = new JLabel();
+        Delay = new JSlider();
+        AnswerDelayLabel = new JLabel();
+        AnswerDelay = new JSlider();
+        DumbMode = new JCheckBox();
+        LineDelayLabel = new JLabel();
+        LineDelay = new JSlider();
+        TurboMode = new JCheckBox();
         JLayeredPane jLayeredPane2 = new JLayeredPane();
         JLabel jLabel1 = new JLabel();
         JLabel jLabel7 = new JLabel();
-        TerminalMaxSize = new javax.swing.JTextField();
-        LogMaxSize = new javax.swing.JTextField();
+        TerminalMaxSize = new JTextField();
+        LogMaxSize = new JTextField();
         JLabel jLabel8 = new JLabel();
         JLabel jLabel9 = new JLabel();
         JLayeredPane jLayeredPane3 = new JLayeredPane();
-        CustomPortName = new javax.swing.JTextField();
-        UseCustomPortName = new javax.swing.JCheckBox();
+        CustomPortName = new JTextField();
+        UseCustomPortName = new JCheckBox();
         JLabel jLabel10 = new JLabel();
-        AutodetectFirmware = new javax.swing.JCheckBox();
+        AutodetectFirmware = new JCheckBox();
         Box.Filler topWiFiStaFiller = new Box.Filler(new Dimension(457, 150), new Dimension(457, 150), new Dimension(457, 150));
         JButton cmdGetCWJAP = new JButton();
         JButton cmdSetCWJAP = new JButton();
-        SSID = new javax.swing.JTextField();
-        PASS = new javax.swing.JTextField();
+        SSID = new JTextField();
+        PASS = new JTextField();
         JButton cmdSetCWQAP = new JButton();
         JButton cmdGetCIPSTAMAC = new JButton();
         JButton cmdSetCIPSTAMAC = new JButton();
@@ -553,22 +539,22 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdGetCWLIF = new JButton();
         JLayeredPane TCPclientBottomPane = new JLayeredPane();
         JPanel common = new JPanel();
-        conn_id = new javax.swing.JComboBox();
+        conn_id = new JComboBox();
         JRadioButton single = new JRadioButton();
-        multi = new javax.swing.JRadioButton();
+        multi = new JRadioButton();
         JLabel jLabel4 = new JLabel();
         JButton cmdGetCIPSTART = new JButton();
         JLayeredPane UDP = new JLayeredPane();
-        udp_local_port = new javax.swing.JTextField();
+        udp_local_port = new JTextField();
         JLabel jLabel2 = new JLabel();
-        udp_mode = new javax.swing.JTextField();
+        udp_mode = new JTextField();
         JLabel jLabel3 = new JLabel();
-        remote_address = new javax.swing.JTextField();
-        remote_port = new javax.swing.JTextField();
-        protocol = new javax.swing.JComboBox();
+        remote_address = new JTextField();
+        remote_port = new JTextField();
+        protocol = new JComboBox();
         JButton cmdSetCIPSTART = new JButton();
         JScrollPane jScrollData = new JScrollPane();
-        data = new javax.swing.JTextArea();
+        data = new JTextArea();
         JButton cmdCIPSEND = new JButton();
         JButton cmdCIPSENDinteractive = new JButton();
         JButton cmdSetCIPCLOSE = new JButton();
@@ -579,15 +565,15 @@ public class ESPlorer extends javax.swing.JFrame {
         JButton cmdSetCIPMODE0 = new JButton();
         JButton cmdSetCIPMODE1 = new JButton();
         JButton cmdSetCIPSERVER = new JButton();
-        ServerMode = new javax.swing.JComboBox();
+        ServerMode = new JComboBox();
         JLabel jLabel5 = new JLabel();
-        ServerPort = new javax.swing.JTextField();
+        ServerPort = new JTextField();
         JButton cmdGetCIPSTO = new JButton();
         JButton cmdSetCIPSTO = new JButton();
         JTextField serverTimeout = new JTextField();
         JLabel jLabel6 = new JLabel();
-        TCP_common = new javax.swing.JLayeredPane();
-        WiFi_common = new javax.swing.JLayeredPane();
+        TCP_common = new JLayeredPane();
+        WiFi_common = new JLayeredPane();
         JButton cmdGetHelpCWMODE = new JButton();
         JButton cmdSetCWMODE1 = new JButton();
         JButton cmdSetCWMODE2 = new JButton();
@@ -598,121 +584,121 @@ public class ESPlorer extends javax.swing.JFrame {
         JLabel comingSoon1 = new JLabel();
         JLayeredPane rightBasePane = new JLayeredPane();
         JLayeredPane LEDPanel = new JLayeredPane();
-        PortOpenLabel = new javax.swing.JLabel();
-        PortCTS = new javax.swing.JLabel();
-        PortDTR = new javax.swing.JToggleButton();
-        PortRTS = new javax.swing.JToggleButton();
-        Open = new javax.swing.JToggleButton();
-        Speed = new javax.swing.JComboBox();
-        ReScan = new javax.swing.JButton();
-        AutoScroll = new javax.swing.JCheckBox();
-        Port = new javax.swing.JComboBox();
-        EOL = new javax.swing.JCheckBox();
+        PortOpenLabel = new JLabel();
+        PortCTS = new JLabel();
+        PortDTR = new JToggleButton();
+        PortRTS = new JToggleButton();
+        Open = new JToggleButton();
+        Speed = new JComboBox();
+        ReScan = new JButton();
+        AutoScroll = new JCheckBox();
+        Port = new JComboBox();
+        EOL = new JCheckBox();
         JLayeredPane rightBottomPane = new JLayeredPane();
-        LF = new javax.swing.JCheckBox();
-        SendCommand = new javax.swing.JButton();
-        CR = new javax.swing.JCheckBox();
-        Command = new javax.swing.JComboBox();
+        LF = new JCheckBox();
+        SendCommand = new JButton();
+        CR = new JCheckBox();
+        Command = new JComboBox();
         JLayeredPane rightBigPane = new JLayeredPane();
-        RightFilesSplitPane = new javax.swing.JSplitPane();
+        RightFilesSplitPane = new JSplitPane();
         JLayeredPane terminalLogPane = new JLayeredPane();
-        RightSplitPane = new javax.swing.JSplitPane();
+        RightSplitPane = new JSplitPane();
         org.fife.ui.rtextarea.RTextScrollPane terminalPane = new org.fife.ui.rtextarea.RTextScrollPane();
         Terminal = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
-        ScrollLog = new javax.swing.JScrollPane();
-        Log = new javax.swing.JTextArea();
-        FileManagerScrollPane = new javax.swing.JScrollPane();
-        FileManagerPane = new javax.swing.JLayeredPane();
-        FileFormat = new javax.swing.JButton();
-        FileSystemInfo = new javax.swing.JButton();
-        FileListReload = new javax.swing.JButton();
-        FileAsButton1 = new javax.swing.JButton();
-        FileRenamePanel = new javax.swing.JLayeredPane();
-        FileRenameLabel = new javax.swing.JLabel();
-        FileRename = new javax.swing.JTextField();
-        RightSnippetsPane = new javax.swing.JLayeredPane();
-        ButtonSnippet0 = new javax.swing.JButton();
-        ButtonSnippet1 = new javax.swing.JButton();
-        ButtonSnippet2 = new javax.swing.JButton();
-        ButtonSnippet3 = new javax.swing.JButton();
-        ButtonSnippet4 = new javax.swing.JButton();
-        ButtonSnippet5 = new javax.swing.JButton();
-        ButtonSnippet6 = new javax.swing.JButton();
-        ButtonSnippet7 = new javax.swing.JButton();
-        ButtonSnippet8 = new javax.swing.JButton();
-        ButtonSnippet9 = new javax.swing.JButton();
-        ButtonSnippet10 = new javax.swing.JButton();
-        ButtonSnippet11 = new javax.swing.JButton();
-        ButtonSnippet12 = new javax.swing.JButton();
-        ButtonSnippet13 = new javax.swing.JButton();
-        ButtonSnippet14 = new javax.swing.JButton();
-        ButtonSnippet15 = new javax.swing.JButton();
+        ScrollLog = new JScrollPane();
+        Log = new JTextArea();
+        FileManagerScrollPane = new JScrollPane();
+        FileManagerPane = new JLayeredPane();
+        FileFormat = new JButton();
+        FileSystemInfo = new JButton();
+        FileListReload = new JButton();
+        FileAsButton1 = new JButton();
+        FileRenamePanel = new JLayeredPane();
+        FileRenameLabel = new JLabel();
+        FileRename = new JTextField();
+        RightSnippetsPane = new JLayeredPane();
+        ButtonSnippet0 = new JButton();
+        ButtonSnippet1 = new JButton();
+        ButtonSnippet2 = new JButton();
+        ButtonSnippet3 = new JButton();
+        ButtonSnippet4 = new JButton();
+        ButtonSnippet5 = new JButton();
+        ButtonSnippet6 = new JButton();
+        ButtonSnippet7 = new JButton();
+        ButtonSnippet8 = new JButton();
+        ButtonSnippet9 = new JButton();
+        ButtonSnippet10 = new JButton();
+        ButtonSnippet11 = new JButton();
+        ButtonSnippet12 = new JButton();
+        ButtonSnippet13 = new JButton();
+        ButtonSnippet14 = new JButton();
+        ButtonSnippet15 = new JButton();
         JLabel logo = new JLabel();
-        RightExtraButtons = new javax.swing.JLayeredPane();
+        RightExtraButtons = new JLayeredPane();
         JButton nodeHeap = new JButton();
         JButton nodeInfo = new JButton();
         JButton nodeChipID = new JButton();
         JButton nodeFlashID = new JButton();
-        NodeReset = new javax.swing.JButton();
-        DonateSmall = new javax.swing.JButton();
+        NodeReset = new JButton();
+        DonateSmall = new JButton();
         JMenuBar mainMenuBar = new JMenuBar();
         JMenu menuFile = new JMenu();
-        MenuItemFileNew = new javax.swing.JMenuItem();
-        MenuItemFileOpen = new javax.swing.JMenuItem();
-        MenuItemFileReload = new javax.swing.JMenuItem();
-        MenuItemFileSave = new javax.swing.JMenuItem();
-        MenuItemFileSaveAs = new javax.swing.JMenuItem();
-        MenuItemFileSaveAll = new javax.swing.JMenuItem();
-        MenuItemFileClose = new javax.swing.JMenuItem();
+        MenuItemFileNew = new JMenuItem();
+        MenuItemFileOpen = new JMenuItem();
+        MenuItemFileReload = new JMenuItem();
+        MenuItemFileSave = new JMenuItem();
+        MenuItemFileSaveAs = new JMenuItem();
+        MenuItemFileSaveAll = new JMenuItem();
+        MenuItemFileClose = new JMenuItem();
         JPopupMenu.Separator jSeparatorFileMenu = new JPopupMenu.Separator();
-        MenuItemFileSaveESP = new javax.swing.JMenuItem();
+        MenuItemFileSaveESP = new JMenuItem();
         JMenuItem jMenuItem4 = new JMenuItem();
-        MenuItemFileSendESP = new javax.swing.JMenuItem();
+        MenuItemFileSendESP = new JMenuItem();
         JMenuItem jMenuItem7 = new JMenuItem();
         JPopupMenu.Separator jSeparator4 = new JPopupMenu.Separator();
-        MenuItemFileDo = new javax.swing.JMenuItem();
+        MenuItemFileDo = new JMenuItem();
         JPopupMenu.Separator jSeparator3 = new JPopupMenu.Separator();
-        MenuItemFileRemoveESP = new javax.swing.JMenuItem();
+        MenuItemFileRemoveESP = new JMenuItem();
         JPopupMenu.Separator jSeparator2 = new JPopupMenu.Separator();
         JMenuItem menuItemFileExit = new JMenuItem();
         JMenu menuEdit = new JMenu();
-        MenuItemEditUndo = new javax.swing.JMenuItem();
-        MenuItemEditRedo = new javax.swing.JMenuItem();
+        MenuItemEditUndo = new JMenuItem();
+        MenuItemEditRedo = new JMenuItem();
         JPopupMenu.Separator jSeparator7 = new JPopupMenu.Separator();
-        MenuItemEditCut = new javax.swing.JMenuItem();
-        MenuItemEditCopy = new javax.swing.JMenuItem();
-        MenuItemEditPaste = new javax.swing.JMenuItem();
+        MenuItemEditCut = new JMenuItem();
+        MenuItemEditCopy = new JMenuItem();
+        MenuItemEditPaste = new JMenuItem();
         JPopupMenu.Separator jSeparator5 = new JPopupMenu.Separator();
-        MenuItemEditSendSelected = new javax.swing.JMenuItem();
-        MenuItemEditSendLine = new javax.swing.JMenuItem();
+        MenuItemEditSendSelected = new JMenuItem();
+        MenuItemEditSendLine = new JMenuItem();
         JMenu menuESP = new JMenu();
-        MenuItemESPReset = new javax.swing.JMenuItem();
-        MenuItemESPFormat = new javax.swing.JMenuItem();
-        MenuView = new javax.swing.JMenu();
-        AlwaysOnTop = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewLog = new javax.swing.JCheckBoxMenuItem();
+        MenuItemESPReset = new JMenuItem();
+        MenuItemESPFormat = new JMenuItem();
+        MenuView = new JMenu();
+        AlwaysOnTop = new JCheckBoxMenuItem();
+        MenuItemViewLog = new JCheckBoxMenuItem();
         JMenuItem menuItemViewClearLog = new JMenuItem();
         JMenuItem menuItemViewClearTerminal = new JMenuItem();
         JPopupMenu.Separator jSeparator9 = new JPopupMenu.Separator();
-        MenuItemViewToolbar = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewLeftExtra = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewSnippets = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewFileManager = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewRightExtra = new javax.swing.JCheckBoxMenuItem();
-        MenuItemViewDonate = new javax.swing.JCheckBoxMenuItem();
+        MenuItemViewToolbar = new JCheckBoxMenuItem();
+        MenuItemViewLeftExtra = new JCheckBoxMenuItem();
+        MenuItemViewSnippets = new JCheckBoxMenuItem();
+        MenuItemViewFileManager = new JCheckBoxMenuItem();
+        MenuItemViewRightExtra = new JCheckBoxMenuItem();
+        MenuItemViewDonate = new JCheckBoxMenuItem();
         JPopupMenu.Separator jSeparator13 = new JPopupMenu.Separator();
-        MenuItemViewTermFontInc = new javax.swing.JMenuItem();
-        MenuItemViewTermFontDec = new javax.swing.JMenuItem();
+        MenuItemViewTermFontInc = new JMenuItem();
+        MenuItemViewTermFontDec = new JMenuItem();
         JPopupMenu.Separator jSeparator10 = new JPopupMenu.Separator();
-        MenuItemViewEditorFontInc = new javax.swing.JMenuItem();
-        MenuItemViewEditorFontDec = new javax.swing.JMenuItem();
+        MenuItemViewEditorFontInc = new JMenuItem();
+        MenuItemViewEditorFontDec = new JMenuItem();
         JPopupMenu.Separator jSeparator11 = new JPopupMenu.Separator();
-        MenuItemViewLogFontInc = new javax.swing.JMenuItem();
-        MenuItemViewLogFontDec = new javax.swing.JMenuItem();
+        MenuItemViewLogFontInc = new JMenuItem();
+        MenuItemViewLogFontDec = new JMenuItem();
         JPopupMenu.Separator jSeparator12 = new JPopupMenu.Separator();
         JMenuItem menuItemViewFontDefault = new JMenuItem();
         JPopupMenu.Separator jSeparator17 = new JPopupMenu.Separator();
-        MenuItemViewLF1 = new javax.swing.JRadioButtonMenuItem();
+        MenuItemViewLF1 = new JRadioButtonMenuItem();
         JMenu menuLinks = new JMenu();
         JMenuItem menuItemLinksAPIcn = new JMenuItem();
         JMenuItem menuItemLinksAPIen = new JMenuItem();
@@ -735,7 +721,7 @@ public class ESPlorer extends javax.swing.JFrame {
         JMenuItem menuItemLinksESPlorerHome = new JMenuItem();
         JMenuItem menuItemLinksDonate = new JMenuItem();
         JMenu menuHelp = new JMenu();
-        MenuItemHelpAbout = new javax.swing.JMenuItem();
+        MenuItemHelpAbout = new JMenuItem();
 
         contextMenuTerminal.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -749,8 +735,8 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        MenuItemTerminalClear.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemTerminalClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/terminal_clear.png"))); // NOI18N
+        MenuItemTerminalClear.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemTerminalClear.setIcon(new ImageIcon(getClass().getResource("/resources/terminal_clear.png"))); // NOI18N
         MenuItemTerminalClear.setText("Clear");
         MenuItemTerminalClear.setToolTipText("");
         MenuItemTerminalClear.addActionListener(new java.awt.event.ActionListener() {
@@ -759,8 +745,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuTerminal.add(MenuItemTerminalClear);
 
-        MenuItemTerminalCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemTerminalCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
+        MenuItemTerminalCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemTerminalCopy.setIcon(new ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
         MenuItemTerminalCopy.setText("Copy");
         MenuItemTerminalCopy.setToolTipText("Copy selected text to system clipboard");
         MenuItemTerminalCopy.setEnabled(false);
@@ -771,8 +757,8 @@ public class ESPlorer extends javax.swing.JFrame {
         contextMenuTerminal.add(MenuItemTerminalCopy);
         contextMenuTerminal.add(terminalSeparator1);
 
-        MenuItemTerminalFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemTerminalFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        MenuItemTerminalFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemTerminalFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         MenuItemTerminalFontInc.setText("Inc font size");
         MenuItemTerminalFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -781,8 +767,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuTerminal.add(MenuItemTerminalFontInc);
 
-        MenuItemTerminalFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemTerminalFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        MenuItemTerminalFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemTerminalFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         MenuItemTerminalFontDec.setText("Dec font size");
         MenuItemTerminalFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -792,7 +778,7 @@ public class ESPlorer extends javax.swing.JFrame {
         contextMenuTerminal.add(MenuItemTerminalFontDec);
         contextMenuTerminal.add(terminalSeparator2);
 
-        MenuItemTerminalReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
+        MenuItemTerminalReset.setIcon(new ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
         MenuItemTerminalReset.setText("Restart ESP module");
         MenuItemTerminalReset.setToolTipText("Send RESET command (firmware depended)");
         MenuItemTerminalReset.setEnabled(false);
@@ -803,7 +789,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuTerminal.add(MenuItemTerminalReset);
 
-        MenuItemTerminalFormat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
+        MenuItemTerminalFormat.setIcon(new ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
         MenuItemTerminalFormat.setText("Format ESP");
         MenuItemTerminalFormat.setToolTipText("Remove All files from ESP flash memory");
         MenuItemTerminalFormat.setEnabled(false);
@@ -814,8 +800,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuTerminal.add(MenuItemTerminalFormat);
 
-        MenuItemEditorUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditorUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
+        MenuItemEditorUndo.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditorUndo.setIcon(new ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
         MenuItemEditorUndo.setText("Undo");
         MenuItemEditorUndo.setToolTipText("");
         MenuItemEditorUndo.setEnabled(false);
@@ -826,8 +812,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(MenuItemEditorUndo);
 
-        MenuItemEditorRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
-        MenuItemEditorRedo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
+        MenuItemEditorRedo.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
+        MenuItemEditorRedo.setIcon(new ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
         MenuItemEditorRedo.setText("Redo");
         MenuItemEditorRedo.setToolTipText("");
         MenuItemEditorRedo.setEnabled(false);
@@ -839,8 +825,8 @@ public class ESPlorer extends javax.swing.JFrame {
         ContextMenuEditor.add(MenuItemEditorRedo);
         ContextMenuEditor.add(editorSeparator1);
 
-        MenuItemEditorSendSelected.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemEditorSendSelected.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
+        MenuItemEditorSendSelected.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemEditorSendSelected.setIcon(new ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
         MenuItemEditorSendSelected.setText("Send selected to ESP");
         MenuItemEditorSendSelected.setToolTipText("Send selected fragment to ESP");
         MenuItemEditorSendSelected.addActionListener(new java.awt.event.ActionListener() {
@@ -850,8 +836,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(MenuItemEditorSendSelected);
 
-        MenuItemEditorSendLine.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemEditorSendLine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
+        MenuItemEditorSendLine.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemEditorSendLine.setIcon(new ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
         MenuItemEditorSendLine.setText("Send current line to ESP");
         MenuItemEditorSendLine.setToolTipText("Send current line to ESP");
         MenuItemEditorSendLine.addActionListener(new java.awt.event.ActionListener() {
@@ -862,8 +848,8 @@ public class ESPlorer extends javax.swing.JFrame {
         ContextMenuEditor.add(MenuItemEditorSendLine);
         ContextMenuEditor.add(editorSeparator);
 
-        MenuItemEditorCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditorCut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
+        MenuItemEditorCut.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditorCut.setIcon(new ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
         MenuItemEditorCut.setText("Cut");
         MenuItemEditorCut.setEnabled(false);
         MenuItemEditorCut.addActionListener(new java.awt.event.ActionListener() {
@@ -873,8 +859,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(MenuItemEditorCut);
 
-        MenuItemEditorCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditorCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
+        MenuItemEditorCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditorCopy.setIcon(new ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
         MenuItemEditorCopy.setText("Copy");
         MenuItemEditorCopy.setEnabled(false);
         MenuItemEditorCopy.addActionListener(new java.awt.event.ActionListener() {
@@ -884,8 +870,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(MenuItemEditorCopy);
 
-        MenuItemEditorPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditorPaste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
+        MenuItemEditorPaste.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditorPaste.setIcon(new ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
         MenuItemEditorPaste.setText("Paste");
         MenuItemEditorPaste.setEnabled(false);
         MenuItemEditorPaste.addActionListener(new java.awt.event.ActionListener() {
@@ -896,8 +882,8 @@ public class ESPlorer extends javax.swing.JFrame {
         ContextMenuEditor.add(MenuItemEditorPaste);
         ContextMenuEditor.add(editorSeparator2);
 
-        menuItemEditorFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK));
-        menuItemEditorFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        menuItemEditorFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK));
+        menuItemEditorFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         menuItemEditorFontInc.setText("Inc font size");
         menuItemEditorFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -906,8 +892,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(menuItemEditorFontInc);
 
-        menuItemEditorFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK));
-        menuItemEditorFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        menuItemEditorFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK));
+        menuItemEditorFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         menuItemEditorFontDec.setText("Dec font size");
         menuItemEditorFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -916,8 +902,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         ContextMenuEditor.add(menuItemEditorFontDec);
 
-        MenuItemLogClear.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemLogClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/backup_delete.png"))); // NOI18N
+        MenuItemLogClear.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemLogClear.setIcon(new ImageIcon(getClass().getResource("/resources/backup_delete.png"))); // NOI18N
         MenuItemLogClear.setText("Clear log");
         MenuItemLogClear.setToolTipText("");
         MenuItemLogClear.addActionListener(new java.awt.event.ActionListener() {
@@ -927,7 +913,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuLog.add(MenuItemLogClear);
 
-        menuItemLogClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemLogClose.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         menuItemLogClose.setText("Hide Log");
         menuItemLogClose.setToolTipText("");
         menuItemLogClose.addActionListener(new java.awt.event.ActionListener() {
@@ -938,8 +924,8 @@ public class ESPlorer extends javax.swing.JFrame {
         contextMenuLog.add(menuItemLogClose);
         contextMenuLog.add(logSeparator);
 
-        menuItemLogFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        menuItemLogFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        menuItemLogFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuItemLogFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         menuItemLogFontInc.setText("Inc font size");
         menuItemLogFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -948,8 +934,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuLog.add(menuItemLogFontInc);
 
-        menuItemLogFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        menuItemLogFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        menuItemLogFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuItemLogFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         menuItemLogFontDec.setText("Dec font size");
         menuItemLogFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -958,7 +944,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuLog.add(menuItemLogFontDec);
 
-        aboutDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        aboutDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         aboutDialog.setTitle("aboutDialog");
         aboutDialog.setIconImage(null);
         aboutDialog.setMinimumSize(new java.awt.Dimension(406, 250));
@@ -971,15 +957,15 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         appName.setFont(new java.awt.Font("Tahoma", Font.BOLD, 24)); // NOI18N
-        appName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        appName.setHorizontalAlignment(SwingConstants.CENTER);
         appName.setText("ESPlorer");
-        appName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        appName.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        version1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        version1.setHorizontalAlignment(SwingConstants.CENTER);
         version1.setText(Constants.version);
-        version1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        version1.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        donate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/donate.gif"))); // NOI18N
+        donate.setIcon(new ImageIcon(getClass().getResource("/resources/donate.gif"))); // NOI18N
         donate.setToolTipText("If you'd like to make a one-time donation to ESPlorer author, you can use PayPal to make it fast and easy.");
         donate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -987,14 +973,14 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        author.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        author.setHorizontalAlignment(SwingConstants.CENTER);
         author.setText("by h0uz3");
-        author.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        author.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        homePage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/wifi.png"))); // NOI18N
+        homePage.setIcon(new ImageIcon(getClass().getResource("/resources/wifi.png"))); // NOI18N
         homePage.setText("Visit HomePage");
         homePage.setToolTipText("");
-        homePage.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        homePage.setHorizontalTextPosition(SwingConstants.LEFT);
         homePage.setMaximumSize(new java.awt.Dimension(200, 55));
         homePage.setMinimumSize(new java.awt.Dimension(200, 55));
         homePage.setPreferredSize(new java.awt.Dimension(200, 55));
@@ -1004,32 +990,32 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout AboutLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        GroupLayout AboutLayout = new GroupLayout(aboutDialog.getContentPane());
         aboutDialog.getContentPane().setLayout(AboutLayout);
         AboutLayout.setHorizontalGroup(
-                AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(author, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(appName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(version1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(author, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(appName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(version1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(AboutLayout.createSequentialGroup()
-                                .addComponent(donate, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(homePage, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                .addComponent(donate, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(homePage, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         AboutLayout.setVerticalGroup(
-                AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(AboutLayout.createSequentialGroup()
                                 .addContainerGap(77, Short.MAX_VALUE)
-                                .addComponent(appName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(appName, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(version1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(author)
                                 .addGap(56, 56, 56)
-                                .addGroup(AboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(donate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(homePage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(AboutLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(donate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(homePage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         contextMenuESPFileLUA.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
@@ -1043,7 +1029,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        menuItemESPFileDo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
+        menuItemESPFileDo.setIcon(new ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
         menuItemESPFileDo.setText("Do file");
         menuItemESPFileDo.setToolTipText("");
         menuItemESPFileDo.addActionListener(new java.awt.event.ActionListener() {
@@ -1053,7 +1039,7 @@ public class ESPlorer extends javax.swing.JFrame {
         contextMenuESPFileLUA.add(menuItemESPFileDo);
         contextMenuESPFileLUA.add(terminalSeparator3);
 
-        menuItemESPFileDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file_remove.png"))); // NOI18N
+        menuItemESPFileDelete.setIcon(new ImageIcon(getClass().getResource("/resources/file_remove.png"))); // NOI18N
         menuItemESPFileDelete.setText("Delete file");
         menuItemESPFileDelete.setToolTipText("");
         menuItemESPFileDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -1062,7 +1048,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         contextMenuESPFileLUA.add(menuItemESPFileDelete);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("ESPlorer");
         setAutoRequestFocus(false);
         setBounds(new java.awt.Rectangle(0, 0, 0, 0));
@@ -1112,7 +1098,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         LeftBasePane.setMinimumSize(new java.awt.Dimension(100, 100));
 
-        LeftTab.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        LeftTab.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         LeftTab.setToolTipText("");
         LeftTab.setAlignmentX(0.0F);
         LeftTab.setAlignmentY(0.0F);
@@ -1125,7 +1111,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        nodeMCU.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        nodeMCU.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         nodeMCU.setMinimumSize(new java.awt.Dimension(100, 100));
         nodeMCU.setPreferredSize(new java.awt.Dimension(461, 537));
         nodeMCU.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1138,7 +1124,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        TextTab.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        TextTab.setBorder(BorderFactory.createEtchedBorder());
         TextTab.setComponentPopupMenu(ContextMenuEditor);
         TextTab.setMinimumSize(new java.awt.Dimension(462, 365));
         TextTab.setPreferredSize(new java.awt.Dimension(462, 365));
@@ -1159,14 +1145,14 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonFileNew.setAction(MenuItemFileNew.getAction());
         ButtonFileNew.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonFileNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/document.png"))); // NOI18N
+        ButtonFileNew.setIcon(new ImageIcon(getClass().getResource("/resources/document.png"))); // NOI18N
         ButtonFileNew.setToolTipText("New file");
         ButtonFileNew.setText("New");
-        ButtonFileNew.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonFileNew.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonFileNew.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonFileNew.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonFileNew.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonFileNew.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonFileNew.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, MenuItemFileNew, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), ButtonFileNew, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -1180,31 +1166,31 @@ public class ESPlorer extends javax.swing.JFrame {
 
         buttonFileOpen.setAction(MenuItemFileOpen.getAction());
         buttonFileOpen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        buttonFileOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder open.png"))); // NOI18N
+        buttonFileOpen.setIcon(new ImageIcon(getClass().getResource("/resources/folder open.png"))); // NOI18N
         buttonFileOpen.setText("Open");
         buttonFileOpen.setToolTipText("Open file from disk");
         buttonFileOpen.setHideActionText(true);
-        buttonFileOpen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        buttonFileOpen.setHorizontalTextPosition(SwingConstants.CENTER);
         buttonFileOpen.setMaximumSize(new java.awt.Dimension(40, 40));
         buttonFileOpen.setMinimumSize(new java.awt.Dimension(40, 40));
         buttonFileOpen.setPreferredSize(new java.awt.Dimension(40, 40));
-        buttonFileOpen.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        buttonFileOpen.setVerticalTextPosition(SwingConstants.BOTTOM);
         buttonFileOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonFileOpenActionPerformed(evt);
+                ButtonFileOpenActionPerformed();
             }
         });
         FilesToolBar.add(buttonFileOpen);
 
         ButtonFileReload.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonFileReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refresh.png"))); // NOI18N
+        ButtonFileReload.setIcon(new ImageIcon(getClass().getResource("/resources/refresh.png"))); // NOI18N
         ButtonFileReload.setText("Reload");
         ButtonFileReload.setToolTipText("Reload file from disk (for use with external editor)");
-        ButtonFileReload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonFileReload.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonFileReload.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonFileReload.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonFileReload.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonFileReload.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonFileReload.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, MenuItemFileReload, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), ButtonFileReload, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -1218,15 +1204,15 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonFileSave.setAction(MenuItemFileSave.getAction());
         ButtonFileSave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonFileSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
+        ButtonFileSave.setIcon(new ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         ButtonFileSave.setText("Save");
         ButtonFileSave.setToolTipText("Save file to disk");
         ButtonFileSave.setHideActionText(true);
-        ButtonFileSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonFileSave.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonFileSave.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonFileSave.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonFileSave.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonFileSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonFileSave.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonFileSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonFileSaveActionPerformed();
@@ -1236,17 +1222,17 @@ public class ESPlorer extends javax.swing.JFrame {
 
         buttonFileSaveAll.setAction(MenuItemFileSave.getAction());
         buttonFileSaveAll.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        buttonFileSaveAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save_all.png"))); // NOI18N
+        buttonFileSaveAll.setIcon(new ImageIcon(getClass().getResource("/resources/save_all.png"))); // NOI18N
         buttonFileSaveAll.setText("SaveAll");
         buttonFileSaveAll.setToolTipText("Save all open files to disk");
         buttonFileSaveAll.setEnabled(false);
         buttonFileSaveAll.setFocusable(false);
         buttonFileSaveAll.setHideActionText(true);
-        buttonFileSaveAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        buttonFileSaveAll.setHorizontalTextPosition(SwingConstants.CENTER);
         buttonFileSaveAll.setMaximumSize(new java.awt.Dimension(40, 40));
         buttonFileSaveAll.setMinimumSize(new java.awt.Dimension(40, 40));
         buttonFileSaveAll.setPreferredSize(new java.awt.Dimension(40, 40));
-        buttonFileSaveAll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        buttonFileSaveAll.setVerticalTextPosition(SwingConstants.BOTTOM);
         buttonFileSaveAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonFileSaveAllActionPerformed();
@@ -1255,15 +1241,15 @@ public class ESPlorer extends javax.swing.JFrame {
         FilesToolBar.add(buttonFileSaveAll);
 
         ButtonFileClose.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonFileClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder closed.png"))); // NOI18N
+        ButtonFileClose.setIcon(new ImageIcon(getClass().getResource("/resources/folder closed.png"))); // NOI18N
         ButtonFileClose.setText("Close");
         ButtonFileClose.setToolTipText("Close file");
         ButtonFileClose.setHideActionText(true);
-        ButtonFileClose.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonFileClose.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonFileClose.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonFileClose.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonFileClose.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonFileClose.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonFileClose.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, MenuItemFileClose, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), ButtonFileClose, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -1277,17 +1263,17 @@ public class ESPlorer extends javax.swing.JFrame {
         FilesToolBar.add(jSeparator1);
 
         ButtonUndo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
+        ButtonUndo.setIcon(new ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
         ButtonUndo.setText("Undo");
         ButtonUndo.setToolTipText("Undo last action");
         ButtonUndo.setEnabled(false);
         ButtonUndo.setFocusable(false);
         ButtonUndo.setHideActionText(true);
-        ButtonUndo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonUndo.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonUndo.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonUndo.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonUndo.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonUndo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonUndo.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonUndoActionPerformed();
@@ -1296,17 +1282,17 @@ public class ESPlorer extends javax.swing.JFrame {
         FilesToolBar.add(ButtonUndo);
 
         ButtonRedo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonRedo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
+        ButtonRedo.setIcon(new ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
         ButtonRedo.setText("Redo");
         ButtonRedo.setToolTipText("Redo last action");
         ButtonRedo.setEnabled(false);
         ButtonRedo.setFocusable(false);
         ButtonRedo.setHideActionText(true);
-        ButtonRedo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonRedo.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonRedo.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonRedo.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonRedo.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonRedo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonRedo.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonRedoActionPerformed();
@@ -1317,16 +1303,16 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonCut.setAction(MenuItemEditCut.getAction());
         ButtonCut.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonCut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
+        ButtonCut.setIcon(new ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
         ButtonCut.setText("Cut");
         ButtonCut.setToolTipText("Cut");
         ButtonCut.setEnabled(false);
         ButtonCut.setHideActionText(true);
-        ButtonCut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonCut.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonCut.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonCut.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonCut.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonCut.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonCut.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonCut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonCutActionPerformed();
@@ -1336,17 +1322,17 @@ public class ESPlorer extends javax.swing.JFrame {
 
         copyButton.setAction(MenuItemEditCopy.getAction());
         copyButton.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        copyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
+        copyButton.setIcon(new ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
         copyButton.setText("Copy");
         copyButton.setToolTipText("Copy");
         copyButton.setEnabled(false);
         copyButton.setHideActionText(true);
-        copyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        copyButton.setHorizontalTextPosition(SwingConstants.CENTER);
         copyButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
         copyButton.setMaximumSize(new java.awt.Dimension(40, 40));
         copyButton.setMinimumSize(new java.awt.Dimension(40, 40));
         copyButton.setPreferredSize(new java.awt.Dimension(40, 40));
-        copyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        copyButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         copyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonCopyActionPerformed();
@@ -1356,16 +1342,16 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ButtonPaste.setAction(MenuItemEditPaste.getAction());
         ButtonPaste.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonPaste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
+        ButtonPaste.setIcon(new ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
         ButtonPaste.setText("Paste");
         ButtonPaste.setToolTipText("Paste");
         ButtonPaste.setEnabled(false);
         ButtonPaste.setHideActionText(true);
-        ButtonPaste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonPaste.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonPaste.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonPaste.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonPaste.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonPaste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonPaste.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonPaste.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonPasteActionPerformed();
@@ -1375,15 +1361,15 @@ public class ESPlorer extends javax.swing.JFrame {
         FilesToolBar.add(jSeparator6);
 
         ButtonSendSelected.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonSendSelected.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
+        ButtonSendSelected.setIcon(new ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
         ButtonSendSelected.setToolTipText("Send selected block to ESP");
         ButtonSendSelected.setHideActionText(true);
-        ButtonSendSelected.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonSendSelected.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonSendSelected.setText("Block");
         ButtonSendSelected.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonSendSelected.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonSendSelected.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonSendSelected.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonSendSelected.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, MenuItemEditorSendSelected, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), ButtonSendSelected, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -1396,16 +1382,16 @@ public class ESPlorer extends javax.swing.JFrame {
         FilesToolBar.add(ButtonSendSelected);
 
         ButtonSendLine.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ButtonSendLine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
+        ButtonSendLine.setIcon(new ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
         ButtonSendLine.setText("Line");
         ButtonSendLine.setToolTipText("Send current line to ESP");
         ButtonSendLine.setFocusable(false);
         ButtonSendLine.setHideActionText(true);
-        ButtonSendLine.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonSendLine.setHorizontalTextPosition(SwingConstants.CENTER);
         ButtonSendLine.setMaximumSize(new java.awt.Dimension(40, 40));
         ButtonSendLine.setMinimumSize(new java.awt.Dimension(40, 40));
         ButtonSendLine.setPreferredSize(new java.awt.Dimension(40, 40));
-        ButtonSendLine.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonSendLine.setVerticalTextPosition(SwingConstants.BOTTOM);
         ButtonSendLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonSendLineActionPerformed();
@@ -1424,8 +1410,8 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        textScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        textScroll.setViewportBorder(javax.swing.BorderFactory.createEtchedBorder());
+        textScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        textScroll.setViewportBorder(BorderFactory.createEtchedBorder());
         textScroll.setFoldIndicatorEnabled(true);
         textScroll.setLineNumbersEnabled(true);
         textScroll.setViewportView(textEditor);
@@ -1469,17 +1455,17 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         textScroll.setViewportView(textEditor);
 
-        javax.swing.GroupLayout FileLayeredPaneLayout = new javax.swing.GroupLayout(fileLayeredPane);
+        GroupLayout FileLayeredPaneLayout = new GroupLayout(fileLayeredPane);
         fileLayeredPane.setLayout(FileLayeredPaneLayout);
         FileLayeredPaneLayout.setHorizontalGroup(
-                FileLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(textScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                FileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(textScroll, GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
         );
         FileLayeredPaneLayout.setVerticalGroup(
-                FileLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(textScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+                FileLayeredPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(textScroll, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
         );
-        fileLayeredPane.setLayer(textScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        fileLayeredPane.setLayer(textScroll, JLayeredPane.DEFAULT_LAYER);
 
         FilesTabbedPane.addTab("NewFile", fileLayeredPane);
 
@@ -1491,7 +1477,7 @@ public class ESPlorer extends javax.swing.JFrame {
         fileDo1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         fileDo1.setText("Save&Run");
         fileDo1.setToolTipText("Do lua script");
-        fileDo1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        fileDo1.setHorizontalTextPosition(SwingConstants.CENTER);
         fileDo1.setIconTextGap(8);
         fileDo1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         fileDo1.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1534,7 +1520,7 @@ public class ESPlorer extends javax.swing.JFrame {
         fileCompileDoLC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         fileCompileDoLC.setText("Save&Compile All");
         fileCompileDoLC.setActionCommand("Save&CompileAll");
-        fileCompileDoLC.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        fileCompileDoLC.setHorizontalTextPosition(SwingConstants.CENTER);
         fileCompileDoLC.setIconTextGap(0);
         fileCompileDoLC.setMargin(new java.awt.Insets(2, 0, 2, 0));
         fileCompileDoLC.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1563,8 +1549,8 @@ public class ESPlorer extends javax.swing.JFrame {
 
         Busy.setBackground(new java.awt.Color(0, 153, 0));
         Busy.setForeground(new java.awt.Color(255, 255, 255));
-        Busy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Busy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        Busy.setHorizontalAlignment(SwingConstants.CENTER);
+        Busy.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         Busy.setText("IDLE");
         Busy.setOpaque(true);
 
@@ -1576,10 +1562,10 @@ public class ESPlorer extends javax.swing.JFrame {
 
         leftMainButtons.setLayout(new java.awt.FlowLayout());
 
-        FileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/move.png"))); // NOI18N
+        FileSaveESP.setIcon(new ImageIcon(getClass().getResource("/resources/move.png"))); // NOI18N
         FileSaveESP.setText("<html><u>S</u>ave to ESP");
         FileSaveESP.setToolTipText("Send file to ESP and save into flash memory");
-        FileSaveESP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileSaveESP.setHorizontalAlignment(SwingConstants.LEFT);
         FileSaveESP.setIconTextGap(8);
         FileSaveESP.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileSaveESP.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1592,10 +1578,10 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         leftMainButtons.add(FileSaveESP);
 
-        FileSendESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/script_send.png"))); // NOI18N
+        FileSendESP.setIcon(new ImageIcon(getClass().getResource("/resources/script_send.png"))); // NOI18N
         FileSendESP.setText("<html>S<u>e</u>nd to ESP");
         FileSendESP.setToolTipText("Send file to ESP and run  \"line by line\"");
-        FileSendESP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileSendESP.setHorizontalAlignment(SwingConstants.LEFT);
         FileSendESP.setIconTextGap(8);
         FileSendESP.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileSendESP.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1608,10 +1594,10 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         leftMainButtons.add(FileSendESP);
 
-        FileDo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
+        FileDo.setIcon(new ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
         FileDo.setText("Run");
         FileDo.setToolTipText("Execute lua script via \"dofile\" command");
-        FileDo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileDo.setHorizontalAlignment(SwingConstants.LEFT);
         FileDo.setIconTextGap(8);
         FileDo.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileDo.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1624,10 +1610,10 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         leftMainButtons.add(FileDo);
 
-        // TODO/FIXME FilesUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/uploadLUA.png"))); // NOI18N
+        // TODO/FIXME FilesUpload.setIcon(new ImageIcon(getClass().getResource("/resources/uploadLUA.png"))); // NOI18N
         filesUpload.setText("Upload ...");
         filesUpload.setToolTipText("Upload file from disk to ESP flash memory");
-        filesUpload.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        filesUpload.setHorizontalAlignment(SwingConstants.LEFT);
         filesUpload.setIconTextGap(8);
         filesUpload.setMargin(new java.awt.Insets(2, 2, 2, 2));
         filesUpload.setMaximumSize(new java.awt.Dimension(127, 30));
@@ -1640,48 +1626,48 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         leftMainButtons.add(filesUpload);
 
-        javax.swing.GroupLayout SriptsTabLayout = new javax.swing.GroupLayout(sriptsTab);
+        GroupLayout SriptsTabLayout = new GroupLayout(sriptsTab);
         sriptsTab.setLayout(SriptsTabLayout);
         SriptsTabLayout.setHorizontalGroup(
-                SriptsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(FilesTabbedPane)
-                        .addComponent(FilesToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(FilesToolBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(SriptsTabLayout.createSequentialGroup()
-                                .addGroup(SriptsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(ProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, SriptsTabLayout.createSequentialGroup()
+                                .addGroup(SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(ProgressBar, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(GroupLayout.Alignment.LEADING, SriptsTabLayout.createSequentialGroup()
                                                 .addGap(6, 6, 6)
-                                                .addComponent(Busy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(FilePathLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(LeftExtraButtons, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(leftMainButtons, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(Busy, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(FilePathLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(LeftExtraButtons, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 531, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(leftMainButtons, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 531, GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
         SriptsTabLayout.setVerticalGroup(
-                SriptsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(SriptsTabLayout.createSequentialGroup()
-                                .addComponent(FilesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(FilesToolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(FilesTabbedPane)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SriptsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ProgressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(SriptsTabLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(Busy)
                                         .addComponent(FilePathLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(LeftExtraButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(leftMainButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LeftExtraButtons, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(leftMainButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
-        sriptsTab.setLayer(FilesToolBar, javax.swing.JLayeredPane.PALETTE_LAYER);
-        sriptsTab.setLayer(FilesTabbedPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(LeftExtraButtons, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(Busy, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(FilePathLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(ProgressBar, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        sriptsTab.setLayer(leftMainButtons, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(FilesToolBar, JLayeredPane.PALETTE_LAYER);
+        sriptsTab.setLayer(FilesTabbedPane, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(LeftExtraButtons, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(Busy, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(FilePathLabel, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(ProgressBar, JLayeredPane.DEFAULT_LAYER);
+        sriptsTab.setLayer(leftMainButtons, JLayeredPane.DEFAULT_LAYER);
 
         TextTab.addTab("Scripts", sriptsTab);
         sriptsTab.getAccessibleContext().setAccessibleName("Files");
@@ -1710,7 +1696,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdNodeChipID.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdNodeChipID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdNodeChipIDActionPerformed(evt);
+                cmdNodeChipIDActionPerformed();
             }
         });
 
@@ -1723,7 +1709,7 @@ public class ESPlorer extends javax.swing.JFrame {
         cmdNodeHeap.setPreferredSize(new java.awt.Dimension(210, 23));
         cmdNodeHeap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdNodeHeapActionPerformed(evt);
+                cmdNodeHeapActionPerformed();
             }
         });
 
@@ -1767,76 +1753,76 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         TimerNumber.setMaximumRowCount(7);
-        TimerNumber.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4", "5", "6"}));
+        TimerNumber.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4", "5", "6"}));
         TimerNumber.setToolTipText("Timer number (0-6)");
 
-        jLayeredPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("GPIO"));
+        jLayeredPane1.setBorder(BorderFactory.createTitledBorder("GPIO"));
 
-        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        GroupLayout jLayeredPane1Layout = new GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
-                jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jLayeredPane1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 0, Short.MAX_VALUE)
         );
         jLayeredPane1Layout.setVerticalGroup(
-                jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jLayeredPane1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 177, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout NodeMCUCommandsLayout = new javax.swing.GroupLayout(nodeMCUCommands);
+        GroupLayout NodeMCUCommandsLayout = new GroupLayout(nodeMCUCommands);
         nodeMCUCommands.setLayout(NodeMCUCommandsLayout);
         NodeMCUCommandsLayout.setHorizontalGroup(
-                NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(jLayeredPane1)
                                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
-                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
-                                                                .addComponent(cmdNodeRestart, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(cmdNodeChipID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(cmdNodeRestart, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(cmdNodeChipID, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
-                                                                .addComponent(cmdTimerStop, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(TimerNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(cmdTimerStop, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(TimerNumber, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
-                                                                .addComponent(cmdNodeHeap, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(cmdNodeSleep, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(cmdListFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(cmdNodeHeap, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(cmdNodeSleep, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(cmdListFiles, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         NodeMCUCommandsLayout.setVerticalGroup(
-                NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUCommandsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmdNodeChipID, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdNodeRestart, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdNodeHeap, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdNodeSleep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cmdListFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdTimerStop, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(TimerNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(cmdNodeChipID, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdNodeRestart, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdNodeHeap, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdNodeSleep, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NodeMCUCommandsLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(cmdListFiles, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdTimerStop, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(TimerNumber, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLayeredPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(250, 250, 250))
         );
-        nodeMCUCommands.setLayer(cmdNodeRestart, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(cmdNodeChipID, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(cmdNodeHeap, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(cmdNodeSleep, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(cmdListFiles, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(cmdTimerStop, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(TimerNumber, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUCommands.setLayer(jLayeredPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdNodeRestart, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdNodeChipID, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdNodeHeap, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdNodeSleep, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdListFiles, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(cmdTimerStop, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(TimerNumber, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUCommands.setLayer(jLayeredPane1, JLayeredPane.DEFAULT_LAYER);
 
         TextTab.addTab("Commands", nodeMCUCommands);
 
@@ -1970,86 +1956,86 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout LeftSnippetsPaneLayout = new javax.swing.GroupLayout(leftSnippetsPane);
+        GroupLayout LeftSnippetsPaneLayout = new GroupLayout(leftSnippetsPane);
         leftSnippetsPane.setLayout(LeftSnippetsPaneLayout);
         LeftSnippetsPaneLayout.setHorizontalGroup(
-                LeftSnippetsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(SnippetEdit0, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(snippetEdit12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SnippetEdit15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                LeftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(SnippetEdit0, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit5, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit6, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit7, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit8, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit9, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit10, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit11, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(snippetEdit12, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit13, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit14, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SnippetEdit15, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         LeftSnippetsPaneLayout.setVerticalGroup(
-                LeftSnippetsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                LeftSnippetsPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(LeftSnippetsPaneLayout.createSequentialGroup()
-                                .addComponent(SnippetEdit0, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit6, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit7, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit8, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit9, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit10, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit11, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(snippetEdit12, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit13, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit14, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetEdit15, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SnippetEdit0, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit2, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit3, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit5, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit6, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit7, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit8, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit9, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit10, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit11, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(snippetEdit12, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit13, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit14, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetEdit15, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(252, Short.MAX_VALUE))
         );
-        leftSnippetsPane.setLayer(SnippetEdit0, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit9, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit10, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit11, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(snippetEdit12, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit13, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit14, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        leftSnippetsPane.setLayer(SnippetEdit15, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit0, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit1, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit2, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit3, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit4, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit5, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit6, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit7, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit8, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit9, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit10, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit11, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(snippetEdit12, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit13, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit14, JLayeredPane.DEFAULT_LAYER);
+        leftSnippetsPane.setLayer(SnippetEdit15, JLayeredPane.DEFAULT_LAYER);
 
         SnippetTopPane.setOpaque(true);
 
         SnippetName.setEnabled(false);
 
         SnippetSave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        SnippetSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
+        SnippetSave.setIcon(new ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         SnippetSave.setText("Save");
         SnippetSave.setToolTipText("Save snippet to disk");
         SnippetSave.setEnabled(false);
@@ -2061,7 +2047,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         SnippetRun.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        SnippetRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/server1_start.png"))); // NOI18N
+        SnippetRun.setIcon(new ImageIcon(getClass().getResource("/resources/server1_start.png"))); // NOI18N
         SnippetRun.setText("Run");
         SnippetRun.setToolTipText("Run snippet");
         SnippetRun.setEnabled(false);
@@ -2074,13 +2060,13 @@ public class ESPlorer extends javax.swing.JFrame {
 
         SnippetsBusy.setBackground(new java.awt.Color(0, 153, 0));
         SnippetsBusy.setForeground(new java.awt.Color(255, 255, 255));
-        SnippetsBusy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        SnippetsBusy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        SnippetsBusy.setHorizontalAlignment(SwingConstants.CENTER);
+        SnippetsBusy.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         SnippetsBusy.setText("IDLE");
         SnippetsBusy.setOpaque(true);
 
         SnippetCancelEdit.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        SnippetCancelEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/abort.png"))); // NOI18N
+        SnippetCancelEdit.setIcon(new ImageIcon(getClass().getResource("/resources/abort.png"))); // NOI18N
         SnippetCancelEdit.setText("Cancel");
         SnippetCancelEdit.setToolTipText("Cancel edit and clear editor window");
         SnippetCancelEdit.setEnabled(false);
@@ -2098,48 +2084,48 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout SnippetTopPaneLayout = new javax.swing.GroupLayout(SnippetTopPane);
+        GroupLayout SnippetTopPaneLayout = new GroupLayout(SnippetTopPane);
         SnippetTopPane.setLayout(SnippetTopPaneLayout);
         SnippetTopPaneLayout.setHorizontalGroup(
-                SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(SnippetTopPaneLayout.createSequentialGroup()
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(SnippetTopPaneLayout.createSequentialGroup()
                                                 .addComponent(SnippetSave)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(SnippetCancelEdit))
                                         .addComponent(SnippetName))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(SnippetsBusy, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(SnippetsBusy, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(SnippetTopPaneLayout.createSequentialGroup()
-                                                .addComponent(SnippetRun, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(SnippetRun, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(Condensed)))
                                 .addContainerGap(69, Short.MAX_VALUE))
         );
         SnippetTopPaneLayout.setVerticalGroup(
-                SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(SnippetTopPaneLayout.createSequentialGroup()
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(SnippetName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(SnippetName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(SnippetsBusy))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SnippetTopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(SnippetTopPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(SnippetSave)
                                         .addComponent(SnippetRun)
                                         .addComponent(SnippetCancelEdit)
                                         .addComponent(Condensed)))
         );
-        SnippetTopPane.setLayer(SnippetName, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        SnippetTopPane.setLayer(SnippetSave, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        SnippetTopPane.setLayer(SnippetRun, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        SnippetTopPane.setLayer(SnippetsBusy, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        SnippetTopPane.setLayer(SnippetCancelEdit, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        SnippetTopPane.setLayer(Condensed, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(SnippetName, JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(SnippetSave, JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(SnippetRun, JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(SnippetsBusy, JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(SnippetCancelEdit, JLayeredPane.DEFAULT_LAYER);
+        SnippetTopPane.setLayer(Condensed, JLayeredPane.DEFAULT_LAYER);
 
-        SnippetScrollPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        SnippetScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        SnippetScrollPane.setBorder(BorderFactory.createEtchedBorder());
+        SnippetScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         SnippetScrollPane.setEnabled(false);
         SnippetScrollPane.setLineNumbersEnabled(true);
 
@@ -2149,35 +2135,35 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetText.setEnabled(false);
         SnippetScrollPane.setViewportView(SnippetText);
 
-        javax.swing.GroupLayout NodeMCUSnippetsLayout = new javax.swing.GroupLayout(nodeMCUSnippets);
+        GroupLayout NodeMCUSnippetsLayout = new GroupLayout(nodeMCUSnippets);
         nodeMCUSnippets.setLayout(NodeMCUSnippetsLayout);
         NodeMCUSnippetsLayout.setHorizontalGroup(
-                NodeMCUSnippetsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUSnippetsLayout.createSequentialGroup()
-                                .addComponent(leftSnippetsPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUSnippetsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(leftSnippetsPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(SnippetTopPane)
-                                        .addComponent(SnippetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(SnippetScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         NodeMCUSnippetsLayout.setVerticalGroup(
-                NodeMCUSnippetsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUSnippetsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUSnippetsLayout.createSequentialGroup()
-                                .addComponent(SnippetTopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SnippetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(SnippetTopPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SnippetScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(leftSnippetsPane)
         );
-        nodeMCUSnippets.setLayer(leftSnippetsPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSnippets.setLayer(SnippetTopPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSnippets.setLayer(SnippetScrollPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSnippets.setLayer(leftSnippetsPane, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSnippets.setLayer(SnippetTopPane, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSnippets.setLayer(SnippetScrollPane, JLayeredPane.DEFAULT_LAYER);
 
         TextTab.addTab("Snippets", nodeMCUSnippets);
 
         nodeMCUSettings.setAutoscrolls(true);
         nodeMCUSettings.setOpaque(true);
 
-        optionsFirmware.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Select firmware", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        optionsFirmware.setBorder(BorderFactory.createTitledBorder(null, "Select firmware", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         optionsFirmware.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
         firmware.add(OptionNodeMCU);
@@ -2201,32 +2187,32 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout OptionsFirmwareLayout = new javax.swing.GroupLayout(optionsFirmware);
+        GroupLayout OptionsFirmwareLayout = new GroupLayout(optionsFirmware);
         optionsFirmware.setLayout(OptionsFirmwareLayout);
         OptionsFirmwareLayout.setHorizontalGroup(
-                OptionsFirmwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(OptionNodeMCU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(OptionMicroPython, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                OptionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(OptionNodeMCU, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(OptionMicroPython, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         OptionsFirmwareLayout.setVerticalGroup(
-                OptionsFirmwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                OptionsFirmwareLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(OptionsFirmwareLayout.createSequentialGroup()
                                 .addComponent(OptionNodeMCU)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(OptionMicroPython)
                                 .addContainerGap())
         );
-        optionsFirmware.setLayer(OptionNodeMCU, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFirmware.setLayer(OptionMicroPython, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        optionsFirmware.setLayer(OptionNodeMCU, JLayeredPane.DEFAULT_LAYER);
+        optionsFirmware.setLayer(OptionMicroPython, JLayeredPane.DEFAULT_LAYER);
 
-        optionsOther.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Other", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        optionsOther.setBorder(BorderFactory.createTitledBorder(null, "Other", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         FileAutoSaveDisk.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         FileAutoSaveDisk.setSelected(true);
         FileAutoSaveDisk.setText("AutoSave file to disk before save to ESP");
         FileAutoSaveDisk.setToolTipText("");
-        FileAutoSaveDisk.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        FileAutoSaveDisk.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        FileAutoSaveDisk.setHorizontalAlignment(SwingConstants.LEFT);
+        FileAutoSaveDisk.setHorizontalTextPosition(SwingConstants.RIGHT);
         FileAutoSaveDisk.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 FileAutoSaveDiskItemStateChanged();
@@ -2237,8 +2223,8 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAutoSaveESP.setSelected(true);
         FileAutoSaveESP.setText("AutoSave file to ESP after save to disk");
         FileAutoSaveESP.setToolTipText("");
-        FileAutoSaveESP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        FileAutoSaveESP.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        FileAutoSaveESP.setHorizontalAlignment(SwingConstants.LEFT);
+        FileAutoSaveESP.setHorizontalTextPosition(SwingConstants.RIGHT);
         FileAutoSaveESP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 FileAutoSaveESPItemStateChanged();
@@ -2249,8 +2235,8 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAutoRun.setText("AutoRun file after save to ESP");
         FileAutoRun.setToolTipText("");
         FileAutoRun.setEnabled(false);
-        FileAutoRun.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        FileAutoRun.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        FileAutoRun.setHorizontalAlignment(SwingConstants.LEFT);
+        FileAutoRun.setHorizontalTextPosition(SwingConstants.RIGHT);
         FileAutoRun.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 FileAutoRunItemStateChanged();
@@ -2261,7 +2247,7 @@ public class ESPlorer extends javax.swing.JFrame {
         editorThemeLabel.setText("Editor color theme");
 
         EditorTheme.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        EditorTheme.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Default", "Dark", "Eclipse", "IDEA", "Visual Studio", "Default-alt"}));
+        EditorTheme.setModel(new DefaultComboBoxModel(new String[]{"Default", "Dark", "Eclipse", "IDEA", "Visual Studio", "Default-alt"}));
         EditorTheme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EditorThemeActionPerformed();
@@ -2271,56 +2257,56 @@ public class ESPlorer extends javax.swing.JFrame {
         UseExternalEditor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         UseExternalEditor.setText("Use external editor");
         UseExternalEditor.setToolTipText("Use external editor. All files will be open in ReadOnly mode");
-        UseExternalEditor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        UseExternalEditor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        UseExternalEditor.setHorizontalAlignment(SwingConstants.LEFT);
+        UseExternalEditor.setHorizontalTextPosition(SwingConstants.RIGHT);
         UseExternalEditor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 UseExternalEditorItemStateChanged();
             }
         });
 
-        javax.swing.GroupLayout OptionsOtherLayout = new javax.swing.GroupLayout(optionsOther);
+        GroupLayout OptionsOtherLayout = new GroupLayout(optionsOther);
         optionsOther.setLayout(OptionsOtherLayout);
         OptionsOtherLayout.setHorizontalGroup(
-                OptionsOtherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(FileAutoSaveDisk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(FileAutoSaveESP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(FileAutoSaveDisk, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(FileAutoSaveESP, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(OptionsOtherLayout.createSequentialGroup()
                                 .addComponent(editorThemeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(EditorTheme, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(EditorTheme, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
-                        .addComponent(UseExternalEditor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(FileAutoRun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(UseExternalEditor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(FileAutoRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         OptionsOtherLayout.setVerticalGroup(
-                OptionsOtherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(OptionsOtherLayout.createSequentialGroup()
-                                .addComponent(FileAutoSaveDisk, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(FileAutoSaveDisk, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
                                 .addGap(1, 1, 1)
-                                .addComponent(FileAutoSaveESP, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(FileAutoSaveESP, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(UseExternalEditor)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(OptionsOtherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(OptionsOtherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(editorThemeLabel)
-                                        .addComponent(EditorTheme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(EditorTheme, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(FileAutoRun)
                                 .addContainerGap(39, Short.MAX_VALUE))
         );
-        optionsOther.setLayer(FileAutoSaveDisk, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsOther.setLayer(FileAutoSaveESP, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsOther.setLayer(FileAutoRun, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsOther.setLayer(editorThemeLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsOther.setLayer(EditorTheme, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsOther.setLayer(UseExternalEditor, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(FileAutoSaveDisk, JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(FileAutoSaveESP, JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(FileAutoRun, JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(editorThemeLabel, JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(EditorTheme, JLayeredPane.DEFAULT_LAYER);
+        optionsOther.setLayer(UseExternalEditor, JLayeredPane.DEFAULT_LAYER);
 
-        optionsFileSendMode.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Send", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        optionsFileSendMode.setBorder(BorderFactory.createTitledBorder(null, "Send", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         optionsFileSendMode.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
         DelayLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        DelayLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        DelayLabel.setHorizontalAlignment(SwingConstants.CENTER);
         DelayLabel.setText("Delay after answer = 0 ms");
         DelayLabel.setToolTipText("It's not \"line delay\", as you known. It's delay between answer from ESP and send new data");
 
@@ -2336,12 +2322,12 @@ public class ESPlorer extends javax.swing.JFrame {
         Delay.setAlignmentY(1.0F);
         Delay.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                DelayStateChanged(evt);
+                DelayStateChanged();
             }
         });
 
         AnswerDelayLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        AnswerDelayLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        AnswerDelayLabel.setHorizontalAlignment(SwingConstants.CENTER);
         AnswerDelayLabel.setText("Answer timeout = 3 s");
         AnswerDelayLabel.setToolTipText("How many time we waiting answer from ESP8266");
 
@@ -2370,7 +2356,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         LineDelayLabel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        LineDelayLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LineDelayLabel.setHorizontalAlignment(SwingConstants.CENTER);
         LineDelayLabel.setText("Line delay for \"Dumb Mode\" = 200 ms");
         LineDelayLabel.setToolTipText("It's usual \"line delay\", as you known.");
 
@@ -2410,58 +2396,58 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout OptionsFileSendModeLayout = new javax.swing.GroupLayout(optionsFileSendMode);
+        GroupLayout OptionsFileSendModeLayout = new GroupLayout(optionsFileSendMode);
         optionsFileSendMode.setLayout(OptionsFileSendModeLayout);
         OptionsFileSendModeLayout.setHorizontalGroup(
-                OptionsFileSendModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
-                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
-                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(TurboMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(DelayLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(TurboMode, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(DelayLabel, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                                                 .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OptionsFileSendModeLayout.createSequentialGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, OptionsFileSendModeLayout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
-                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(DumbMode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(Delay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(AnswerDelayLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(AnswerDelay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(LineDelayLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(LineDelay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(DumbMode, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(Delay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(AnswerDelayLabel, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(AnswerDelay, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(LineDelayLabel, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(LineDelay, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         OptionsFileSendModeLayout.setVerticalGroup(
-                OptionsFileSendModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                OptionsFileSendModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(OptionsFileSendModeLayout.createSequentialGroup()
                                 .addComponent(TurboMode)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(DelayLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Delay, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Delay, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(AnswerDelayLabel)
                                 .addGap(1, 1, 1)
-                                .addComponent(AnswerDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(AnswerDelay, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(DumbMode)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(LineDelayLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(LineDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LineDelay, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        optionsFileSendMode.setLayer(DelayLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(Delay, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(AnswerDelayLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(AnswerDelay, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(DumbMode, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(LineDelayLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(LineDelay, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        optionsFileSendMode.setLayer(TurboMode, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(DelayLabel, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(Delay, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(AnswerDelayLabel, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(AnswerDelay, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(DumbMode, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(LineDelayLabel, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(LineDelay, JLayeredPane.DEFAULT_LAYER);
+        optionsFileSendMode.setLayer(TurboMode, JLayeredPane.DEFAULT_LAYER);
 
-        jLayeredPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Data scrollback", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        jLayeredPane2.setBorder(BorderFactory.createTitledBorder(null, "Data scrollback", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel1.setText("Terminal");
@@ -2471,7 +2457,7 @@ public class ESPlorer extends javax.swing.JFrame {
         jLabel7.setText("Log");
         jLabel7.setPreferredSize(new java.awt.Dimension(17, 23));
 
-        TerminalMaxSize.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        TerminalMaxSize.setHorizontalAlignment(JTextField.RIGHT);
         TerminalMaxSize.setText("100");
         TerminalMaxSize.setToolTipText("");
         TerminalMaxSize.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2480,7 +2466,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        LogMaxSize.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        LogMaxSize.setHorizontalAlignment(JTextField.RIGHT);
         LogMaxSize.setText("10");
         LogMaxSize.setToolTipText("");
         LogMaxSize.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2497,48 +2483,48 @@ public class ESPlorer extends javax.swing.JFrame {
 
         jLabel9.setText("kb");
 
-        javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
+        GroupLayout jLayeredPane2Layout = new GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
         jLayeredPane2Layout.setHorizontalGroup(
-                jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(TerminalMaxSize, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                                .addGroup(jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(TerminalMaxSize, GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
                                         .addComponent(LogMaxSize))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel8)
                                         .addComponent(jLabel9))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane2Layout.setVerticalGroup(
-                jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(TerminalMaxSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(TerminalMaxSize, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel8))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(LogMaxSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jLayeredPane2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(LogMaxSize, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel9)))
         );
-        jLayeredPane2.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(TerminalMaxSize, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(LogMaxSize, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel1, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel7, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(TerminalMaxSize, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(LogMaxSize, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel8, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel9, JLayeredPane.DEFAULT_LAYER);
 
-        jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "SerialPort", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        jLayeredPane3.setBorder(BorderFactory.createTitledBorder(null, "SerialPort", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         CustomPortName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        CustomPortName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        CustomPortName.setHorizontalAlignment(JTextField.LEFT);
         CustomPortName.setText("/dev/AnySerialDevice");
         CustomPortName.setToolTipText("");
         CustomPortName.setEnabled(false);
@@ -2559,7 +2545,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel10.setText("(AutoScan will be disabled)");
         jLabel10.setPreferredSize(new java.awt.Dimension(17, 23));
 
@@ -2572,79 +2558,79 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jLayeredPane3Layout = new javax.swing.GroupLayout(jLayeredPane3);
+        GroupLayout jLayeredPane3Layout = new GroupLayout(jLayeredPane3);
         jLayeredPane3.setLayout(jLayeredPane3Layout);
         jLayeredPane3Layout.setHorizontalGroup(
-                jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(UseCustomPortName, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CustomPortName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(AutodetectFirmware, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                jLayeredPane3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(UseCustomPortName, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                        .addComponent(jLabel10, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CustomPortName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(AutodetectFirmware, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jLayeredPane3Layout.setVerticalGroup(
-                jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jLayeredPane3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jLayeredPane3Layout.createSequentialGroup()
                                 .addComponent(UseCustomPortName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(CustomPortName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(CustomPortName, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(AutodetectFirmware))
         );
-        jLayeredPane3.setLayer(CustomPortName, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane3.setLayer(UseCustomPortName, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane3.setLayer(jLabel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane3.setLayer(AutodetectFirmware, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(CustomPortName, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(UseCustomPortName, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel10, JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(AutodetectFirmware, JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout NodeMCUSettingsLayout = new javax.swing.GroupLayout(nodeMCUSettings);
+        GroupLayout NodeMCUSettingsLayout = new GroupLayout(nodeMCUSettings);
         nodeMCUSettings.setLayout(NodeMCUSettingsLayout);
         NodeMCUSettingsLayout.setHorizontalGroup(
-                NodeMCUSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(optionsOther)
                                         .addComponent(optionsFirmware)
-                                        .addComponent(optionsFileSendMode, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(optionsFileSendMode, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLayeredPane2)
                                         .addComponent(jLayeredPane3))
                                 .addContainerGap(135, Short.MAX_VALUE))
         );
         NodeMCUSettingsLayout.setVerticalGroup(
-                NodeMCUSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(NodeMCUSettingsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                                .addComponent(optionsFirmware, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(optionsOther, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(optionsFirmware, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(optionsOther, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(NodeMCUSettingsLayout.createSequentialGroup()
-                                                .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(optionsFileSendMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLayeredPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLayeredPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(optionsFileSendMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 173, Short.MAX_VALUE))
         );
-        nodeMCUSettings.setLayer(optionsFirmware, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSettings.setLayer(optionsOther, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSettings.setLayer(optionsFileSendMode, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSettings.setLayer(jLayeredPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        nodeMCUSettings.setLayer(jLayeredPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSettings.setLayer(optionsFirmware, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSettings.setLayer(optionsOther, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSettings.setLayer(optionsFileSendMode, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSettings.setLayer(jLayeredPane2, JLayeredPane.DEFAULT_LAYER);
+        nodeMCUSettings.setLayer(jLayeredPane3, JLayeredPane.DEFAULT_LAYER);
 
-        TextTab.addTab("Settings", new javax.swing.ImageIcon(getClass().getResource("/resources/settings2.png")), nodeMCUSettings, "Settings for file sending"); // NOI18N
+        TextTab.addTab("Settings", new ImageIcon(getClass().getResource("/resources/settings2.png")), nodeMCUSettings, "Settings for file sending"); // NOI18N
 
-        javax.swing.GroupLayout NodeMCULayout = new javax.swing.GroupLayout(nodeMCU);
+        GroupLayout NodeMCULayout = new GroupLayout(nodeMCU);
         nodeMCU.setLayout(NodeMCULayout);
         NodeMCULayout.setHorizontalGroup(
-                NodeMCULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(TextTab, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+                NodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
         );
         NodeMCULayout.setVerticalGroup(
-                NodeMCULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(TextTab, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+                NodeMCULayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(TextTab, GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
         );
 
         TextTab.getAccessibleContext().setAccessibleName("NewFile");
@@ -2655,7 +2641,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
 
         cmdGetCWJAP.setFont(cmdGetCWJAP.getFont().deriveFont((float) 12));
-        cmdGetCWJAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
+        cmdGetCWJAP.setIcon(new ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
         cmdGetCWJAP.setText("CWJAP? - Connection info");
         cmdGetCWJAP.setToolTipText("Query AP’s info which is connect by ESP8266");
         cmdGetCWJAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2668,7 +2654,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdSetCWJAP.setFont(cmdSetCWJAP.getFont().deriveFont((float) 12));
-        cmdSetCWJAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/connect3.png"))); // NOI18N
+        cmdSetCWJAP.setIcon(new ImageIcon(getClass().getResource("/resources/connect3.png"))); // NOI18N
         cmdSetCWJAP.setText("CWJAP Connect to AP");
         cmdSetCWJAP.setToolTipText("Connect to WiFi Access Point");
         cmdSetCWJAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2713,7 +2699,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdSetCWQAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCWQAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/disconnect3.png"))); // NOI18N
+        cmdSetCWQAP.setIcon(new ImageIcon(getClass().getResource("/resources/disconnect3.png"))); // NOI18N
         cmdSetCWQAP.setText("CWQAP - Disconnect from AP");
         cmdSetCWQAP.setToolTipText("Disconnect from WiFi Access Point");
         cmdSetCWQAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2726,7 +2712,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdGetCIPSTAMAC.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPSTAMAC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
+        cmdGetCIPSTAMAC.setIcon(new ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
         cmdGetCIPSTAMAC.setText("CIPSTAMAC? Get MAC");
         cmdGetCIPSTAMAC.setToolTipText("Get Station MAC address");
         cmdGetCIPSTAMAC.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2739,7 +2725,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdSetCIPSTAMAC.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPSTAMAC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
+        cmdSetCIPSTAMAC.setIcon(new ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
         cmdSetCIPSTAMAC.setText("CIPSTAMAC= Set MAC Station");
         cmdSetCIPSTAMAC.setToolTipText("Set Station MAC address");
         cmdSetCIPSTAMAC.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2752,7 +2738,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         try {
-            MAC.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA:AA:AA:AA:AA:AA")));
+            MAC.setFormatterFactory(new DefaultFormatterFactory(new javax.swing.text.MaskFormatter("AA:AA:AA:AA:AA:AA")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -2764,7 +2750,7 @@ public class ESPlorer extends javax.swing.JFrame {
         MAC.setPreferredSize(new java.awt.Dimension(210, 23));
 
         cmdGetCIPSTA.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPSTA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
+        cmdGetCIPSTA.setIcon(new ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
         cmdGetCIPSTA.setText("CIPSTA? Get Station IP");
         cmdGetCIPSTA.setToolTipText("Get Station IP address");
         cmdGetCIPSTA.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2777,7 +2763,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdSetCIPSTA.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCIPSTA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
+        cmdSetCIPSTA.setIcon(new ImageIcon(getClass().getResource("/resources/set.png"))); // NOI18N
         cmdSetCIPSTA.setText("CIPSTA= Set Station IP");
         cmdSetCIPSTA.setToolTipText("Set Station IP address");
         cmdSetCIPSTA.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2797,7 +2783,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
 
         cmdSetCWSAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdSetCWSAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/server1_start.png"))); // NOI18N
+        cmdSetCWSAP.setIcon(new ImageIcon(getClass().getResource("/resources/server1_start.png"))); // NOI18N
         cmdSetCWSAP.setText("CWSAP=  Set softAP config");
         cmdSetCWSAP.setToolTipText("Set configuraton of softAP mode");
         cmdSetCWSAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2810,7 +2796,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdGetCWSAP.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCWSAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
+        cmdGetCWSAP.setIcon(new ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
         cmdGetCWSAP.setText("AT+CWSAP? Get softAP config");
         cmdGetCWSAP.setToolTipText("Get configuraton of softAP mode");
         cmdGetCWSAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2823,7 +2809,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdGetCIPAPMAC.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCIPAPMAC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
+        cmdGetCIPAPMAC.setIcon(new ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
         cmdGetCIPAPMAC.setText("CIPAPMAC Get softAP MAC");
         cmdGetCIPAPMAC.setToolTipText("Get MAC address of ESP8266 softAP");
         cmdGetCIPAPMAC.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2836,7 +2822,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         cmdGetCWLIF.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmdGetCWLIF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
+        cmdGetCWLIF.setIcon(new ImageIcon(getClass().getResource("/resources/get.png"))); // NOI18N
         cmdGetCWLIF.setText("CWLIF  Get connected clients IP");
         cmdGetCWLIF.setToolTipText("Get IP adresses softAP clients");
         cmdGetCWLIF.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -2849,12 +2835,12 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
 
-        common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common parameters for commands", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common parameters for commands", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         common.setMaximumSize(new java.awt.Dimension(445, 54));
         common.setMinimumSize(new java.awt.Dimension(445, 54));
         common.setPreferredSize(new java.awt.Dimension(445, 54));
 
-        conn_id.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
+        conn_id.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
         conn_id.setToolTipText("Connection ID");
 
         MUXGroup.add(single);
@@ -2878,35 +2864,35 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel4.setText("Connection ID");
 
-        javax.swing.GroupLayout commonLayout = new javax.swing.GroupLayout(common);
+        GroupLayout commonLayout = new GroupLayout(common);
         common.setLayout(commonLayout);
         commonLayout.setHorizontalGroup(
-                commonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                commonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(commonLayout.createSequentialGroup()
                                 .addGap(2, 2, 2)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(conn_id, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(conn_id, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(multi)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(single, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(single, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE))
         );
         commonLayout.setVerticalGroup(
-                commonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                commonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(commonLayout.createSequentialGroup()
-                                .addGroup(commonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(conn_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(commonLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(conn_id, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(multi)
                                         .addComponent(single)
                                         .addComponent(jLabel4))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        cmdGetCIPSTART.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
+        cmdGetCIPSTART.setIcon(new ImageIcon(getClass().getResource("/resources/information.png"))); // NOI18N
         cmdGetCIPSTART.setText("CIPSTART=? - Connection info");
         cmdGetCIPSTART.setToolTipText("Get the information of param");
         cmdGetCIPSTART.addActionListener(new java.awt.event.ActionListener() {
@@ -2914,7 +2900,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        UDP.setBorder(javax.swing.BorderFactory.createTitledBorder("UDP only"));
+        UDP.setBorder(BorderFactory.createTitledBorder("UDP only"));
         UDP.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
             }
@@ -2923,45 +2909,45 @@ public class ESPlorer extends javax.swing.JFrame {
         udp_local_port.setToolTipText("Local UDP port");
         udp_local_port.setEnabled(false);
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel2.setText("Local port");
 
         udp_mode.setToolTipText("Local UDP port");
         udp_mode.setEnabled(false);
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel3.setText("mode");
 
-        javax.swing.GroupLayout UDPLayout = new javax.swing.GroupLayout(UDP);
+        GroupLayout UDPLayout = new GroupLayout(UDP);
         UDP.setLayout(UDPLayout);
         UDPLayout.setHorizontalGroup(
-                UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(UDPLayout.createSequentialGroup()
-                                .addGroup(UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(udp_local_port))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(udp_mode)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(6, 6, 6))
         );
         UDPLayout.setVerticalGroup(
-                UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                UDPLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(UDPLayout.createSequentialGroup()
-                                .addGroup(UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(UDPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(udp_local_port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(udp_mode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(UDPLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(udp_local_port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(udp_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
-        UDP.setLayer(udp_local_port, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(udp_mode, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        UDP.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        UDP.setLayer(udp_local_port, JLayeredPane.DEFAULT_LAYER);
+        UDP.setLayer(jLabel2, JLayeredPane.DEFAULT_LAYER);
+        UDP.setLayer(udp_mode, JLayeredPane.DEFAULT_LAYER);
+        UDP.setLayer(jLabel3, JLayeredPane.DEFAULT_LAYER);
 
         remote_address.setText("192.168.1.1");
         remote_address.setToolTipText("Remote IP address");
@@ -2969,19 +2955,19 @@ public class ESPlorer extends javax.swing.JFrame {
         remote_port.setText("80");
         remote_port.setToolTipText("Remote port");
 
-        protocol.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"TCP", "UDP"}));
+        protocol.setModel(new DefaultComboBoxModel(new String[]{"TCP", "UDP"}));
         protocol.setToolTipText("Connection type: TCP or UDP");
         protocol.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
             }
         });
 
-        cmdSetCIPSTART.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/connect3.png"))); // NOI18N
+        cmdSetCIPSTART.setIcon(new ImageIcon(getClass().getResource("/resources/connect3.png"))); // NOI18N
         cmdSetCIPSTART.setText("AT+CIPSTART= - Start connection");
         cmdSetCIPSTART.setToolTipText("Start a connection as client");
         cmdSetCIPSTART.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetCIPSTARTActionPerformed(evt);
+                cmdSetCIPSTARTActionPerformed();
             }
         });
 
@@ -2993,7 +2979,7 @@ public class ESPlorer extends javax.swing.JFrame {
         data.setCaretPosition(1);
         jScrollData.setViewportView(data);
 
-        cmdCIPSEND.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/level up.png"))); // NOI18N
+        cmdCIPSEND.setIcon(new ImageIcon(getClass().getResource("/resources/level up.png"))); // NOI18N
         cmdCIPSEND.setText("AT+CIPSEND= - Send data");
         cmdCIPSEND.setToolTipText("Send data to remote client");
         cmdCIPSEND.addActionListener(new java.awt.event.ActionListener() {
@@ -3009,7 +2995,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        cmdSetCIPCLOSE.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/disconnect3.png"))); // NOI18N
+        cmdSetCIPCLOSE.setIcon(new ImageIcon(getClass().getResource("/resources/disconnect3.png"))); // NOI18N
         cmdSetCIPCLOSE.setText("AT+CIPCLOSE - Close connection");
         cmdSetCIPCLOSE.setToolTipText("Close current connection in Single mode and close connection <ID> in Multiple mode");
         cmdSetCIPCLOSE.addActionListener(new java.awt.event.ActionListener() {
@@ -3018,154 +3004,154 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout TCPclientBottomPaneLayout = new javax.swing.GroupLayout(TCPclientBottomPane);
+        GroupLayout TCPclientBottomPaneLayout = new GroupLayout(TCPclientBottomPane);
         TCPclientBottomPane.setLayout(TCPclientBottomPaneLayout);
         TCPclientBottomPaneLayout.setHorizontalGroup(
-                TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                                .addComponent(UDP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(UDP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                                                .addComponent(remote_address, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(remote_port, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(protocol, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(cmdSetCIPSTART, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                                .addComponent(remote_address, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(remote_port, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(protocol, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(cmdSetCIPSTART, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                                .addComponent(jScrollData, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                        .addComponent(cmdCIPSENDinteractive, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(cmdCIPSEND, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(cmdSetCIPCLOSE, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                                        .addComponent(cmdGetCIPSTART, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addComponent(jScrollData, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                        .addComponent(cmdCIPSENDinteractive, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(cmdCIPSEND, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(cmdSetCIPCLOSE, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                                        .addComponent(cmdGetCIPSTART, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE))))
                                 .addGap(33, 33, 33))
                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                .addComponent(common, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(common, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
         TCPclientBottomPaneLayout.setVerticalGroup(
-                TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                .addComponent(common, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(common, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
                                                 .addGap(18, 18, 18)
-                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(remote_address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(remote_port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(protocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(remote_address, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(remote_port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(protocol, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(cmdSetCIPSTART))
                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(UDP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(UDP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addGap(413, 413, 413)
-                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(TCPclientBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(TCPclientBottomPaneLayout.createSequentialGroup()
                                                 .addComponent(cmdGetCIPSTART)
                                                 .addGap(7, 7, 7)
                                                 .addComponent(cmdCIPSEND)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(cmdCIPSENDinteractive)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(cmdSetCIPCLOSE))
                                         .addComponent(jScrollData))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel6.setText("Server timeout");
 
-        javax.swing.GroupLayout TCPServerBottomPaneLayout = new javax.swing.GroupLayout(TCPServerBottomPane);
+        GroupLayout TCPServerBottomPaneLayout = new GroupLayout(TCPServerBottomPane);
         TCPServerBottomPane.setLayout(TCPServerBottomPaneLayout);
         TCPServerBottomPaneLayout.setHorizontalGroup(
-                TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(cmdSetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(cmdSetCIPSTO, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
-                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(serverTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(cmdSetCIPMODE1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(cmdGetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(cmdGetCIPMODE, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCIPMODE0, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jLabel6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(serverTimeout, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(cmdSetCIPMODE1, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(cmdGetCIPSTO, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(cmdGetCIPMODE, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdSetCIPMODE0, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
-                                                .addComponent(ServerMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(ServerMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ServerPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(cmdSetCIPSERVER, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(ServerPort, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(cmdSetCIPSERVER, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)))
         );
         TCPServerBottomPaneLayout.setVerticalGroup(
-                TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(TCPServerBottomPaneLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel5)
-                                        .addComponent(ServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(ServerMode, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdGetCIPMODE, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(cmdSetCIPSERVER, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmdSetCIPMODE0, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cmdSetCIPMODE1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cmdGetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(serverTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ServerPort, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ServerMode, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdGetCIPMODE, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(cmdSetCIPSERVER, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cmdSetCIPMODE0, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmdSetCIPMODE1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmdGetCIPSTO, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(TCPServerBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(serverTimeout, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cmdSetCIPSTO, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmdSetCIPSTO, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        TCPServerBottomPane.setLayer(cmdGetCIPMODE, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPMODE0, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPMODE1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPSERVER, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(ServerMode, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(ServerPort, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdGetCIPSTO, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(cmdSetCIPSTO, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(serverTimeout, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        TCPServerBottomPane.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdGetCIPMODE, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdSetCIPMODE0, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdSetCIPMODE1, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdSetCIPSERVER, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(ServerMode, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(jLabel5, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(ServerPort, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdGetCIPSTO, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(cmdSetCIPSTO, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(serverTimeout, JLayeredPane.DEFAULT_LAYER);
+        TCPServerBottomPane.setLayer(jLabel6, JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout AT_ServerLayout = new javax.swing.GroupLayout(AT_Server);
+        GroupLayout AT_ServerLayout = new GroupLayout(AT_Server);
         AT_Server.setLayout(AT_ServerLayout);
         AT_ServerLayout.setHorizontalGroup(
-                AT_ServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
-                                .addGroup(AT_ServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(TCPServerBottomPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE)
-                                        .addComponent(TCPServerTopFiller, javax.swing.GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE))
+                AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
+                                .addGroup(AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(TCPServerBottomPane, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE)
+                                        .addComponent(TCPServerTopFiller, GroupLayout.PREFERRED_SIZE, 447, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         AT_ServerLayout.setVerticalGroup(
-                AT_ServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
-                                .addComponent(TCPServerTopFiller, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TCPServerBottomPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                AT_ServerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, AT_ServerLayout.createSequentialGroup()
+                                .addComponent(TCPServerTopFiller, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TCPServerBottomPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        TCP_common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common TCP commands"));
+        TCP_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common TCP commands"));
         TCP_common.setAlignmentX(0.0F);
         TCP_common.setAlignmentY(0.0F);
         TCP_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -3174,7 +3160,7 @@ public class ESPlorer extends javax.swing.JFrame {
         TCP_common.setOpaque(true);
         TCP_common.setLayout(new java.awt.FlowLayout());
 
-        WiFi_common.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Common WiFi commands"));
+        WiFi_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
         WiFi_common.setAlignmentX(0.0F);
         WiFi_common.setAlignmentY(0.0F);
         WiFi_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -3212,7 +3198,7 @@ public class ESPlorer extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE2, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
 
-        cmdSetCWLAP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/search again.png"))); // NOI18N
+        cmdSetCWLAP.setIcon(new ImageIcon(getClass().getResource("/resources/search again.png"))); // NOI18N
         cmdSetCWLAP.setText("CWLAP - Get AP list");
         cmdSetCWLAP.setToolTipText("Lists all available WiFi Access Points");
         cmdSetCWLAP.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -3233,13 +3219,13 @@ public class ESPlorer extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cmdGetHelpCWMODE, org.jdesktop.beansbinding.ELProperty.create("${font}"), cmdSetCWMODE3, org.jdesktop.beansbinding.BeanProperty.create("font"));
         bindingGroup.addBinding(binding);
 
-        DHCP.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0 - Enable DHCP", "1 - Disable DHCP"}));
+        DHCP.setModel(new DefaultComboBoxModel(new String[]{"0 - Enable DHCP", "1 - Disable DHCP"}));
         DHCP.setMaximumSize(new java.awt.Dimension(114, 23));
         DHCP.setMinimumSize(new java.awt.Dimension(114, 23));
         DHCP.setPreferredSize(new java.awt.Dimension(114, 23));
         WiFi_common.add(DHCP);
 
-        DHCPmode.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"0 - Set softAP", "1 - Set Station", "2 - Set both AP&Sta"}));
+        DHCPmode.setModel(new DefaultComboBoxModel(new String[]{"0 - Set softAP", "1 - Set Station", "2 - Set both AP&Sta"}));
         DHCPmode.setSelectedIndex(1);
         DHCPmode.setMaximumSize(new java.awt.Dimension(90, 23));
         DHCPmode.setMinimumSize(new java.awt.Dimension(90, 23));
@@ -3247,20 +3233,20 @@ public class ESPlorer extends javax.swing.JFrame {
         WiFi_common.add(DHCPmode);
 
         comingSoon1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        comingSoon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        comingSoon1.setHorizontalAlignment(SwingConstants.CENTER);
         comingSoon1.setText("Coming soon...");
 
-        javax.swing.GroupLayout LeftBasePaneLayout = new javax.swing.GroupLayout(LeftBasePane);
+        GroupLayout LeftBasePaneLayout = new GroupLayout(LeftBasePane);
         LeftBasePane.setLayout(LeftBasePaneLayout);
         LeftBasePaneLayout.setHorizontalGroup(
-                LeftBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(LeftTab, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
+                LeftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
         );
         LeftBasePaneLayout.setVerticalGroup(
-                LeftBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(LeftTab, javax.swing.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
+                LeftBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(LeftTab, GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
         );
-        LeftBasePane.setLayer(LeftTab, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        LeftBasePane.setLayer(LeftTab, JLayeredPane.DEFAULT_LAYER);
 
         LeftTab.getAccessibleContext().setAccessibleName("LeftTab");
 
@@ -3269,42 +3255,42 @@ public class ESPlorer extends javax.swing.JFrame {
         LEDPanel.setMaximumSize(new java.awt.Dimension(392, 25));
         LEDPanel.setMinimumSize(new java.awt.Dimension(392, 25));
 
-        PortOpenLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        PortOpenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        PortOpenLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        PortOpenLabel.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         PortOpenLabel.setText("Open");
-        PortOpenLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        PortOpenLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         PortOpenLabel.setMaximumSize(new java.awt.Dimension(50, 25));
         PortOpenLabel.setMinimumSize(new java.awt.Dimension(50, 25));
         PortOpenLabel.setPreferredSize(new java.awt.Dimension(50, 25));
-        PortOpenLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        PortOpenLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-        PortCTS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        PortCTS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        PortCTS.setHorizontalAlignment(SwingConstants.CENTER);
+        PortCTS.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         PortCTS.setText("CTS");
-        PortCTS.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        PortCTS.setHorizontalTextPosition(SwingConstants.CENTER);
         PortCTS.setMaximumSize(new java.awt.Dimension(50, 25));
         PortCTS.setMinimumSize(new java.awt.Dimension(50, 25));
         PortCTS.setPreferredSize(new java.awt.Dimension(50, 25));
-        PortCTS.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        PortCTS.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-        PortDTR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        PortDTR.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         PortDTR.setText("DTR");
         PortDTR.setToolTipText("");
-        PortDTR.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        PortDTR.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        PortDTR.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        PortDTR.setHorizontalTextPosition(SwingConstants.CENTER);
+        PortDTR.setVerticalAlignment(SwingConstants.TOP);
+        PortDTR.setVerticalTextPosition(SwingConstants.BOTTOM);
         PortDTR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PortDTRActionPerformed();
             }
         });
 
-        PortRTS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
+        PortRTS.setIcon(new ImageIcon(getClass().getResource("/resources/led_grey.png"))); // NOI18N
         PortRTS.setText("RTS");
         PortRTS.setToolTipText("");
-        PortRTS.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        PortRTS.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        PortRTS.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        PortRTS.setHorizontalTextPosition(SwingConstants.CENTER);
+        PortRTS.setVerticalAlignment(SwingConstants.TOP);
+        PortRTS.setVerticalTextPosition(SwingConstants.BOTTOM);
         PortRTS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PortRTSActionPerformed();
@@ -3312,7 +3298,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
 
         Open.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        Open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/connect1.png"))); // NOI18N
+        Open.setIcon(new ImageIcon(getClass().getResource("/resources/connect1.png"))); // NOI18N
         Open.setText("Open");
         Open.setToolTipText("Open/Close selected serial port");
         Open.setIconTextGap(2);
@@ -3322,12 +3308,12 @@ public class ESPlorer extends javax.swing.JFrame {
         Open.setPreferredSize(new java.awt.Dimension(80, 25));
         Open.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpenActionPerformed(evt);
+                OpenActionPerformed();
             }
         });
 
         Speed.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        Speed.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400", "460800", "921600"}));
+        Speed.setModel(new DefaultComboBoxModel(new String[]{"1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400", "460800", "921600"}));
         Speed.setToolTipText("Select baud rate");
         Speed.setMaximumSize(new java.awt.Dimension(80, 25));
         Speed.setMinimumSize(new java.awt.Dimension(80, 25));
@@ -3347,7 +3333,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        ReScan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refresh3.png"))); // NOI18N
+        ReScan.setIcon(new ImageIcon(getClass().getResource("/resources/refresh3.png"))); // NOI18N
         ReScan.setToolTipText("Scan system for available serial port");
         ReScan.setMaximumSize(new java.awt.Dimension(25, 25));
         ReScan.setMinimumSize(new java.awt.Dimension(25, 25));
@@ -3371,7 +3357,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         Port.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         Port.setMaximumRowCount(20);
-        Port.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"COM1", "COM3"}));
+        Port.setModel(new DefaultComboBoxModel(new String[]{"COM1", "COM3"}));
         Port.setToolTipText("Serial port chooser");
         Port.setMaximumSize(new java.awt.Dimension(150, 25));
         Port.setMinimumSize(new java.awt.Dimension(150, 25));
@@ -3396,72 +3382,72 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout LEDPanelLayout = new javax.swing.GroupLayout(LEDPanel);
+        GroupLayout LEDPanelLayout = new GroupLayout(LEDPanel);
         LEDPanel.setLayout(LEDPanelLayout);
         LEDPanelLayout.setHorizontalGroup(
-                LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(LEDPanelLayout.createSequentialGroup()
-                                .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(LEDPanelLayout.createSequentialGroup()
                                                 .addComponent(PortDTR)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(PortRTS))
                                         .addGroup(LEDPanelLayout.createSequentialGroup()
-                                                .addComponent(PortOpenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(PortCTS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Open, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(PortOpenLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(PortCTS, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Open, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(LEDPanelLayout.createSequentialGroup()
-                                                .addComponent(ReScan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(AutoScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(EOL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(Speed, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(Port, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ReScan, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(AutoScroll, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(EOL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(Speed, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(Port, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         LEDPanelLayout.setVerticalGroup(
-                LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(LEDPanelLayout.createSequentialGroup()
-                                .addComponent(Port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
-                                                .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(ReScan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Port, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addGroup(GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
+                                                .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(ReScan, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addGroup(LEDPanelLayout.createSequentialGroup()
-                                                                .addComponent(AutoScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(EOL, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(Speed, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(Open, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
-                                                        .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addComponent(PortOpenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(PortCTS, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(LEDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(AutoScroll, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(EOL, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(Speed, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(Open, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(GroupLayout.Alignment.LEADING, LEDPanelLayout.createSequentialGroup()
+                                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addComponent(PortOpenLabel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(PortCTS, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addGroup(LEDPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                 .addComponent(PortDTR)
                                                                 .addComponent(PortRTS)))))
                                 .addGap(0, 0, 0))
         );
-        LEDPanel.setLayer(PortOpenLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortCTS, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortDTR, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(PortRTS, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Open, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Speed, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(ReScan, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(AutoScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        LEDPanel.setLayer(Port, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(PortOpenLabel, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(PortCTS, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(PortDTR, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(PortRTS, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(Open, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(Speed, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(ReScan, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(AutoScroll, JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(Port, JLayeredPane.DEFAULT_LAYER);
 
         Port.getAccessibleContext().setAccessibleName("");
-        LEDPanel.setLayer(EOL, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        LEDPanel.setLayer(EOL, JLayeredPane.DEFAULT_LAYER);
 
         rightBottomPane.setAlignmentX(0.0F);
         rightBottomPane.setAlignmentY(0.0F);
@@ -3476,7 +3462,7 @@ public class ESPlorer extends javax.swing.JFrame {
         LF.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         SendCommand.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        SendCommand.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/left.png"))); // NOI18N
+        SendCommand.setIcon(new ImageIcon(getClass().getResource("/resources/left.png"))); // NOI18N
         SendCommand.setToolTipText("");
         SendCommand.setAlignmentY(0.0F);
         SendCommand.setEnabled(false);
@@ -3499,7 +3485,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         Command.setEditable(true);
         Command.setMaximumRowCount(20);
-        Command.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"AT", "AT+GMR", "AT+RST", ""}));
+        Command.setModel(new DefaultComboBoxModel(new String[]{"AT", "AT+GMR", "AT+RST", ""}));
         Command.setToolTipText("Command to send");
         Command.setAlignmentX(0.0F);
         Command.setAlignmentY(0.0F);
@@ -3526,36 +3512,36 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout RightBottomPaneLayout = new javax.swing.GroupLayout(rightBottomPane);
+        GroupLayout RightBottomPaneLayout = new GroupLayout(rightBottomPane);
         rightBottomPane.setLayout(RightBottomPaneLayout);
         RightBottomPaneLayout.setHorizontalGroup(
-                RightBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(RightBottomPaneLayout.createSequentialGroup()
-                                .addComponent(Command, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(SendCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(RightBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(Command, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SendCommand, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(CR)
                                         .addComponent(LF))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         RightBottomPaneLayout.setVerticalGroup(
-                RightBottomPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(SendCommand, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, RightBottomPaneLayout.createSequentialGroup()
+                RightBottomPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(SendCommand, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(GroupLayout.Alignment.LEADING, RightBottomPaneLayout.createSequentialGroup()
                                 .addComponent(CR)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(LF)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                        .addComponent(Command, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Command, GroupLayout.Alignment.LEADING)
         );
-        rightBottomPane.setLayer(LF, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBottomPane.setLayer(SendCommand, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        rightBottomPane.setLayer(LF, JLayeredPane.DEFAULT_LAYER);
+        rightBottomPane.setLayer(SendCommand, JLayeredPane.DEFAULT_LAYER);
 
         SendCommand.getAccessibleContext().setAccessibleName("");
-        rightBottomPane.setLayer(CR, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBottomPane.setLayer(Command, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        rightBottomPane.setLayer(CR, JLayeredPane.DEFAULT_LAYER);
+        rightBottomPane.setLayer(Command, JLayeredPane.DEFAULT_LAYER);
         Command.getAccessibleContext().setAccessibleName("Command");
 
         rightBigPane.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -3574,7 +3560,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         RightSplitPane.setBorder(null);
         RightSplitPane.setDividerLocation(320);
-        RightSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        RightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
         RightSplitPane.setToolTipText("");
         RightSplitPane.setName(""); // NOI18N
         RightSplitPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -3619,7 +3605,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         ScrollLog.setBorder(terminalPane.getBorder());
         ScrollLog.setToolTipText("Log");
-        ScrollLog.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        ScrollLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         ScrollLog.setAlignmentX(0.0F);
         ScrollLog.setAlignmentY(0.0F);
 
@@ -3652,26 +3638,26 @@ public class ESPlorer extends javax.swing.JFrame {
 
         RightSplitPane.setBottomComponent(ScrollLog);
 
-        javax.swing.GroupLayout TerminalLogPaneLayout = new javax.swing.GroupLayout(terminalLogPane);
+        GroupLayout TerminalLogPaneLayout = new GroupLayout(terminalLogPane);
         terminalLogPane.setLayout(TerminalLogPaneLayout);
         TerminalLogPaneLayout.setHorizontalGroup(
-                TerminalLogPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 299, Short.MAX_VALUE)
-                        .addGroup(TerminalLogPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(RightSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+                        .addGroup(TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(RightSplitPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
         );
         TerminalLogPaneLayout.setVerticalGroup(
-                TerminalLogPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 425, Short.MAX_VALUE)
-                        .addGroup(TerminalLogPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(RightSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
+                        .addGroup(TerminalLogPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(RightSplitPane, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
         );
-        terminalLogPane.setLayer(RightSplitPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        terminalLogPane.setLayer(RightSplitPane, JLayeredPane.DEFAULT_LAYER);
 
         RightFilesSplitPane.setLeftComponent(terminalLogPane);
 
         FileManagerScrollPane.setBorder(null);
-        FileManagerScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        FileManagerScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         FileManagerScrollPane.setMaximumSize(new java.awt.Dimension(150, 150));
         FileManagerScrollPane.setPreferredSize(new java.awt.Dimension(150, 150));
 
@@ -3682,10 +3668,10 @@ public class ESPlorer extends javax.swing.JFrame {
         flowLayout1.setAlignOnBaseline(true);
         FileManagerPane.setLayout(flowLayout1);
 
-        FileFormat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
+        FileFormat.setIcon(new ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
         FileFormat.setText("Format");
         FileFormat.setToolTipText("Format (erase) NodeMCU file system. All files will be removed!");
-        FileFormat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileFormat.setHorizontalAlignment(SwingConstants.LEFT);
         FileFormat.setMargin(new java.awt.Insets(2, 4, 2, 4));
         FileFormat.setMaximumSize(new java.awt.Dimension(130, 25));
         FileFormat.setMinimumSize(new java.awt.Dimension(130, 25));
@@ -3697,11 +3683,11 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         FileManagerPane.add(FileFormat);
 
-        FileSystemInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file manager.png"))); // NOI18N
+        FileSystemInfo.setIcon(new ImageIcon(getClass().getResource("/resources/file manager.png"))); // NOI18N
         FileSystemInfo.setText("FS Info");
         FileSystemInfo.setToolTipText("Execute command file.fsinfo() and show total, used and remainig space on the ESP filesystem");
         FileSystemInfo.setAlignmentX(0.5F);
-        FileSystemInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileSystemInfo.setHorizontalAlignment(SwingConstants.LEFT);
         FileSystemInfo.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileSystemInfo.setMaximumSize(new java.awt.Dimension(130, 25));
         FileSystemInfo.setPreferredSize(new java.awt.Dimension(130, 25));
@@ -3713,10 +3699,10 @@ public class ESPlorer extends javax.swing.JFrame {
         FileManagerPane.add(FileSystemInfo);
 
         FileListReload.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        FileListReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refresh3.png"))); // NOI18N
+        FileListReload.setIcon(new ImageIcon(getClass().getResource("/resources/refresh3.png"))); // NOI18N
         FileListReload.setText("Reload");
         FileListReload.setAlignmentX(0.5F);
-        FileListReload.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileListReload.setHorizontalAlignment(SwingConstants.LEFT);
         FileListReload.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileListReload.setMaximumSize(new java.awt.Dimension(130, 25));
         FileListReload.setPreferredSize(new java.awt.Dimension(130, 25));
@@ -3728,12 +3714,12 @@ public class ESPlorer extends javax.swing.JFrame {
         FileManagerPane.add(FileListReload);
 
         FileAsButton1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        FileAsButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file.png"))); // NOI18N
+        FileAsButton1.setIcon(new ImageIcon(getClass().getResource("/resources/file.png"))); // NOI18N
         FileAsButton1.setText("File 1");
         FileAsButton1.setToolTipText("Left click");
         FileAsButton1.setAlignmentX(0.5F);
         FileAsButton1.setComponentPopupMenu(contextMenuESPFileLUA);
-        FileAsButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        FileAsButton1.setHorizontalAlignment(SwingConstants.LEFT);
         FileAsButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileAsButton1.setMaximumSize(new java.awt.Dimension(130, 25));
         FileAsButton1.setPreferredSize(new java.awt.Dimension(130, 25));
@@ -3751,7 +3737,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileRenamePanel.setMaximumSize(new java.awt.Dimension(130, 45));
         FileRenamePanel.setMinimumSize(new java.awt.Dimension(130, 45));
 
-        FileRenameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        FileRenameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         FileRenameLabel.setText("Old file name");
         FileRenameLabel.setToolTipText("Input new file name and hit Enter to completed or press Reload for cancel");
         FileRenameLabel.setMaximumSize(new java.awt.Dimension(130, 14));
@@ -3769,26 +3755,26 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout FileRenamePanelLayout = new javax.swing.GroupLayout(FileRenamePanel);
+        GroupLayout FileRenamePanelLayout = new GroupLayout(FileRenamePanel);
         FileRenamePanel.setLayout(FileRenamePanelLayout);
         FileRenamePanelLayout.setHorizontalGroup(
-                FileRenamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(FileRenamePanelLayout.createSequentialGroup()
-                                .addGroup(FileRenamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(FileRename, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(FileRenameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(FileRename, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(FileRenameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
         FileRenamePanelLayout.setVerticalGroup(
-                FileRenamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                FileRenamePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(FileRenamePanelLayout.createSequentialGroup()
-                                .addComponent(FileRenameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(FileRename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(FileRenameLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(FileRename, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        FileRenamePanel.setLayer(FileRenameLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        FileRenamePanel.setLayer(FileRename, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        FileRenamePanel.setLayer(FileRenameLabel, JLayeredPane.DEFAULT_LAYER);
+        FileRenamePanel.setLayer(FileRename, JLayeredPane.DEFAULT_LAYER);
 
         FileManagerPane.add(FileRenamePanel);
 
@@ -3958,27 +3944,27 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         RightSnippetsPane.add(ButtonSnippet15);
 
-        javax.swing.GroupLayout RightBigPaneLayout = new javax.swing.GroupLayout(rightBigPane);
+        GroupLayout RightBigPaneLayout = new GroupLayout(rightBigPane);
         rightBigPane.setLayout(RightBigPaneLayout);
         RightBigPaneLayout.setHorizontalGroup(
-                RightBigPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                RightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(RightFilesSplitPane)
-                        .addComponent(RightSnippetsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(RightSnippetsPane, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         RightBigPaneLayout.setVerticalGroup(
-                RightBigPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                RightBigPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(RightBigPaneLayout.createSequentialGroup()
                                 .addComponent(RightFilesSplitPane)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(RightSnippetsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(RightSnippetsPane, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
         );
-        rightBigPane.setLayer(RightFilesSplitPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBigPane.setLayer(RightSnippetsPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        rightBigPane.setLayer(RightFilesSplitPane, JLayeredPane.DEFAULT_LAYER);
+        rightBigPane.setLayer(RightSnippetsPane, JLayeredPane.DEFAULT_LAYER);
 
-        logo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ESP8266-96x96.png"))); // NOI18N
+        logo.setHorizontalAlignment(SwingConstants.RIGHT);
+        logo.setIcon(new ImageIcon(getClass().getResource("/resources/ESP8266-96x96.png"))); // NOI18N
         logo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        logo.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        logo.setHorizontalTextPosition(SwingConstants.LEFT);
         logo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 logoMouseClicked();
@@ -4042,7 +4028,7 @@ public class ESPlorer extends javax.swing.JFrame {
         RightExtraButtons.add(nodeFlashID);
 
         NodeReset.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        NodeReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
+        NodeReset.setIcon(new ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
         NodeReset.setText("Reset");
         NodeReset.setToolTipText("Soft reset by command node.reset()");
         NodeReset.setMargin(new java.awt.Insets(2, 4, 2, 4));
@@ -4056,8 +4042,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         RightExtraButtons.add(NodeReset);
 
-        DonateSmall.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/donate-small.gif"))); // NOI18N
-        DonateSmall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        DonateSmall.setIcon(new ImageIcon(getClass().getResource("/resources/donate-small.gif"))); // NOI18N
+        DonateSmall.setHorizontalTextPosition(SwingConstants.CENTER);
         DonateSmall.setMargin(new java.awt.Insets(2, 2, 2, 2));
         DonateSmall.setMaximumSize(new java.awt.Dimension(100, 35));
         DonateSmall.setMinimumSize(new java.awt.Dimension(100, 35));
@@ -4068,49 +4054,49 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout RightBasePaneLayout = new javax.swing.GroupLayout(rightBasePane);
+        GroupLayout RightBasePaneLayout = new GroupLayout(rightBasePane);
         rightBasePane.setLayout(RightBasePaneLayout);
         RightBasePaneLayout.setHorizontalGroup(
-                RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                .addGroup(RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(rightBigPane)
                                         .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                                .addComponent(LEDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(LEDPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(logo))
                                         .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                                .addGroup(RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(RightBasePaneLayout.createSequentialGroup()
-                                                                .addComponent(rightBottomPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(DonateSmall, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(RightExtraButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(rightBottomPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(DonateSmall, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(RightExtraButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         RightBasePaneLayout.setVerticalGroup(
-                RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(RightBasePaneLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(LEDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(LEDPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(logo))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(rightBigPane)
                                 .addGap(5, 5, 5)
-                                .addComponent(RightExtraButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(RightBasePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(RightExtraButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(RightBasePaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(rightBottomPane)
-                                        .addComponent(DonateSmall, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(DonateSmall, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-        rightBasePane.setLayer(LEDPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(rightBottomPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(rightBigPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(logo, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(RightExtraButtons, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        rightBasePane.setLayer(DonateSmall, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(LEDPanel, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(rightBottomPane, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(rightBigPane, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(logo, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(RightExtraButtons, JLayeredPane.DEFAULT_LAYER);
+        rightBasePane.setLayer(DonateSmall, JLayeredPane.DEFAULT_LAYER);
 
         horizontSplit.setRightComponent(rightBasePane);
 
@@ -4124,8 +4110,8 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
 
-        MenuItemFileNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/document.png"))); // NOI18N
+        MenuItemFileNew.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileNew.setIcon(new ImageIcon(getClass().getResource("/resources/document.png"))); // NOI18N
         MenuItemFileNew.setText("<html><u>N</u>ew");
         MenuItemFileNew.setToolTipText("File New");
         MenuItemFileNew.addActionListener(new java.awt.event.ActionListener() {
@@ -4135,8 +4121,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileNew);
 
-        MenuItemFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder open.png"))); // NOI18N
+        MenuItemFileOpen.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileOpen.setIcon(new ImageIcon(getClass().getResource("/resources/folder open.png"))); // NOI18N
         MenuItemFileOpen.setText("<html><u>O</u>pen from disk");
         MenuItemFileOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4145,8 +4131,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileOpen);
 
-        MenuItemFileReload.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refresh.png"))); // NOI18N
+        MenuItemFileReload.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileReload.setIcon(new ImageIcon(getClass().getResource("/resources/refresh.png"))); // NOI18N
         MenuItemFileReload.setText("<html><u>R</u>eload from disk");
         MenuItemFileReload.setToolTipText("Reload file from disk, if you use external editor");
         MenuItemFileReload.setEnabled(false);
@@ -4157,8 +4143,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileReload);
 
-        MenuItemFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
+        MenuItemFileSave.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileSave.setIcon(new ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         MenuItemFileSave.setText("<html><u>S</u>ave to disk");
         MenuItemFileSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4167,7 +4153,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileSave);
 
-        MenuItemFileSaveAs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
+        MenuItemFileSaveAs.setIcon(new ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         MenuItemFileSaveAs.setText("Save As.. to disk");
         MenuItemFileSaveAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4175,14 +4161,14 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileSaveAs);
 
-        MenuItemFileSaveAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileSaveAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save_all.png"))); // NOI18N
+        MenuItemFileSaveAll.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileSaveAll.setIcon(new ImageIcon(getClass().getResource("/resources/save_all.png"))); // NOI18N
         MenuItemFileSaveAll.setText("<html>Save <u>A</u>ll to disk");
         MenuItemFileSaveAll.setEnabled(false);
         menuFile.add(MenuItemFileSaveAll);
 
-        MenuItemFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemFileClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/folder closed.png"))); // NOI18N
+        MenuItemFileClose.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemFileClose.setIcon(new ImageIcon(getClass().getResource("/resources/folder closed.png"))); // NOI18N
         MenuItemFileClose.setText("Close");
         MenuItemFileClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4192,8 +4178,8 @@ public class ESPlorer extends javax.swing.JFrame {
         menuFile.add(MenuItemFileClose);
         menuFile.add(jSeparatorFileMenu);
 
-        MenuItemFileSaveESP.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemFileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/move.png"))); // NOI18N
+        MenuItemFileSaveESP.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemFileSaveESP.setIcon(new ImageIcon(getClass().getResource("/resources/move.png"))); // NOI18N
         MenuItemFileSaveESP.setText("<html><u>S</u>ave to ESP");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, FileSaveESP, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), MenuItemFileSaveESP, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
@@ -4206,13 +4192,13 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileSaveESP);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem4.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem4.setText("<html>Save <u>A</u>ll to ESP");
         jMenuItem4.setEnabled(false);
         menuFile.add(jMenuItem4);
 
-        MenuItemFileSendESP.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemFileSendESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/script_send.png"))); // NOI18N
+        MenuItemFileSendESP.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemFileSendESP.setIcon(new ImageIcon(getClass().getResource("/resources/script_send.png"))); // NOI18N
         MenuItemFileSendESP.setText("<html>S<u>e</u>nd to ESP");
         MenuItemFileSendESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4221,14 +4207,14 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuFile.add(MenuItemFileSendESP);
 
-        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem7.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem7.setText("<html><u>U</u>pload file to ESP");
         jMenuItem7.setEnabled(false);
         menuFile.add(jMenuItem7);
         menuFile.add(jSeparator4);
 
-        MenuItemFileDo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemFileDo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
+        MenuItemFileDo.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemFileDo.setIcon(new ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
         MenuItemFileDo.setText("<html><u>D</u>oFile on ESP");
         MenuItemFileDo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4238,8 +4224,8 @@ public class ESPlorer extends javax.swing.JFrame {
         menuFile.add(MenuItemFileDo);
         menuFile.add(jSeparator3);
 
-        MenuItemFileRemoveESP.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemFileRemoveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/trash.png"))); // NOI18N
+        MenuItemFileRemoveESP.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemFileRemoveESP.setIcon(new ImageIcon(getClass().getResource("/resources/trash.png"))); // NOI18N
         MenuItemFileRemoveESP.setText("<html><u>R</u>emove from ESP");
         MenuItemFileRemoveESP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4249,7 +4235,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuFile.add(MenuItemFileRemoveESP);
         menuFile.add(jSeparator2);
 
-        menuItemFileExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        menuItemFileExit.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         menuItemFileExit.setText("Exit");
         menuItemFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4261,8 +4247,8 @@ public class ESPlorer extends javax.swing.JFrame {
 
         menuEdit.setText("Edit");
 
-        MenuItemEditUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
+        MenuItemEditUndo.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditUndo.setIcon(new ImageIcon(getClass().getResource("/resources/undo1.png"))); // NOI18N
         MenuItemEditUndo.setText("Undo");
         MenuItemEditUndo.setEnabled(false);
         MenuItemEditUndo.addActionListener(new java.awt.event.ActionListener() {
@@ -4272,8 +4258,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuEdit.add(MenuItemEditUndo);
 
-        MenuItemEditRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
-        MenuItemEditRedo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
+        MenuItemEditRedo.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
+        MenuItemEditRedo.setIcon(new ImageIcon(getClass().getResource("/resources/redo1.png"))); // NOI18N
         MenuItemEditRedo.setText("Redo");
         MenuItemEditRedo.setEnabled(false);
         MenuItemEditRedo.addActionListener(new java.awt.event.ActionListener() {
@@ -4284,8 +4270,8 @@ public class ESPlorer extends javax.swing.JFrame {
         menuEdit.add(MenuItemEditRedo);
         menuEdit.add(jSeparator7);
 
-        MenuItemEditCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditCut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
+        MenuItemEditCut.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditCut.setIcon(new ImageIcon(getClass().getResource("/resources/cut.png"))); // NOI18N
         MenuItemEditCut.setText("Cut");
         MenuItemEditCut.setEnabled(false);
         MenuItemEditCut.addActionListener(new java.awt.event.ActionListener() {
@@ -4295,8 +4281,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuEdit.add(MenuItemEditCut);
 
-        MenuItemEditCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
+        MenuItemEditCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditCopy.setIcon(new ImageIcon(getClass().getResource("/resources/copy.png"))); // NOI18N
         MenuItemEditCopy.setText("Copy");
         MenuItemEditCopy.setEnabled(false);
         MenuItemEditCopy.addActionListener(new java.awt.event.ActionListener() {
@@ -4306,8 +4292,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuEdit.add(MenuItemEditCopy);
 
-        MenuItemEditPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemEditPaste.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
+        MenuItemEditPaste.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemEditPaste.setIcon(new ImageIcon(getClass().getResource("/resources/paste.png"))); // NOI18N
         MenuItemEditPaste.setText("Paste");
         MenuItemEditPaste.setToolTipText("");
         MenuItemEditPaste.setEnabled(false);
@@ -4319,8 +4305,8 @@ public class ESPlorer extends javax.swing.JFrame {
         menuEdit.add(MenuItemEditPaste);
         menuEdit.add(jSeparator5);
 
-        MenuItemEditSendSelected.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemEditSendSelected.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
+        MenuItemEditSendSelected.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemEditSendSelected.setIcon(new ImageIcon(getClass().getResource("/resources/send_selected.png"))); // NOI18N
         MenuItemEditSendSelected.setText("<html>Send selected <u>B</u>lock to ESP");
         MenuItemEditSendSelected.setToolTipText("Send selected block to ESP");
 
@@ -4334,8 +4320,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuEdit.add(MenuItemEditSendSelected);
 
-        MenuItemEditSendLine.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemEditSendLine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
+        MenuItemEditSendLine.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemEditSendLine.setIcon(new ImageIcon(getClass().getResource("/resources/run_line.png"))); // NOI18N
         MenuItemEditSendLine.setText("<html>Send current <u>L</u>ine to ESP");
         MenuItemEditSendLine.setToolTipText("Send current line from code editor window to ESP");
         MenuItemEditSendLine.addActionListener(new java.awt.event.ActionListener() {
@@ -4350,7 +4336,7 @@ public class ESPlorer extends javax.swing.JFrame {
         menuESP.setText("ESP");
         menuESP.setToolTipText("");
 
-        MenuItemESPReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
+        MenuItemESPReset.setIcon(new ImageIcon(getClass().getResource("/resources/reset.png"))); // NOI18N
         MenuItemESPReset.setText("Restart ESP module");
         MenuItemESPReset.setToolTipText("Send RESET command (firmware depended)");
         MenuItemESPReset.setEnabled(false);
@@ -4361,7 +4347,7 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         menuESP.add(MenuItemESPReset);
 
-        MenuItemESPFormat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
+        MenuItemESPFormat.setIcon(new ImageIcon(getClass().getResource("/resources/file manager (delete).png"))); // NOI18N
         MenuItemESPFormat.setText("Format ESP");
         MenuItemESPFormat.setToolTipText("Remove All files from ESP flash memory");
         MenuItemESPFormat.setEnabled(false);
@@ -4383,7 +4369,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
         AlwaysOnTop.setText("Always On Top");
         AlwaysOnTop.setToolTipText("");
-        AlwaysOnTop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AlwaysOnTop.png"))); // NOI18N
+        AlwaysOnTop.setIcon(new ImageIcon(getClass().getResource("/resources/AlwaysOnTop.png"))); // NOI18N
         AlwaysOnTop.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 AlwaysOnTopItemStateChanged();
@@ -4391,11 +4377,11 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(AlwaysOnTop);
 
-        MenuItemViewLog.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemViewLog.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         MenuItemViewLog.setSelected(true);
         MenuItemViewLog.setText("<html>Show <u>L</u>og");
         MenuItemViewLog.setToolTipText("Enable/disable log window");
-        MenuItemViewLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/backup.png"))); // NOI18N
+        MenuItemViewLog.setIcon(new ImageIcon(getClass().getResource("/resources/backup.png"))); // NOI18N
         MenuItemViewLog.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 MenuItemViewLogItemStateChanged();
@@ -4408,8 +4394,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(MenuItemViewLog);
 
-        menuItemViewClearLog.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemViewClearLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/backup_delete.png"))); // NOI18N
+        menuItemViewClearLog.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemViewClearLog.setIcon(new ImageIcon(getClass().getResource("/resources/backup_delete.png"))); // NOI18N
         menuItemViewClearLog.setText("Clear log");
         menuItemViewClearLog.setToolTipText("Clear log window");
         menuItemViewClearLog.addActionListener(new java.awt.event.ActionListener() {
@@ -4419,8 +4405,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(menuItemViewClearLog);
 
-        menuItemViewClearTerminal.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemViewClearTerminal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/terminal_clear.png"))); // NOI18N
+        menuItemViewClearTerminal.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemViewClearTerminal.setIcon(new ImageIcon(getClass().getResource("/resources/terminal_clear.png"))); // NOI18N
         menuItemViewClearTerminal.setText("Clear terminal");
         menuItemViewClearTerminal.setToolTipText("Clear terminal window");
         menuItemViewClearTerminal.addActionListener(new java.awt.event.ActionListener() {
@@ -4521,8 +4507,8 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuView.add(MenuItemViewDonate);
         MenuView.add(jSeparator13);
 
-        MenuItemViewTermFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemViewTermFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        MenuItemViewTermFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemViewTermFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         MenuItemViewTermFontInc.setText("Terminal font size inc");
         MenuItemViewTermFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4531,8 +4517,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(MenuItemViewTermFontInc);
 
-        MenuItemViewTermFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemViewTermFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        MenuItemViewTermFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemViewTermFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         MenuItemViewTermFontDec.setText("Terminal font size dec");
         MenuItemViewTermFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4542,8 +4528,8 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuView.add(MenuItemViewTermFontDec);
         MenuView.add(jSeparator10);
 
-        MenuItemViewEditorFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemViewEditorFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        MenuItemViewEditorFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemViewEditorFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         MenuItemViewEditorFontInc.setText("Editor font size inc");
         MenuItemViewEditorFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4552,8 +4538,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(MenuItemViewEditorFontInc);
 
-        MenuItemViewEditorFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK));
-        MenuItemViewEditorFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        MenuItemViewEditorFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK));
+        MenuItemViewEditorFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         MenuItemViewEditorFontDec.setText("Editor font size dec");
         MenuItemViewEditorFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4563,8 +4549,8 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuView.add(MenuItemViewEditorFontDec);
         MenuView.add(jSeparator11);
 
-        MenuItemViewLogFontInc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemViewLogFontInc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
+        MenuItemViewLogFontInc.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemViewLogFontInc.setIcon(new ImageIcon(getClass().getResource("/resources/zoom in.png"))); // NOI18N
         MenuItemViewLogFontInc.setText("Log font size inc");
         MenuItemViewLogFontInc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4573,8 +4559,8 @@ public class ESPlorer extends javax.swing.JFrame {
         });
         MenuView.add(MenuItemViewLogFontInc);
 
-        MenuItemViewLogFontDec.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        MenuItemViewLogFontDec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
+        MenuItemViewLogFontDec.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemViewLogFontDec.setIcon(new ImageIcon(getClass().getResource("/resources/zoom out.png"))); // NOI18N
         MenuItemViewLogFontDec.setText("Log font size dec");
         MenuItemViewLogFontDec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4781,15 +4767,15 @@ public class ESPlorer extends javax.swing.JFrame {
 
         setJMenuBar(mainMenuBar);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(horizontSplit, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(horizontSplit, GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(horizontSplit, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(horizontSplit, GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
         );
 
         getAccessibleContext().setAccessibleDescription("");
@@ -4812,7 +4798,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 try {
                     Thread.sleep(200L);
                 } catch (Exception e) {
-
+                    LOGGER.log(Level.SEVERE, e.getMessage());
                 }
             } else {
                 return;
@@ -4825,7 +4811,7 @@ public class ESPlorer extends javax.swing.JFrame {
         UpdateLED();
     }//GEN-LAST:event_SpeedActionPerformed
 
-    private void OpenActionPerformed(ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+    private void OpenActionPerformed() {//GEN-FIRST:event_OpenActionPerformed
         if (Open.isSelected()) {
             if (pOpen) {
                 return;
@@ -4843,6 +4829,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 prefs.putInt(Constants.SERIAL_BAUD, speed);
                 log("Baud rate " + Speed.getSelectedItem().toString().trim() + " save as default.");
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
             pOpen = portOpen();
             Open.setSelected(pOpen);
@@ -5022,7 +5009,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }//GEN-LAST:event_CommandActionPerformed
 
 
-    private void cmdSetCIPSTARTActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
+    private void cmdSetCIPSTARTActionPerformed() {//GEN-FIRST:event_cmdSetCIPSTARTActionPerformed
         String cmd = "AT+CIPSTART=";
         if (multi.isSelected()) {
             cmd += conn_id.getSelectedItem().toString() + ",";
@@ -5088,23 +5075,6 @@ public class ESPlorer extends javax.swing.JFrame {
         MenuItemTerminalFontDec.setText(dec);
     }//GEN-LAST:event_ContextMenuTerminalPopupMenuWillBecomeVisible
 
-    private void cmdSetCIPSERVERActionPerformed() {//GEN-FIRST:event_cmdSetCIPSERVERActionPerformed
-        String cmd = "AT+CIPSERVER=";
-        cmd += Integer.toString(ServerMode.getSelectedIndex()).trim();
-        if (ServerMode.getSelectedIndex() == 1) {
-            cmd += "," + ServerPort.getText().trim();
-        }
-        btnSend(cmd);
-    }//GEN-LAST:event_cmdSetCIPSERVERActionPerformed
-
-    private void ServerModeActionPerformed() {//GEN-FIRST:event_ServerModeActionPerformed
-        if (ServerMode.getSelectedIndex() == 1) { // create
-            ServerPort.setEnabled(true);
-        } else {
-            ServerPort.setEnabled(false);
-        }
-    }//GEN-LAST:event_ServerModeActionPerformed
-
 
     private void PASSFocusGained() {//GEN-FIRST:event_PASSFocusGained
         if (PASS.getText().trim().equals("password")) {
@@ -5118,21 +5088,6 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SSIDFocusGained
 
-    private void AT_StationComponentShown() {//GEN-FIRST:event_AT_StationComponentShown
-        WiFi_common.setVisible(true);
-        TCP_common.setVisible(false);
-    }//GEN-LAST:event_AT_StationComponentShown
-
-    private void AT_ClientComponentShown() {//GEN-FIRST:event_AT_ClientComponentShown
-        WiFi_common.setVisible(false);
-        TCP_common.setVisible(true);
-    }//GEN-LAST:event_AT_ClientComponentShown
-
-    private void AT_ServerComponentShown() {//GEN-FIRST:event_AT_ServerComponentShown
-        WiFi_common.setVisible(false);
-        TCP_common.setVisible(true);
-    }//GEN-LAST:event_AT_ServerComponentShown
-
     private void MenuItemViewLogActionPerformed() {//GEN-FIRST:event_MenuItemViewLogActionPerformed
         isLogShow();
         prefs.putBoolean(Constants.SHOW_LOG, MenuItemViewLog.isSelected());
@@ -5143,7 +5098,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (FileAutoSaveESP.isSelected()) {
             SaveFileESP();
         }
-    }//GEN-LAST:event_MenuItemFileSaveActionPerformed
+    }
 
     private boolean isFileNew() {
         try {
@@ -5370,7 +5325,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return true;
     }
 
-    private void DelayStateChanged(ChangeEvent evt) {//GEN-FIRST:event_DelayStateChanged
+    private void DelayStateChanged() {//GEN-FIRST:event_DelayStateChanged
         DelayLabel.setText("Delay after answer = " + Integer.toString(Delay.getValue()) + " ms");
         prefs.putInt(Constants.DELAY, Delay.getValue());
         PrefsFlush();
@@ -5388,7 +5343,7 @@ public class ESPlorer extends javax.swing.JFrame {
         return success;
     }
 
-    private void ButtonFileOpenActionPerformed(ActionEvent evt) {//GEN-FIRST:event_ButtonFileOpenActionPerformed
+    private void ButtonFileOpenActionPerformed() {//GEN-FIRST:event_ButtonFileOpenActionPerformed
         MenuItemFileOpen.doClick();
     }//GEN-LAST:event_ButtonFileOpenActionPerformed
 
@@ -5457,6 +5412,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 ButtonPaste.setEnabled(true);
             }
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -5654,11 +5610,11 @@ public class ESPlorer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cmdNodeRestartActionPerformed
 
-    private void cmdNodeChipIDActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdNodeChipIDActionPerformed
+    private void cmdNodeChipIDActionPerformed() {//GEN-FIRST:event_cmdNodeChipIDActionPerformed
         btnSend("print(node.chipid())");
     }//GEN-LAST:event_cmdNodeChipIDActionPerformed
 
-    private void cmdNodeHeapActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdNodeHeapActionPerformed
+    private void cmdNodeHeapActionPerformed() {//GEN-FIRST:event_cmdNodeHeapActionPerformed
         btnSend("print(node.heap())");
     }//GEN-LAST:event_cmdNodeHeapActionPerformed
 
@@ -5777,7 +5733,7 @@ public class ESPlorer extends javax.swing.JFrame {
             log(e.toString());
         }
         try {
-            serialPort.addEventListener(new PortFilesReader(), portMask);
+            serialPort.addEventListener(new PortFilesReader(), Constants.PORT_MASK);
             log("FileManager: Add EventListener: Success.");
         } catch (SerialPortException e) {
             log("FileManager: Add EventListener Error. Canceled.");
@@ -5818,7 +5774,7 @@ public class ESPlorer extends javax.swing.JFrame {
         FileRenamePanel.setVisible(false);
         FileRenamePanel.setEnabled(false);
         FileManagerPane.repaint();
-        FileAsButton = new ArrayList<javax.swing.JButton>();
+        FileAsButton = new ArrayList<JButton>();
     }
 
     private void FileDownload(String param) {
@@ -5878,7 +5834,7 @@ public class ESPlorer extends javax.swing.JFrame {
             log(e.toString());
         }
         try {
-            serialPort.addEventListener(new PortFileDownloader(), portMask);
+            serialPort.addEventListener(new PortFileDownloader(), Constants.PORT_MASK);
             log("Downloader: Add EventListener: Success.");
         } catch (SerialPortException e) {
             log("Downloader: Add EventListener Error. Canceled.");
@@ -5909,7 +5865,7 @@ public class ESPlorer extends javax.swing.JFrame {
             log(e.toString());
         }
         try {
-            serialPort.addEventListener(new PortReader(), portMask);
+            serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
         } catch (SerialPortException e) {
             log("Downloader: Can't Add OldEventListener.");
         }
@@ -5989,8 +5945,8 @@ public class ESPlorer extends javax.swing.JFrame {
         int cs = 0;
         int x;
         try {
-            for (int i = 0; i < s.length; i++) {
-                x = s[i] & 0xFF;
+            for (byte value : s) {
+                x = value & 0xFF;
                 //log( Integer.toHexString(x) );
                 cs = cs + (x * 20) % 19;
             }
@@ -6077,6 +6033,7 @@ public class ESPlorer extends javax.swing.JFrame {
             try {
                 doc.remove(0, 1024);
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         }
         try {
@@ -6120,22 +6077,23 @@ public class ESPlorer extends javax.swing.JFrame {
             }
             if (l > 0) SendToESP(SnippetText.getSelectedText());
         }
-    }//GEN-LAST:event_MenuItemEditSendSelectedActionPerformed
+    }
 
-    private void MenuItemFileRemoveESPActionPerformed() {//GEN-FIRST:event_MenuItemFileRemoveESPActionPerformed
+    private void MenuItemFileRemoveESPActionPerformed() {
         String ft = iFile.get(iTab).getName();
         if (ft.length() == 0) {
             log("FileRemoveESP: FAIL. Can't remove file from ESP without name.");
             JOptionPane.showMessageDialog(null, "Can't remove file from ESP without name.");
         }
         FileRemoveESP(ft);
-    }//GEN-LAST:event_MenuItemFileRemoveESPActionPerformed
+    }
 
     private void FileRemoveESP(String FileName) {
         btnSend("file.remove(\"" + FileName + "\")");
         try {
             Thread.sleep(200L);
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         FileListReload.doClick();
     }
@@ -6144,7 +6102,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (!FileSaveESP.isSelected()) {
             FileSaveESP.doClick();
         }
-    }//GEN-LAST:event_MenuItemFileSaveESPActionPerformed
+    }
 
     private void cmdTimerStopActionPerformed() {//GEN-FIRST:event_cmdTimerStopActionPerformed
         String cmd = "tmr.stop(" + Integer.toString(TimerNumber.getSelectedIndex()) + ")";
@@ -6462,7 +6420,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (OptionNodeMCU.isSelected()) {
             prefs.put(Constants.FIRMWARE, "NodeMCU");
             PrefsFlush();
-            chooser.setFileFilter(filterLUA);
+            chooser.setFileFilter(FILTER_LUA);
         }
     }//GEN-LAST:event_OptionNodeMCUItemStateChanged
 
@@ -6470,7 +6428,7 @@ public class ESPlorer extends javax.swing.JFrame {
         if (OptionMicroPython.isSelected()) {
             prefs.put(Constants.FIRMWARE, "MicroPython");
             PrefsFlush();
-            chooser.setFileFilter(filterPY);
+            chooser.setFileFilter(FILTER_PYTHON);
         }
     }//GEN-LAST:event_OptionMicroPythonItemStateChanged
 
@@ -6724,8 +6682,6 @@ public class ESPlorer extends javax.swing.JFrame {
     private void MenuItemESPResetActionPerformed() {//GEN-FIRST:event_MenuItemESPResetActionPerformed
         if (LeftTab.getSelectedIndex() == 0) {              // NodeMCU TAB
             cmdNodeRestart.doClick();
-        } else if (LeftTab.getSelectedIndex() == 1) {     // AT TAB
-            // AT_Restart.doClick();
         }
     }//GEN-LAST:event_MenuItemESPResetActionPerformed
 
@@ -6772,6 +6728,7 @@ public class ESPlorer extends javax.swing.JFrame {
         try {
             Thread.sleep(500L);
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         LocalEcho = false;
         FileListReload.doClick();
@@ -6959,6 +6916,7 @@ public class ESPlorer extends javax.swing.JFrame {
         try {
             Thread.sleep(200L);
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         FileListReload.doClick();
     }//GEN-LAST:event_FileRenameActionPerformed
@@ -7166,16 +7124,18 @@ public class ESPlorer extends javax.swing.JFrame {
     private void log(String l) {
         String log = Log.getText();
         Document doc = Log.getDocument();
-        logger.info(l);
+        LOGGER.info(l);
         if (log.length() > LogMax) {
             try {
                 doc.remove(0, 1024);
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         }
         try {
             doc.insertString(doc.getLength(), "\r\n" + l, null);
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         Log.setCaretPosition(Log.getText().length());
     }
@@ -7218,6 +7178,7 @@ public class ESPlorer extends javax.swing.JFrame {
             try {
                 serialPort.closePort();
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         } else {
             log("Try to open port " + portName + ", baud " + Integer.toString(nSpeed) + ", 8N1");
@@ -7253,7 +7214,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
             */
             if (success) {
-                serialPort.addEventListener(new PortReader(), portMask);
+                serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
             }
             if (success) {
                 log("Open port " + portName + " - Success.");
@@ -7305,6 +7266,7 @@ public class ESPlorer extends javax.swing.JFrame {
             try {
                 openTimeout.stop();
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         }
         try {
@@ -7354,11 +7316,11 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuItemViewLF1.setSelected(true);
         }
         int x = 1;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem MenuItemViewLF2;
-            MenuItemViewLF2 = new javax.swing.JRadioButtonMenuItem();
+            MenuItemViewLF2 = new JRadioButtonMenuItem();
             buttonGroupLF.add(MenuItemViewLF2);
-            MenuItemViewLF2.setText(LAF.get(x));
+            MenuItemViewLF2.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 MenuItemViewLF2.setSelected(true);
             }
@@ -7371,10 +7333,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(MenuItemViewLF2);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF3 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF3);
-            menuItemViewLF3.setText(LAF.get(x));
+            menuItemViewLF3.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF3.setSelected(true);
             }
@@ -7387,10 +7349,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF3);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF4 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF4);
-            menuItemViewLF4.setText(LAF.get(x));
+            menuItemViewLF4.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF4.setSelected(true);
             }
@@ -7403,10 +7365,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF4);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF5 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF5);
-            menuItemViewLF5.setText(LAF.get(x));
+            menuItemViewLF5.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF5.setSelected(true);
             }
@@ -7419,10 +7381,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF5);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF6 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF6);
-            menuItemViewLF6.setText(LAF.get(x));
+            menuItemViewLF6.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF6.setSelected(true);
             }
@@ -7435,10 +7397,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF6);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF7 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF7);
-            menuItemViewLF7.setText(LAF.get(x));
+            menuItemViewLF7.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF7.setSelected(true);
             }
@@ -7451,10 +7413,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF7);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF8 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF8);
-            menuItemViewLF8.setText(LAF.get(x));
+            menuItemViewLF8.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF8.setSelected(true);
             }
@@ -7467,10 +7429,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF8);
         }
         x++;
-        if (LAF.size() >= x + 1) {
+        if (lookAndFeel.size() >= x + 1) {
             JRadioButtonMenuItem menuItemViewLF9 = new JRadioButtonMenuItem();
             buttonGroupLF.add(menuItemViewLF9);
-            menuItemViewLF9.setText(LAF.get(x));
+            menuItemViewLF9.setText(lookAndFeel.get(x));
             if (LAFclass.get(x).equals(prefs.get("LAF", ""))) {
                 menuItemViewLF9.setSelected(true);
             }
@@ -7483,10 +7445,10 @@ public class ESPlorer extends javax.swing.JFrame {
             MenuView.add(menuItemViewLF9);
         }
 
-        LED_GREY = new javax.swing.ImageIcon(getClass().getResource("/resources/led_grey.png"));
-        LED_GREEN = new javax.swing.ImageIcon(getClass().getResource("/resources/led_green.png"));
-        LED_RED = new javax.swing.ImageIcon(getClass().getResource("/resources/led_red.png"));
-        LED_BLUE = new javax.swing.ImageIcon(getClass().getResource("/resources/led_blue.png"));
+        LED_GREY = new ImageIcon(getClass().getResource("/resources/led_grey.png"));
+        LED_GREEN = new ImageIcon(getClass().getResource("/resources/led_green.png"));
+        LED_RED = new ImageIcon(getClass().getResource("/resources/led_red.png"));
+        LED_BLUE = new ImageIcon(getClass().getResource("/resources/led_blue.png"));
 
         SnippetScrollPane.setLineNumbersEnabled(true);
         SnippetText.setFadeCurrentLineHighlight(true);
@@ -7495,17 +7457,17 @@ public class ESPlorer extends javax.swing.JFrame {
         SnippetText.setAntiAliasingEnabled(true);
         SnippetText.setTabsEmulated(true);
 
-        FileLayeredPane1 = new ArrayList<javax.swing.JLayeredPane>();
+        FileLayeredPane1 = new ArrayList<JLayeredPane>();
         TextScroll1 = new ArrayList<org.fife.ui.rtextarea.RTextScrollPane>();
         TextEditor1 = new ArrayList<org.fife.ui.rsyntaxtextarea.RSyntaxTextArea>();
-        FileLayeredPaneLayout1 = new ArrayList<javax.swing.GroupLayout>();
+        FileLayeredPaneLayout1 = new ArrayList<GroupLayout>();
         provider = new ArrayList<org.fife.ui.autocomplete.CompletionProvider>();
         ac = new ArrayList<org.fife.ui.autocomplete.AutoCompletion>();
         iFile = new ArrayList<File>();
         FileChanged = new ArrayList<Boolean>();
-        FileAsButton = new ArrayList<javax.swing.JButton>();
-        FilePopupMenu = new ArrayList<javax.swing.JPopupMenu>();
-        FilePopupMenuItem = new ArrayList<javax.swing.JMenuItem>();
+        FileAsButton = new ArrayList<JButton>();
+        FilePopupMenu = new ArrayList<JPopupMenu>();
+        FilePopupMenuItem = new ArrayList<JMenuItem>();
 
         FilesTabbedPane.removeAll();
 
@@ -7560,10 +7522,10 @@ public class ESPlorer extends javax.swing.JFrame {
         }
         if (prefs.get(Constants.FIRMWARE, "NodeMCU").equals("MicroPython") && OptionMicroPython.isEnabled()) {
             OptionMicroPython.setSelected(true);
-            chooser.setFileFilter(filterPY);
+            chooser.setFileFilter(FILTER_PYTHON);
         } else {
             OptionNodeMCU.setSelected(true);
-            chooser.setFileFilter(filterLUA);
+            chooser.setFileFilter(FILTER_LUA);
         }
         FileAutoSaveDisk.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_DISK, true));
         FileAutoSaveESP.setSelected(prefs.getBoolean(Constants.FILE_AUTO_SAVE_ESP, true));
@@ -7603,7 +7565,7 @@ public class ESPlorer extends javax.swing.JFrame {
     }
 
     private void AddFileButton(String FileName, int size) {
-        FileAsButton.add(new javax.swing.JButton());
+        FileAsButton.add(new JButton());
         int i = FileAsButton.size() - 1;
         FileAsButton.get(i).setText(FileName);
         //FileAsButton.get(i).setFont(new java.awt.Font("Tahoma", 0, 12));
@@ -7611,19 +7573,19 @@ public class ESPlorer extends javax.swing.JFrame {
         FileAsButton.get(i).setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileAsButton.get(i).setMaximumSize(new java.awt.Dimension(130, 25));
         FileAsButton.get(i).setPreferredSize(new java.awt.Dimension(130, 25));
-        FileAsButton.get(i).setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        //FileAsButton.get(i).setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        FileAsButton.get(i).setHorizontalAlignment(SwingConstants.LEFT);
+        //FileAsButton.get(i).setHorizontalTextPosition(SwingConstants.LEFT);
         FileAsButton.get(i).addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FileAsButton1ActionPerformed(evt);
             }
         });
         // PopUp menu
-        FilePopupMenu.add(new javax.swing.JPopupMenu());
+        FilePopupMenu.add(new JPopupMenu());
         int x = FilePopupMenu.size() - 1;
         // PopUp menu items
         if (FileName.endsWith(".lua")) {
-            FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/lua.png")));
+            FileAsButton.get(i).setIcon(new ImageIcon(getClass().getResource("/resources/lua.png")));
             FileAsButton.get(i).setToolTipText(FileAsButton.get(i).getActionCommand() + ", LeftClick - Run, RightClick - Other actions");
             AddMenuItemRun(x, FileName);
             AddMenuItemCompile(x, FileName);
@@ -7631,7 +7593,7 @@ public class ESPlorer extends javax.swing.JFrame {
             setupFileMenuItem(FileName, x, size);
 
         } else if (FileName.endsWith(".lc")) {
-            FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/lc.png")));
+            FileAsButton.get(i).setIcon(new ImageIcon(getClass().getResource("/resources/lc.png")));
             FileAsButton.get(i).setToolTipText(FileAsButton.get(i).getActionCommand() + ", LeftClick - Run, RightClick - Other actions");
             AddMenuItemRun(x, FileName);
             AddMenuItemSeparator(x);
@@ -7641,7 +7603,7 @@ public class ESPlorer extends javax.swing.JFrame {
             AddMenuItemSeparator(x);
             AddMenuItemRemove(x, FileName);
         } else {
-            FileAsButton.get(i).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/file.png")));
+            FileAsButton.get(i).setIcon(new ImageIcon(getClass().getResource("/resources/file.png")));
             FileAsButton.get(i).setToolTipText(FileAsButton.get(i).getActionCommand() + ", LeftClick - View, RightClick - Other actions");
             setupFileMenuItem(FileName, x, size);
             AddMenuItemDump(x, FileName);
@@ -7667,12 +7629,12 @@ public class ESPlorer extends javax.swing.JFrame {
     }
 
     private void AddMenuItemSeparator(int x) {
-        FilePopupMenu.get(x).add(new javax.swing.JPopupMenu.Separator());
+        FilePopupMenu.get(x).add(new JPopupMenu.Separator());
     }
 
     private void AddMenuItemEdit(int x, String FileName, int size) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/edit.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/edit.png")));
         FilePopupMenuItem.get(y).setText("Edit " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("Download file from ESP and open in new editor window");
         FilePopupMenuItem.get(y).setActionCommand(FileName + "Size:" + Integer.toString(size));
@@ -7687,7 +7649,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemDownload(int x, String FileName, int size) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/download.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/download.png")));
         FilePopupMenuItem.get(y).setText("Download " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("Download file from ESP and save to disk");
         FilePopupMenuItem.get(y).setActionCommand(FileName + "Size:" + Integer.toString(size));
@@ -7702,7 +7664,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemRun(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/play.png")));
         FilePopupMenuItem.get(y).setText("Run " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("Execute command dofile(\"" + FileName + "\") for run this file");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7716,7 +7678,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemCompile(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/wizard.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/wizard.png")));
         FilePopupMenuItem.get(y).setText("Compile " + FileName + " to .lc");
         FilePopupMenuItem.get(y).setToolTipText("Execute command node.compile(\"" + FileName + "\")");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7726,6 +7688,7 @@ public class ESPlorer extends javax.swing.JFrame {
                 try {
                     Thread.sleep(500L);
                 } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage());
                 }
                 FileListReload.doClick();
             }
@@ -7735,7 +7698,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemRename(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/rename.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/rename.png")));
         FilePopupMenuItem.get(y).setText("Rename " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("Execute command file.rename(\"" + FileName + "\",\"NewName\")");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7753,7 +7716,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemRemove(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/trash.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/trash.png")));
         FilePopupMenuItem.get(y).setText("Remove " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("Execute command file.remove(\"" + FileName + "\") and delete file from NodeMCU filesystem");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7768,7 +7731,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemView(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/view.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/view.png")));
         FilePopupMenuItem.get(y).setText("View " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("View content of file " + FileName + " on Terminal");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7782,7 +7745,7 @@ public class ESPlorer extends javax.swing.JFrame {
 
     private void AddMenuItemDump(int x, String FileName) {
         int y = addPopupItem();
-        FilePopupMenuItem.get(y).setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/dump.png")));
+        FilePopupMenuItem.get(y).setIcon(new ImageIcon(getClass().getResource("/resources/dump.png")));
         FilePopupMenuItem.get(y).setText("HexDump " + FileName);
         FilePopupMenuItem.get(y).setToolTipText("View HexDump " + FileName + "in Terminal");
         FilePopupMenuItem.get(y).setActionCommand(FileName);
@@ -7804,7 +7767,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private void AddTab(String s) {
         int i = FilesTabbedPane.getTabCount();
 
-        FileLayeredPane1.add(new javax.swing.JLayeredPane());
+        FileLayeredPane1.add(new JLayeredPane());
         TextScroll1.add(new org.fife.ui.rtextarea.RTextScrollPane());
         TextEditor1.add(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea());
         iFile.add(new File(""));
@@ -7813,7 +7776,7 @@ public class ESPlorer extends javax.swing.JFrame {
         ac.add(new AutoCompletion(provider.get(i)));
         ac.get(i).install(TextEditor1.get(i));
 
-        FileLayeredPaneLayout1.add(new javax.swing.GroupLayout(FileLayeredPane1.get(i)));
+        FileLayeredPaneLayout1.add(new GroupLayout(FileLayeredPane1.get(i)));
 
         TextEditor1.get(i).setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
         TextEditor1.get(i).setColumns(20);
@@ -7860,7 +7823,7 @@ public class ESPlorer extends javax.swing.JFrame {
             }
         });
         TextScroll1.get(i).setViewportView(TextEditor1.get(i));
-        TextScroll1.get(i).setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        TextScroll1.get(i).setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         TextScroll1.get(i).setIconRowHeaderEnabled(false);
         TextScroll1.get(i).setLineNumbersEnabled(true);
         TextScroll1.get(i).setFoldIndicatorEnabled(true);
@@ -7868,14 +7831,14 @@ public class ESPlorer extends javax.swing.JFrame {
 
         FileLayeredPane1.get(i).setLayout(FileLayeredPaneLayout1.get(i));
         FileLayeredPaneLayout1.get(i).setHorizontalGroup(
-                FileLayeredPaneLayout1.get(i).createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(TextScroll1.get(i), javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                FileLayeredPaneLayout1.get(i).createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(TextScroll1.get(i), GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
         );
         FileLayeredPaneLayout1.get(i).setVerticalGroup(
-                FileLayeredPaneLayout1.get(i).createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(TextScroll1.get(i), javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                FileLayeredPaneLayout1.get(i).createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(TextScroll1.get(i), GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
         );
-        FileLayeredPane1.get(i).setLayer(TextScroll1.get(i), javax.swing.JLayeredPane.DEFAULT_LAYER);
+        FileLayeredPane1.get(i).setLayer(TextScroll1.get(i), JLayeredPane.DEFAULT_LAYER);
 
         FilesTabbedPane.addTab(NewFile, FileLayeredPane1.get(i));
 
@@ -8138,18 +8101,22 @@ public class ESPlorer extends javax.swing.JFrame {
         try {
             serialPort.removeEventListener();
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         try {
             timer.stop();
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         try {
             timeout.stop();
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         try {
-            serialPort.addEventListener(new PortReader(), portMask);
+            serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
         } catch (SerialPortException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         SendUnLock();
         long duration = System.currentTimeMillis() - startTime;
@@ -8265,9 +8232,10 @@ public class ESPlorer extends javax.swing.JFrame {
         try {
             serialPort.removeEventListener();
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         try {
-            serialPort.addEventListener(new PortTurboReader(), portMask);
+            serialPort.addEventListener(new PortTurboReader(), Constants.PORT_MASK);
         } catch (SerialPortException e) {
             log("DataTurboSender: Add EventListener Error. Canceled.");
             return;
@@ -8298,12 +8266,13 @@ public class ESPlorer extends javax.swing.JFrame {
         try {
             serialPort.removeEventListener();
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         try {
             if (DumbMode.isSelected()) {
-                serialPort.addEventListener(new PortReader(), portMask);
+                serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
             } else {
-                serialPort.addEventListener(new PortExtraReader(), portMask);
+                serialPort.addEventListener(new PortExtraReader(), Constants.PORT_MASK);
             }
         } catch (SerialPortException e) {
             log("DataSender: Add EventListener Error. Canceled.");
@@ -8375,6 +8344,7 @@ public class ESPlorer extends javax.swing.JFrame {
             try {
                 timeout.restart();
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         }
         if (simple) {
@@ -8424,7 +8394,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private void SendLock() {
         Busy();
         FileSaveESP.setText("Cancel");
-        FileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/abort.png")));
+        FileSaveESP.setIcon(new ImageIcon(getClass().getResource("/resources/abort.png")));
         FileSaveESP.setSelected(true);
     }
 
@@ -8448,12 +8418,12 @@ public class ESPlorer extends javax.swing.JFrame {
             PortRTS.setIcon(LED_GREY);
             PortCTS.setIcon(LED_GREY);
             Open.setText("Open");
-            Open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/connect1.png")));
+            Open.setIcon(new ImageIcon(getClass().getResource("/resources/connect1.png")));
             PortOpenLabel.setIcon(LED_GREY);
             return;
         }
         Open.setText("Close");
-        Open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/disconnect1.png")));
+        Open.setIcon(new ImageIcon(getClass().getResource("/resources/disconnect1.png")));
         PortOpenLabel.setIcon(LED_GREEN);
         UpdateLedCTS();
         if (PortDTR.isSelected()) {
@@ -8474,7 +8444,7 @@ public class ESPlorer extends javax.swing.JFrame {
     private void SendUnLock() {
         Idle();
         FileSaveESP.setText("Save to ESP");
-        FileSaveESP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/move.png")));
+        FileSaveESP.setIcon(new ImageIcon(getClass().getResource("/resources/move.png")));
         FileSaveESP.setSelected(false);
         FileSendESP.setSelected(false);
     }
@@ -8650,7 +8620,7 @@ public class ESPlorer extends javax.swing.JFrame {
             log(e.toString());
         }
         try {
-            serialPort.addEventListener(new PortFilesUploader(), portMask);
+            serialPort.addEventListener(new PortFilesUploader(), Constants.PORT_MASK);
             log("Uploader: Add EventListener: Success.");
         } catch (SerialPortException e) {
             log("Uploader: Add EventListener Error. Canceled.");
@@ -8805,6 +8775,7 @@ public class ESPlorer extends javax.swing.JFrame {
                         try {
                             timer.stop();
                         } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, e.getMessage());
                         }
                     }
                 }
@@ -8856,8 +8827,9 @@ public class ESPlorer extends javax.swing.JFrame {
                         try {
                             serialPort.removeEventListener();
                         } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, e.getMessage());
                         }
-                        serialPort.addEventListener(new PortReader(), portMask);
+                        serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
                         SendUnLock();
                         FileSystemInfo();
                     }
@@ -8904,6 +8876,7 @@ public class ESPlorer extends javax.swing.JFrame {
                         try {
                             timer.stop();
                         } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, e.getMessage());
                         }
                     }
                 }
@@ -9068,6 +9041,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     try {
                         timeout.stop();
                     } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, e.getMessage());
                     }
                     if (rcvBuf.contains("stdin:")) {
                         String msg[] = {"LUA interpreter error detected!", rcvBuf, "Click OK to continue."};
@@ -9119,6 +9093,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     try {
                         timeout.stop(); // first, reset watchdog timer
                     } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, e.getMessage());
                     }
                     rcvBuf = "";
                     if (j < sendBuf.size() - 1) {
@@ -9202,6 +9177,7 @@ public class ESPlorer extends javax.swing.JFrame {
                         try {
                             timer.stop();
                         } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, e.getMessage());
                         }
                     }
                 }
@@ -9211,6 +9187,7 @@ public class ESPlorer extends javax.swing.JFrame {
                     try {
                         timer.stop();
                     } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, e.getMessage());
                     }
                     try {
                         timeout.stop();
@@ -9219,8 +9196,8 @@ public class ESPlorer extends javax.swing.JFrame {
                     }
                     //log("Uploader: send all data, finishing...");
                     boolean success = true;
-                    for (int i = 0; i < sendPacketsCRC.size(); i++) {
-                        if (!sendPacketsCRC.get(i)) {
+                    for (Boolean aSendPacketsCRC : sendPacketsCRC) {
+                        if (!aSendPacketsCRC) {
                             success = false;
                         }
                     }
@@ -9237,7 +9214,7 @@ public class ESPlorer extends javax.swing.JFrame {
                         log(e.toString());
                     }
                     try {
-                        serialPort.addEventListener(new PortReader(), portMask);
+                        serialPort.addEventListener(new PortReader(), Constants.PORT_MASK);
                     } catch (Exception e) {
                         log(e.toString());
                     }
