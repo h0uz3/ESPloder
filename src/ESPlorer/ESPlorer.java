@@ -1094,8 +1094,8 @@ public class ESPlorer extends JFrame {
 
         LeftTab.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         LeftTab.setToolTipText("");
-        LeftTab.setAlignmentX(0.0F);
-        LeftTab.setAlignmentY(0.0F);
+        LeftTab.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        LeftTab.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         LeftTab.setAutoscrolls(true);
         LeftTab.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         LeftTab.setMinimumSize(new java.awt.Dimension(100, 100));
@@ -1132,7 +1132,7 @@ public class ESPlorer extends JFrame {
 
         FilesToolBar.setFloatable(false);
         FilesToolBar.setRollover(true);
-        FilesToolBar.setAlignmentY(0.5F);
+        FilesToolBar.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         FilesToolBar.setMaximumSize(new java.awt.Dimension(1000, 40));
         FilesToolBar.setMinimumSize(new java.awt.Dimension(321, 40));
         FilesToolBar.setPreferredSize(new java.awt.Dimension(321, 40));
@@ -2313,7 +2313,7 @@ public class ESPlorer extends JFrame {
         Delay.setSnapToTicks(true);
         Delay.setToolTipText("Delay between answer from ESP and send new data");
         Delay.setValue(0);
-        Delay.setAlignmentY(1.0F);
+        Delay.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
         Delay.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 DelayStateChanged();
@@ -2366,7 +2366,7 @@ public class ESPlorer extends JFrame {
         LineDelay.setSnapToTicks(true);
         LineDelay.setToolTipText("Fixed delay between lines");
         LineDelay.setValue(200);
-        LineDelay.setAlignmentY(1.0F);
+        LineDelay.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, DumbMode, org.jdesktop.beansbinding.ELProperty.create("${selected}"), LineDelay, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -3146,8 +3146,8 @@ public class ESPlorer extends JFrame {
         );
 
         TCP_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common TCP commands"));
-        TCP_common.setAlignmentX(0.0F);
-        TCP_common.setAlignmentY(0.0F);
+        TCP_common.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        TCP_common.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         TCP_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         TCP_common.setMaximumSize(new java.awt.Dimension(445, 45));
         TCP_common.setMinimumSize(new java.awt.Dimension(445, 45));
@@ -3155,8 +3155,8 @@ public class ESPlorer extends JFrame {
         TCP_common.setLayout(new java.awt.FlowLayout());
 
         wiFi_common.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Common WiFi commands"));
-        wiFi_common.setAlignmentX(0.0F);
-        wiFi_common.setAlignmentY(0.0F);
+        wiFi_common.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        wiFi_common.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         wiFi_common.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         wiFi_common.setName(""); // NOI18N
         wiFi_common.setOpaque(true);
@@ -3443,14 +3443,14 @@ public class ESPlorer extends JFrame {
         Port.getAccessibleContext().setAccessibleName("");
         LEDPanel.setLayer(EOL, JLayeredPane.DEFAULT_LAYER);
 
-        rightBottomPane.setAlignmentX(0.0F);
-        rightBottomPane.setAlignmentY(0.0F);
+        rightBottomPane.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        rightBottomPane.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 
         LF.setFont(LF.getFont().deriveFont(LF.getFont().getSize() - 4f));
         LF.setSelected(true);
         LF.setText("LF");
         LF.setToolTipText("Add LF at end of line");
-        LF.setAlignmentY(0.0F);
+        LF.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         LF.setEnabled(false);
         LF.setIconTextGap(0);
         LF.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -3458,7 +3458,7 @@ public class ESPlorer extends JFrame {
         SendCommand.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         SendCommand.setIcon(new ImageIcon(getClass().getResource("/resources/left.png"))); // NOI18N
         SendCommand.setToolTipText("");
-        SendCommand.setAlignmentY(0.0F);
+        SendCommand.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         SendCommand.setEnabled(false);
         SendCommand.setText("Send");
         SendCommand.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -3471,7 +3471,7 @@ public class ESPlorer extends JFrame {
         CR.setSelected(true);
         CR.setText("CR");
         CR.setToolTipText("Add CR at end of line");
-        CR.setAlignmentY(0.0F);
+        CR.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         CR.setEnabled(false);
         CR.setIconTextGap(0);
         CR.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -3481,8 +3481,8 @@ public class ESPlorer extends JFrame {
         Command.setMaximumRowCount(20);
         Command.setModel(new DefaultComboBoxModel(new String[]{"AT", "AT+GMR", "AT+RST", ""}));
         Command.setToolTipText("Command to send");
-        Command.setAlignmentX(0.0F);
-        Command.setAlignmentY(0.0F);
+        Command.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        Command.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         Command.setAutoscrolls(true);
         Command.setEnabled(false);
         Command.setName("Command"); // NOI18N
@@ -3600,8 +3600,8 @@ public class ESPlorer extends JFrame {
         ScrollLog.setBorder(terminalPane.getBorder());
         ScrollLog.setToolTipText("Log");
         ScrollLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        ScrollLog.setAlignmentX(0.0F);
-        ScrollLog.setAlignmentY(0.0F);
+        ScrollLog.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        ScrollLog.setAlignmentY(JComponent.LEFT_ALIGNMENT);
 
         Log.setEditable(false);
         Log.setBackground(new java.awt.Color(51, 51, 51));
@@ -3614,8 +3614,8 @@ public class ESPlorer extends JFrame {
         Log.setText("Logging enable");
         Log.setToolTipText("Log");
         Log.setWrapStyleWord(true);
-        Log.setAlignmentX(0.0F);
-        Log.setAlignmentY(0.0F);
+        Log.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        Log.setAlignmentY(JComponent.LEFT_ALIGNMENT);
         Log.setBorder(Terminal.getBorder());
         Log.setComponentPopupMenu(contextMenuLog);
         Log.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -3680,7 +3680,7 @@ public class ESPlorer extends JFrame {
         FileSystemInfo.setIcon(new ImageIcon(getClass().getResource("/resources/file manager.png"))); // NOI18N
         FileSystemInfo.setText("FS Info");
         FileSystemInfo.setToolTipText("Execute command file.fsinfo() and show total, used and remainig space on the ESP filesystem");
-        FileSystemInfo.setAlignmentX(0.5F);
+        FileSystemInfo.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         FileSystemInfo.setHorizontalAlignment(SwingConstants.LEFT);
         FileSystemInfo.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileSystemInfo.setMaximumSize(new java.awt.Dimension(130, 25));
@@ -3695,7 +3695,7 @@ public class ESPlorer extends JFrame {
         FileListReload.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         FileListReload.setIcon(new ImageIcon(getClass().getResource("/resources/refresh3.png"))); // NOI18N
         FileListReload.setText("Reload");
-        FileListReload.setAlignmentX(0.5F);
+        FileListReload.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         FileListReload.setHorizontalAlignment(SwingConstants.LEFT);
         FileListReload.setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileListReload.setMaximumSize(new java.awt.Dimension(130, 25));
@@ -3711,7 +3711,7 @@ public class ESPlorer extends JFrame {
         FileAsButton1.setIcon(new ImageIcon(getClass().getResource("/resources/file.png"))); // NOI18N
         FileAsButton1.setText("File 1");
         FileAsButton1.setToolTipText("Left click");
-        FileAsButton1.setAlignmentX(0.5F);
+        FileAsButton1.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         FileAsButton1.setComponentPopupMenu(contextMenuESPFileLUA);
         FileAsButton1.setHorizontalAlignment(SwingConstants.LEFT);
         FileAsButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -7563,7 +7563,7 @@ public class ESPlorer extends JFrame {
         int i = FileAsButton.size() - 1;
         FileAsButton.get(i).setText(FileName);
         //FileAsButton.get(i).setFont(new java.awt.Font("Tahoma", 0, 12));
-        FileAsButton.get(i).setAlignmentX(0.5F);
+        FileAsButton.get(i).setAlignmentX(JComponent.CENTER_ALIGNMENT);
         FileAsButton.get(i).setMargin(new java.awt.Insets(2, 2, 2, 2));
         FileAsButton.get(i).setMaximumSize(new java.awt.Dimension(130, 25));
         FileAsButton.get(i).setPreferredSize(new java.awt.Dimension(130, 25));
